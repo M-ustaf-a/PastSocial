@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= community.title %></title>
+
+    <!-- External Resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Inline Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffebcd;
+        }
+
+        #chat-background {
+            background: url("/bg.png") no-repeat center center;
+            background-size: 370px;
+        }
+
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-messages::-webkit-scrollbar-track {
+            background: #fee4bd;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body class="flex flex-col h-screen overflow-hidden">
+    <!-- Header -->
+    <div class="bg-[#fee4bd] text-[#A82400] p-4 flex items-center justify-between md:justify-start">
+        <button onclick="history.back()" class="mb-2 md:mb-0">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+
+        <% if (community.thumbnail && community.thumbnail.url) { %>
+            <img src="<%= community.thumbnail.url %>" alt="<%= community.title %>" class="w-10 h-10 rounded-full mr-3 object-cover">
+        <% } else { %>
+            <div class="w-10 h-10 rounded-full mr-3 bg-gray-300 flex items-center justify-center">
+                <i class="fas fa-users text-white"></i>
+            </div>
+        <% } %>
+
+        <div class="flex flex-col items-start md:ml-3">
+            <h1 class="text-lg font-semibold"><%= community.title %></h1>
+            <p class="text-xs text-gray-600" id="active-users-count">
+                <i class="fas fa-users mr-1"></i>0 Active Users
+            </p>
+        </div>
+
+        <div class="ml-auto flex space-x-4">
+            <button><i class="fas fa-video"></i></button>
+            <button><i class="fas fa-phone"></i></button>
+            <button><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+    </div>
+
+    <!-- Chat Container -->
+    <main id="chat-background" class="flex-grow overflow-hidden flex">
+        <section class="w-full flex flex-col">
+            <!-- Messages Container -->
+            <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-3 md:w-[500px] md:mx-auto">
+                <% messages.forEach(function(msg) { %>
+                    <div class="flex <%= msg.username === currentUsername ? 'justify-end' : 'justify-start' %> mb-2">
+                        <div class="max-w-full sm:max-w-[70%] <%= msg.username === currentUsername ? 'bg-[#d9fdd3]' : 'bg-white' %> p-2 rounded-lg shadow-sm">
+                            <div class="flex items-center mb-1">
+                                <span class="font-semibold text-sm mr-2 <%= msg.username === currentUsername ? 'text-green-800' : 'text-blue-800' %>">
+                                    <%= msg.username %>
+                                </span>
+                                <span class="text-xs text-gray-500 ml-auto">
+                                    <%= msg.timestamp.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) %>
+                                </span>
+                            </div>
+                            <p class="text-gray-800"><%= msg.message %></p>
+                            <div class="text-right text-xs text-gray-500">
+                                <i class="fas fa-check-double text-[#A82400]"></i>
+                            </div>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+
+            <!-- Message Input Area -->
+            <footer class="bg-[#fee4bd] p-3 flex flex-wrap items-center space-x-2 border-t mb-14">
+                <form id="message-form" class="flex-grow flex flex-wrap items-center space-x-2">
+                    <!-- Username Input -->
+                    <div class="bg-white flex items-center border p-2 w-full sm:w-1/4 focus-within:ring-2 focus-within:ring-[#A82400] mb-2" style="border-radius: 35px;">
+                        <input type="text" id="username" placeholder="Your Name" required class="flex-grow p-2 text-sm focus:outline-none">
+                    </div>
+
+                    <!-- Message Input -->
+                    <div class="bg-white flex items-center border p-2 w-full sm:w-1/4 focus-within:ring-2 focus-within:ring-[#A82400]" style="border-radius: 35px;">
+                        <button class="text-[#A82400] px-2">
+                            <i class="fas fa-paperclip"></i>
+                        </button>
+                        <button class="text-[#A82400] px-2">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                        <input type="text" id="message" placeholder="Type a message" required class="flex-grow p-2 text-sm focus:outline-none">
+                        <button type="submit" id="send-button" class="bg-[#A82400] text-white p-2 rounded-full w-10 h-10 flex items-center justify-center hidden">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                        <button type="submit" class="bg-[#A82400] text-white p-2 rounded-full w-10 h-10 flex items-center justify-center">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                    </div>
+                </form>
+            </footer>
+        </section>
+    </main>
+
+    <script>
+        const socket = io();
+        const communityId = '<%= community._id %>';
+        const chatMessages = document.getElementById('chat-messages');
+        const messageForm = document.getElementById('message-form');
+        const usernameInput = document.getElementById('username');
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send-button');
+        const micButton = document.querySelector('button[type="submit"] i.fa-microphone').parentElement;
+
+        // Join the community-specific room
+        socket.emit('joinCommunity', communityId);
+
+        // Toggle send/mic button
+        messageInput.addEventListener('input', function() {
+            if (this.value.trim()) {
+                micButton.classList.add('hidden');
+                sendButton.classList.remove('hidden');
+            } else {
+                micButton.classList.remove('hidden');
+                sendButton.classList.add('hidden');
+            }
+        });
+
+        messageForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = usernameInput.value.trim();
+            const message = messageInput.value.trim();
+
+            if (username && message) {
+                socket.emit('sendMessage', { 
+                    username, 
+                    message, 
+                    communityId 
+                });
+
+                // Clear message input
+                messageInput.value = '';
+                micButton.classList.remove('hidden');
+                sendButton.classList.add('hidden');
+            }
+        });
+
+        // Listen for new messages
+        socket.on('newMessage', function(data) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('flex', 'mb-2', 'animate-fade-in');
+            
+            // Determine message alignment (you might want to pass current username from server)
+            const isOwnMessage = false; // This should be dynamically set
+            
+            messageDiv.classList.add(isOwnMessage ? 'justify-end' : 'justify-start');
+            
+            messageDiv.innerHTML = `
+                <div class="max-w-[70%] ${isOwnMessage ? 'bg-[#d9fdd3]' : 'bg-white'} p-2 rounded-lg shadow-sm">
+                    <div class="flex items-center mb-1">
+                        <span class="font-semibold text-sm mr-2 ${isOwnMessage ? 'text-green-800' : 'text-blue-800'}">
+                            ${data.username}
+                        </span>
+                        <span class="text-xs text-gray-500 ml-auto">
+                            ${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
+                        </span>
+                    </div>
+                    <p class="text-gray-800">${data.message}</p>
+                    <div class="text-right text-xs text-gray-500">
+                        <i class="fas fa-check-double text-[#A82400]"></i>
+                    </div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            
+            // Auto-scroll to the bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        });
+
+        // Auto-scroll to bottom on page load
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    </script>
+</body>
+
+</html>

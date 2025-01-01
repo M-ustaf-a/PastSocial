@@ -1,0 +1,154 @@
+<%layout('/layouts/boilerplate.ejs')%>
+    <style>
+        body {
+            background-color: blanchedalmond;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+            gap: 15px;
+        }
+
+        .posts-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 15px;
+        }
+
+        .rows {
+            background-color: rgb(253, 226, 185);
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .rows video {
+            width: 100%; 
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+        }
+
+        .post-title {
+            font-style: oblique;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .post-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+        }
+
+        .heart-icon {
+            cursor: pointer;
+            height: 30px;
+            width: 30px;
+            transition: transform 0.2s;
+        }
+
+        .btn-explore {
+            background-color: #A82400;
+            color: aliceblue;
+        }
+
+        /* Mobile-specific adjustments */
+        @media (max-width: 576px) {
+            .posts-container {
+                padding: 0; /* Remove horizontal padding */
+            }
+
+            .rows {
+                margin-left: 0; /* Remove left margin */
+                margin-right: 0; /* Remove right margin */
+                border-radius: 0; /* Optional: Remove border radius for full-width appearance */
+                margin-bottom: 10px; /* Keep a consistent bottom margin */
+            }
+        }
+    </style>
+<body>
+        <!-- <div class="header-content">
+            <h1 class="header-title">Posts</h1>
+            <div class="create-btn-container">
+                <div style="display: flex; gap: 25px;">
+                    <form action="/community/<%=community.id%>/chat" method="get">
+                        <button class="btn btn-light" style="border: none; border-radius: 50%; height: 35px; width: 35px; display: flex; justify-content: center; align-items: center;"><b>G</b></button>  
+                    </form>
+                    <form action="/community/<%= community._id %>/posts/new" method="get">
+                        <button class="btn btn-light create-btn" style="background-color: #A82400; color: white;border-radius: 25px;">Create</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr class="m-0"> -->
+
+    <div class="posts-container">
+        <div class="row g-3">
+            <% for(post of posts) { %>
+                <div class="col-12 col-sm-6 col-lg-4" style="padding-right: 0px; margin-bottom: 0px;">
+                    <div class="rows">
+                        <button type="button" class="btn btn-light post-title" 
+                                data-bs-container="body" 
+                                data-bs-toggle="popover" 
+                                data-bs-placement="top" 
+                                data-bs-content="<%=post.username%>" style="background-color: #fee4bd; border: none;">
+                            <b><%=post.title%></b>
+                        </button>
+                        <% if (post.video && post.video.url) { %>
+                            <video controls>
+                                <source src="<%= post.video.url %>" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                        <% } %>
+                        <div class="post-actions">
+                            <img src="/heart.svg" 
+                               alt="Heart Icon" 
+                               class="heart-icon" 
+                               data-post-id="<%= post.id %>" 
+                               onclick="toggleHeart(this)">
+                            <form action="/community/<%=community.id%>/posts/<%=post.id%>" method="get">
+                                <button class="btn btn-sm btn-explore">Explore</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+            // Define toggleHeart globally to ensure it's available everywhere
+            function toggleHeart(element) {
+                if (!element) return;
+    
+                // Get the current heart icon
+                const heartIcon = element.querySelector('img') || element;
+                
+                // Check current state and toggle
+                const currentSrc = heartIcon.getAttribute('src');
+                const postId = heartIcon.getAttribute('data-post-id');
+    
+                if (currentSrc === '/heart.svg') {
+                    heartIcon.setAttribute('src', '/heart-fill.svg');
+                    // Optional: Add like logic here
+                    console.log(`Liked post ${postId}`);
+                } else {
+                    heartIcon.setAttribute('src', '/heart.svg');
+                    // Optional: Add unlike logic here
+                    console.log(`Unliked post ${postId}`);
+                }
+            }
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+    </script>

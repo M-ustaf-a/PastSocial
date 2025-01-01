@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Approval show</h1>
+    <p><%=user.name%></p>
+    <p><%=user.email%></p>
+    <p><%=user.company%></p>
+    <p><%=user.role%></p>
+    <img src="<%=user.image.url%>" alt="image" height="100px" width="100px">
+    <form action="/community/<%=community.id%>/adminApproval/<%=user.id%>/show/adminApproved" method="post">
+        <input type="email" name="email" value="<%=user.email%>">
+        <input type="checkbox" name="approved">
+        <button>Approved</button>
+    </form>
+</body>
+</html>

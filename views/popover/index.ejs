@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom Popover</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <div class="container">
+    <button id="popoverButton" class="popover-button">Click Me</button>
+    <div id="popover" class="popover">
+      <p>This is a custom popover!</p>
+    </div>
+  </div>
+
+  <script>
+    // Popover functionality
+    const button = document.getElementById('popoverButton');
+    const popover = document.getElementById('popover');
+
+    button.addEventListener('click', () => {
+      if (popover.style.display === 'block') {
+        popover.style.display = 'none';
+      } else {
+        popover.style.display = 'block';
+      }
+    });
+
+    // Close the popover if clicked outside
+    document.addEventListener('click', (event) => {
+      if (!button.contains(event.target) && !popover.contains(event.target)) {
+        popover.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

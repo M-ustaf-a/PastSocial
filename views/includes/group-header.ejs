@@ -1,0 +1,93 @@
+<style>
+    body{
+        background-color: blanchedalmond;
+    }
+    header{
+        width: 100%;
+        background-color: #fee4bd;
+    }
+    a{
+        text-decoration: none;
+    }
+    h1{
+        color: black;
+    }
+
+    a svg{
+        color: #fc9a06;
+    }
+    .card-body{
+        width: 100px; 
+        margin-left: 86%; 
+        display: flex; 
+        background-color: #fee0b4;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border: none;
+    }
+    .icon-image{
+        display: flex;
+        gap: 80%;
+        margin-left: 5%;
+    }
+    .icons{
+        margin: 30px;
+    }
+    
+
+    @media (max-width: 1440px){
+        .card-body{
+            margin-left: 86%;
+        }
+    }
+
+    @media (max-width: 768px){
+        header{
+            background-color: transparent;
+        }
+        .logo {
+            display: none;
+        }
+        .create-comm{
+            display: none;
+        }
+        .mobile-view{
+            display: none;
+        }
+        .icons{
+            margin-left: 50px;
+        }
+    }
+</style>
+
+<body>
+    <header>
+        <div class="icon-image">
+            <span class="icons">
+                <img src="/group.png" alt="icons" height="40" width="40">
+            </span>
+                <a class="create-comm" href="#" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample" style="margin-top: 20px;">
+                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+                 </svg>
+                </a>
+        </div>
+        <div>
+          <div class="collapse collapse-horizontal" id="collapseWidthExample">
+            <div class="card card-body" style="width: 100px; display: flex; background-color: #fee0b4;">
+                <span style="display: flex; gap: 30px;">
+                    <a href="/community/<%=communityId%>/personal">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                        </svg>
+                    </a>
+                    <a href="/community/<%=communityId%>/group">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                        </svg>
+                    </a>
+                </span>
+            </div>
+          </div>
+        </div>
+    </header>
+</body>

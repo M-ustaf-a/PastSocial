@@ -1,0 +1,24 @@
+body {
+    font-family: Arial, sans-serif;
+  }
+  
+  #chat-container {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  li {
+    padding: 5px 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  form {
+    display: flex;
+    gap: 10px;
+  }
+  

@@ -1,0 +1,207 @@
+<%- layout('/layouts/boilerplate.ejs') %>
+<style>
+    body {
+        background: blanchedalmond;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    }
+    
+    .content-card {
+        width: 100%;
+        max-width: 800px;
+        margin: 1rem auto;
+        overflow: hidden;
+        border-radius: 20px;
+        border: 1px solid #f9d8a6;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        position: relative;
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+    }
+
+    .content-media {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    .profile-img {
+        width: 65px;
+        height: 60px;
+        border-radius: 50%;
+        margin-bottom: 1rem;
+    }
+
+    .post-form {
+        width: 100%;
+        max-width: 700px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .form-card {
+        background-color: #fee4bd;
+        padding: 20px;
+        border-radius: 25px;
+        border: 1px solid #f9d8a6;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    /* Mobile-specific adjustments */
+    @media (max-width: 767px) {
+        .content-card {
+            flex-direction: column;
+        }
+
+        .post-image {
+            width: 100%;
+            margin-top: 1rem;
+            display: block;
+            text-align: center;
+        }
+
+        .post-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 20px;
+        }
+
+        .interaction-buttons {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .interaction-buttons button {
+            margin: 0.5rem 0;
+        }
+
+        .content-details {
+            padding: 0.5rem;
+        }
+    }
+
+    /* Desktop Layout */
+    @media (min-width: 768px) {
+        .content-card {
+            display: flex;
+            flex-direction: row;
+        }
+
+        .post-image {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            margin-right: 1rem;
+        }
+
+        .post-image img {
+            width: 13rem;
+            height: 13rem;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+
+        .content-details {
+            padding: 1rem;
+        }
+
+        .interaction-buttons {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .interaction-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 1rem;
+        }
+    }
+
+</style>
+
+<div class="container mx-auto px-4">
+    <!-- Post Creation Form -->
+    <%if(user){%>
+    <form action="/community/<%= community.id %>/main" method="post" enctype="multipart/form-data" class="post-form">
+        <section class="form-card">
+            <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                <a href="" class="self-center">
+                    <img src="<%=user.image.url%>" class="profile-img">
+                </a>
+                <div class="flex-grow w-full">
+                    <input type="text" name="upload[title]" placeholder="Future of humanity" style="padding: 5px; margin-bottom: 5px; border-radius: 10px; padding-left: 20px; background-color: #ffebcd;" required>
+                    <textarea name="upload[content]" placeholder="What's your insight today?" class="w-full h-24 p-4 bg-[#ffebcd] rounded-xl focus:ring-2 focus:ring-[#ffe6bf] transition" required></textarea>
+                    <div class="flex flex-col md:flex-row justify-between items-center mt-2 space-y-2 md:space-y-0">
+                        <div class="flex space-x-4 w-full justify-start">
+                            <input type="file" name="upload[image]" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#A82400] file:text-white hover:file:bg-[#8A1F00]" required>
+                        </div>
+                        <button class="px-6 py-2 bg-[#A82400] text-white rounded-full w-full md:w-auto text-center">Publish</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </form>
+    <%}%>
+    
+    <!-- Content Feed -->
+    <main class="space-y-8 mt-8">
+        <% for(let uploadPost of newUploadPost) { %>
+            <article class="content-card post-content">
+                <div class="content-details p-4">
+                    <div class="flex mb-4">
+                        <div style="display: flex;">
+                            <a href="/profile">
+                                <img src="<%=uploadPost.user.image.url%>" class="w-12 h-12 rounded-full mr-4 border-2 border-indigo-200">
+                            </a>
+                            <span>
+                                <h3 class="font-bold text-lg text-gray-900"></h3>
+                                <p class="text-sm text-gray-500"></p>
+                            </span>
+                        </div>
+                        
+                    </div>
+                    <% if(uploadPost.image && uploadPost.image.url) { %>
+                        <div class="post-image">
+                            <a href="<%= uploadPost.image.url %>">
+                                <img src="<%= uploadPost.image.url %>" alt="Post media">
+                            </a>
+                        </div>
+                    <% }else{%>
+                        <div class="post-image" style="display: none;">
+                            <a href="<%= uploadPost.image.url %>">
+                                <img src="<%= uploadPost.image.url %>" alt="Post media">
+                            </a>
+                        </div>
+                   <% } %>
+                    
+                    <div class="mb-4 mt-10">
+                        <h2 class="text-xl font-bold mb-3 text-gray-900"><%=uploadPost.title%></h2>
+                        <p class="text-gray-600" style="height: auto;"><%= uploadPost.content %></p>
+                    </div>
+                    
+                    <div class="interaction-buttons">
+                        <div class="flex space-x-4 text-gray-600">
+                            <button class="flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                </svg>
+                                <span>Likes</span>
+                            </button>
+                            <button class="flex items-center">
+                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                                </svg>
+                                <span>Comments</span>
+                            </button>
+                            <button class="text-gray-600">
+                                <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684z" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        <% } %>
+    </main>
+</div>

@@ -1,0 +1,119 @@
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+        }
+       
+
+      
+
+        /* Mobile Header Styles */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: transparent;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+
+        .mobile-top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            background-color: transparent;
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .menu-toggle .bar {
+            width: 25px;
+            height: 3px;
+            background-color: #333;
+            margin: 2px 0;
+            transition: 0.4s;
+        }
+
+        .mobile-nav {
+            display: none;
+            background-color: #fff;
+            position: fixed;
+            bottom: 60px;
+            left: 0;
+            width: 100%;
+            max-height: 70vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .mobile-nav ul li {
+            padding: 1rem;
+            border-top: 1px solid #eee;
+        }
+
+        .mobile-nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+
+        .mobile-user-actions a {
+            text-decoration: none;
+            color: #007bff;
+            margin-left: 0.5rem;
+        }
+
+        /* Responsive Breakpoints */
+        @media screen and (max-width: 768px) {
+            .desktop-header {
+                display: none;
+            }
+
+            .mobile-header {
+                display: block;
+            }
+
+            .mobile-top-bar {
+                display: flex;
+            }
+
+            .menu-toggle {
+                display: flex;
+            }
+        }
+    </style>
+<body>
+    
+
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+        <div class="mobile-top-bar">
+            <div class="logo" style="margin-left: 44%;">
+                <a href="/commForm">
+                    <img src="/create.png" alt="create" height="45px" width="45px">
+                </a>
+            </div>
+        </div>
+       
+    </header>
+
+</body>

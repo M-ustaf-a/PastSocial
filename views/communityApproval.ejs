@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>CommunityApproval</h1>
+    <form action="/community/<%=community._id%>/communityApproval" method="post" enctype="multipart/form-data">
+        <div>
+            <input type="text" name="CommunityApproval[name]" placeholder="Name">
+        </div><br>
+        <div>
+            <input type="email" name="CommunityApproval[email]" placeholder="Email">
+        </div><br>
+        <div>
+            <input type="text" name="CommunityApproval[company]" placeholder="Company">
+        </div><br>
+        <div>
+            <input type="text" name="CommunityApproval[role]" placeholder="Role">
+        </div><br>
+        <div>
+            <input type="file" name="CommunityApproval[image]">
+        </div><br>
+        <div>
+            <textarea name="CommunityApproval[reason]" placeholder="Why are you join us?"></textarea>
+        </div><br>
+        <div>
+            <button>Submit</button>
+        </div>
+    </form>
+</body>
+</html>

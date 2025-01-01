@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../public/css/popoverStyle.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <title>Document</title>
+    <style>
+        body{
+            background-color: blanchedalmond;
+        }
+        .container {
+            position: relative;
+        }
+        
+        #popoverButton svg{
+            cursor: pointer;
+        }
+
+        a{
+          text-decoration: none;
+        }
+
+        a svg{
+            color: #A82400;
+        }
+          
+        .popover {
+            background-color: #fee4bd;
+            width: 690px;
+            position: absolute;
+            top: 50px;
+            left: 30%;
+            transform: translateX(-50%);
+            border: 1px solid #f9d8a6;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            padding: 15px;
+            display: none;
+            z-index: 100;
+        }
+          
+        .popover a{
+            text-decoration: none;
+        }
+        .popover::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent transparent white transparent;
+        }
+        .button{
+            padding: 10px;
+            border: none;
+            border-radius: 6px;
+            background-color: blanchedalmond;
+            margin-top: 10px;
+        }
+        .button:hover{
+            background-color: #f9d8a6;
+        }
+
+        .header{
+            position: sticky;
+            top: 0; 
+            z-index: 1000; 
+            background-color: transparent; 
+            width: 100%;
+            
+        }
+        .filled {
+            fill: red;
+        }
+        .rows{
+            background-color: aliceblue;
+            width: 23rem;
+            align-items: center;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+        }
+        @media screen and (max-width: 768px){
+            .rows {
+              margin-bottom: 30px;
+            }
+            .create-comm{
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" style="padding: 0px">
+        <header class="header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap">
+                <a href="/community">
+                    <h1 style="color: #A82400; margin: 20px;">
+                        <img src="/group.png" alt="group-icon" height="35" width="35">
+                    </h1>
+                </a>
+                    <span class="create-comm">
+                            <div class="container">
+                                <%if(user){%>
+                                    <div class="icon-image" style="margin: 10px;">
+                                            <a class="create-comm" href="#" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample" style="margin-top: 20px;">
+                                             <button style="height: 35px; width: 35px; border-radius: 25px; padding: 5px; border: none; background-color: transparent;">
+                                                <img src="<%=user.image.url%>" alt="use image" style="width: 35px; height: 35px; border-radius: 25px;">
+                                             </button>
+                                            </a>
+                                    </div>
+                                    <div>
+                                      <div class="collapse collapse-horizontal" id="collapseWidthExample">
+                                        <div class="card card-body" style="width: 100px; display: flex; background-color: #fee0b4; border: none;">
+                                            <div>
+                                                <div>
+                                                    <a href="/admin/profiles/store" style="text-decoration: none;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                                                        </svg>
+                                                        <span style="color: #A82400;">Profile</span>
+                                                    </a>
+                                                </div>
+                                                <hr>
+                                                <div>
+                                                    <a href="/createCommunity" style="text-decoration: none;">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exposure" viewBox="0 0 16 16">
+                                                            <path d="M8.5 4a.5.5 0 0 0-1 0v2h-2a.5.5 0 0 0 0 1h2v2a.5.5 0 0 0 1 0V7h2a.5.5 0 0 0 0-1h-2zm-3 7a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
+                                                            <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8"/>
+                                                          </svg>
+                                                        <span style="color: #A82400;">create</span>
+                                                    </a>
+                                                </div>
+                                                <hr>
+                                                <div>
+                                                    <a href="/admin/logout">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-door-open" viewBox="0 0 16 16">
+                                                            <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1"/>
+                                                            <path d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z"/>
+                                                          </svg>
+                                                        <span style="color: #A82400;">logout</span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                <%}else{%>
+                                <div id="popoverButton" class="popover-button"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                                    <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                                </svg>
+                                </div>
+                                <div id="popover" class="popover">
+                                      <b>Are you already a member of justPost?</b>
+                                      <div style="display: flex; gap: 25px;">
+                                        <form action="/createCommunity" method="get">
+                                          <button class="button">Yes</button>
+                                        </form>
+                                        <form action="/admin/approval" method="get">
+                                          <button class="button">No</button>
+                                        </form>
+                                      </div>
+                                      <!-- <%if(user){%>
+                                      <form action="/admin/logout" method="get">
+                                        <button class="button">Logout</button>
+                                      </form>
+                                      <%}%> -->
+                                </div>
+                                <%}%>
+                            </div>
+                    </span>
+            </div>
+        </header>
+        <div class="row g-1">
+            <% for(community of Communities){ %>
+                    <div class="community col-20 col-md-6 col-lg-4 d-flex justify-content-center mb-3" style="padding: 0; margin: 0px;">
+                       <div class="rows" style="border-radius: 23px; background-color: #feebca; box-shadow: 0 4px 6px rgba(0,0,0,0.1); border: 1px solid #fbe1b5;">
+                        <button type="button" class="btn btn-light mt-1 mb-1" data-bs-container="body" data-bs-toggle="popover" data-bs-placement="top" data-bs-content="<%=community.admin%>" style="font-style: oblique; background-color: #feebca; border: none">
+                            <b><%=community.title%></b>
+                        </button>
+                        <a href="/community/<%= community._id %>/main">
+                            <div>
+                                <img src="<%=community.thumbnail.url%>" alt="thumbnail" style=" border-radius: 23px; height: 170px; width: 300px;">
+                            </div>
+                        </a>
+                        <a href="/community/<%= community._id %>/main" style="text-decoration: none; color: black; margin-top: 10px;">
+                            <div style="margin-left: 9%;">
+                                <b>Description</b>
+                                <p style="overflow-y: scroll; overflow-x: hidden;  scrollbar-width: none; height: 60px; width: 90%;"><%= community.description %></p>
+                            </div>
+                        </a>
+                       </div>
+                    </div>
+                    <%}%>
+                    <div>
+                        <%-include("./includes/footer.ejs")%>
+                    </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script>
+        const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+        const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+        
+         // Popover functionality
+    const button = document.getElementById('popoverButton');
+    const popover = document.getElementById('popover');
+
+    button.addEventListener('click', () => {
+      if (popover.style.display === 'block') {
+        popover.style.display = 'none';
+      } else {
+        popover.style.display = 'block';
+      }
+    });
+
+    // Close the popover if clicked outside
+    document.addEventListener('click', (event) => {
+      if (!button.contains(event.target) && !popover.contains(event.target)) {
+        popover.style.display = 'none';
+      }
+    });
+    </script>
+</body>
+</html>

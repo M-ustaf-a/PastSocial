@@ -1,0 +1,132 @@
+<style>
+    /* Reset and Base Styles */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+    }
+
+    /* Mobile Header Styles */
+    .mobile-header {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background-color: transparent;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        z-index: 1000;
+    }
+
+    .mobile-top-bar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background-color: transparent;
+    }
+
+    .logo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        max-width: 300px;
+    }
+
+    .logo a {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-decoration: none;
+        color: #333;
+        padding: 0.5rem;
+    }
+
+    .logo img {
+        transition: transform 0.2s ease;
+    }
+
+    .logo a:hover svg, .logo a:hover img {
+        transform: scale(1.1);
+    }
+
+    /* Mobile Navigation (if needed) */
+    .mobile-nav {
+        display: none;
+        background-color: #fff;
+        position: fixed;
+        bottom: 60px;
+        left: 0;
+        width: 100%;
+        max-height: 70vh;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    .mobile-nav ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .mobile-nav ul li {
+        padding: 1rem;
+        border-top: 1px solid #eee;
+    }
+
+    .mobile-nav ul li a {
+        text-decoration: none;
+        color: #333;
+    }
+
+    /* Responsive Breakpoints */
+    @media screen and (max-width: 768px) {
+        .desktop-header {
+            display: none;
+        }
+
+        .mobile-header {
+            display: block;
+        }
+    }
+
+    /* Specific breakpoint adjustments */
+    @media screen and (max-width: 375px) {
+        .logo {
+            max-width: 250px;
+        }
+    }
+
+    @media screen and (min-width: 377px) and (max-width: 768px) {
+        .logo {
+            max-width: 300px;
+        }
+    }
+</style>
+</head>
+<body>
+<!-- Mobile Header -->
+<header class="mobile-header">
+    <div class="mobile-top-bar">
+        <div class="logo">
+            <a href="/community/<%=communityId%>/personal" aria-label="Personal Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+                    <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+                </svg>
+            </a>
+            <a href="/community/<%=communityId%>/group" aria-label="Group">
+                <svg xmlns="http://www.w3.org/2000/svg" width="35" height="35" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
+                    <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                </svg>
+            </a>
+            <a href="/community/<%=communityId%>/meeting" aria-label="Meetings">
+                <img src="/meeting-room.png" alt="Meeting" height="35" width="35" class="active">
+            </a>
+        </div>
+    </div>
+</header>
