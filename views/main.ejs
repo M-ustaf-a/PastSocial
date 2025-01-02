@@ -1,26 +1,27 @@
 <%- layout('/layouts/boilerplate.ejs') %>
+<%- layout('/layouts/boilerplate.ejs') %>
 <style>
     body {
         background: blanchedalmond;
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
     
     .content-card {
         width: 100%;
         max-width: 800px;
         margin: 1rem auto;
-        overflow: hidden;
         border-radius: 20px;
         border: 1px solid #f9d8a6;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         position: relative;
-        display: flex;
-        flex-direction: column; /* Stack elements vertically */
     }
 
-    .content-media {
-        width: 100%;
-        object-fit: cover;
+    .content {
+        width: 400px;
+        height: 230px;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        scrollbar-width: none;
     }
 
     .profile-img {
@@ -45,23 +46,40 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
 
-    /* Mobile-specific adjustments */
+    .post-image {
+        width: 208px;
+        height: 208px;
+        overflow: hidden;
+    }
+
+    .post-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 20px;
+    }
+
+    .interaction-buttons {
+        display: flex;
+        width: 100%;
+        margin-top: 1rem;
+    }
+
     @media (max-width: 767px) {
-        .content-card {
-            flex-direction: column;
+        .content {
+            width: 100%;
+            height: 200px;
         }
 
         .post-image {
             width: 100%;
+            height: 220px;
             margin-top: 1rem;
-            display: block;
             text-align: center;
         }
 
         .post-image img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 20px;
+            aspect-ratio: 1/1;
         }
 
         .interaction-buttons {
@@ -72,36 +90,27 @@
         .interaction-buttons button {
             margin: 0.5rem 0;
         }
-
-        .content-details {
-            padding: 0.5rem;
-        }
     }
 
-    /* Desktop Layout */
     @media (min-width: 768px) {
         .content-card {
             display: flex;
-            flex-direction: row;
+        }
+
+        .content-details {
+            flex: 1;
+            padding: 1rem;
+            max-width: calc(100% - 240px);
         }
 
         .post-image {
             position: absolute;
-            right: 0;
+            right: 1rem;
             top: 50%;
             transform: translateY(-50%);
-            margin-right: 1rem;
         }
-
-        .post-image img {
-            width: 13rem;
-            height: 13rem;
-            object-fit: cover;
-            border-radius: 20px;
-        }
-
-        .content-details {
-            padding: 1rem;
+        .post-image img{
+            height: 200px;
         }
 
         .interaction-buttons {
@@ -109,18 +118,11 @@
             justify-content: space-between;
             align-items: center;
         }
-        .interaction-buttons {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-top: 1rem;
-        }
     }
-
 </style>
 
+
 <div class="container mx-auto px-4">
-    <!-- Post Creation Form -->
     <%if(user){%>
     <form action="/community/<%= community.id %>/main" method="post" enctype="multipart/form-data" class="post-form">
         <section class="form-card">
@@ -143,7 +145,6 @@
     </form>
     <%}%>
     
-    <!-- Content Feed -->
     <main class="space-y-8 mt-8">
         <% for(let uploadPost of newUploadPost) { %>
             <article class="content-card post-content">
@@ -158,8 +159,8 @@
                                 <p class="text-sm text-gray-500"></p>
                             </span>
                         </div>
-                        
                     </div>
+                    
                     <% if(uploadPost.image && uploadPost.image.url) { %>
                         <div class="post-image">
                             <a href="<%= uploadPost.image.url %>">
@@ -172,11 +173,11 @@
                                 <img src="<%= uploadPost.image.url %>" alt="Post media">
                             </a>
                         </div>
-                   <% } %>
+                    <% } %>
                     
                     <div class="mb-4 mt-10">
                         <h2 class="text-xl font-bold mb-3 text-gray-900"><%=uploadPost.title%></h2>
-                        <p class="text-gray-600" style="height: auto;"><%= uploadPost.content %></p>
+                        <p class="content text-gray-600"><%= uploadPost.content %></p>
                     </div>
                     
                     <div class="interaction-buttons">

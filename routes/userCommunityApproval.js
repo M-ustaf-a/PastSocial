@@ -340,7 +340,6 @@ router.post("/community/:communityId/login", async (req, res) => {
   }
 });
 
-
 router.get("/community/:communityId/logout", (req,res)=>{
   let {communityId} = req.body;
   req.session.destroy((err)=>{

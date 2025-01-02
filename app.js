@@ -160,7 +160,7 @@ app.get("/community/:communityId/posts/new", async (req, res) => {
   }
 });
 
-// Create New Post for a Specific Community
+// Create New Post(video) for a Specific Community
 app.post(
   "/community/:communityId/posts",
   upload.fields([
@@ -301,14 +301,19 @@ app.post(
       }
 
       // Validate session user ID
-      const userId = req.session?.communityUserId;
+      const userId = req.session?.user?.id; // Fixed session key structure
       if (!userId) {
         return res.status(401).send("User not authenticated.");
       }
 
-      const communityId = req.params.communityId;
-      const url = req.file.path;
-      const filename = req.file.filename;
+      const { communityId } = req.params;
+
+      // Validate communityId
+      if (!communityId || !mongoose.Types.ObjectId.isValid(communityId)) {
+        return res.status(400).send("Invalid community ID.");
+      }
+
+      const { path: url, filename } = req.file;
 
       // Find the user by session ID
       const user = await CommunityUser.findById(userId);
@@ -327,10 +332,12 @@ app.post(
         return res.status(400).send("Post data missing.");
       }
 
-      const newUploadPost = new uploadPost(req.body.upload);
-      newUploadPost.image = { url, filename };
-      newUploadPost.community = community;
-      newUploadPost.user = user;
+      const newUploadPost = new uploadPost({
+        ...req.body.upload,
+        image: { url, filename },
+        community: community._id, // Store references as IDs
+        user: user._id,
+      });
       await newUploadPost.save();
 
       // Redirect to the community's main page
@@ -341,6 +348,7 @@ app.post(
     }
   }
 );
+
 
 
 

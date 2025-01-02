@@ -56,6 +56,7 @@
         }
         .profile-menu {
             gap: 0;
+            margin-left: 65%;
         }
         .profile-menu img {
             margin-left: 70%;
@@ -82,7 +83,7 @@
             font-size: 1.1rem;
         }
         .profile-menu{
-            margin-left: 0;
+            margin-left: 60%;
         }
         .profile-menu img {
             margin-left: 100%;
@@ -120,7 +121,7 @@
             <%if(!user){%>
                 <div style="margin-left: 75%;"><a href="/community/<%=community.id%>/login">Login</a></div>
             <%}else{%>
-            <div class="profile-menu" style="display: block; margin-left: 75%;">
+            <div class="profile-menu" style="display: block;">
                <img src="<%=user.image.url%>" alt="Profile Picture">
             </div>
             <%}%>
