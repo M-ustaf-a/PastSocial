@@ -338,6 +338,8 @@ app.post(
         community: community._id, // Store references as IDs
         user: user._id,
       });
+      newUploadPost.user.name = user.name;
+      newUploadPost.user.image = user.image;
       await newUploadPost.save();
 
       // Redirect to the community's main page

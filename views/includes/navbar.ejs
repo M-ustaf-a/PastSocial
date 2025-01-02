@@ -70,9 +70,11 @@
         .nav-icons svg {
             margin: 0 100%;
             cursor: pointer;
-            color: #A82400;
+            color: #ea8c00;
         }
-
+        .nav-icons svg.active{
+            color: #ff5733;
+        }
         .img-company{
             margin-left: 10%;
         }
@@ -83,7 +85,7 @@
             font-size: 1.1rem;
         }
         .profile-menu{
-            margin-left: 60%;
+            margin-left: 50%;
         }
         .profile-menu img {
             margin-left: 100%;
@@ -99,12 +101,15 @@
             cursor: pointer;
             color: #A82400;
         }
+        .nav-icons svg.active{
+            color: #ff5733;
+        }
     }
 </style>
 <body>
 <header class="" id="">
     <!-- Logo -->
-     <div class="d-flex" style="display: flex; margin-bottom: 25px;">
+     <div class="d-flex" style="display: flex; margin-bottom: 25px; margin-top: 15px;">
             <a href="/company-profile" class="header-logo">
                 
                 <%if(community.thumbnail && community.thumbnail.url){%>
@@ -119,7 +124,7 @@
                 <%}%>
             </a>
             <%if(!user){%>
-                <div style="margin-left: 75%;"><a href="/community/<%=community.id%>/login">Login</a></div>
+                <div class="profile-menu"><a href="/community/<%=community.id%>/login">Login</a></div>
             <%}else{%>
             <div class="profile-menu" style="display: block;">
                <img src="<%=user.image.url%>" alt="Profile Picture">
