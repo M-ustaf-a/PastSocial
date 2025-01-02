@@ -11,10 +11,13 @@ const Community = require("./models/community");
 const methodOverride = require("method-override");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
+const flash = require("connect-flash");
 const ejsMate = require("ejs-mate");
 const approvalRoute = require("./routes/admin");
+const passport = require("passport");
+const LocalStrategy = require("passport-local");
+const crypto = require("crypto");
 const profileRoute = require("./routes/profile");
-
 const communityApproval = require("./routes/userCommunityApproval");
 const checkCommunity = require("./middleware");
 
@@ -24,9 +27,7 @@ const uploadPost = require("./models/uploadPost");
 const { isLoggedIn, isApproved } = require("./middleware");
 const User = require("./models/user");
 const Approvaladmin = require("./models/adminApproval");
-
 const CommunityUser = require( "./models/communityUser" );
-
 
 const app = express();
 const MONGO_URL = process.env.ATLAS;
@@ -136,7 +137,6 @@ app.post(
       const newCommunity = new Community(req.body.community);
 
       newCommunity.thumbnail = { url: url, filename: filename };
-      newCommunity.owner = req.session.userId;
       await newCommunity.save();
 
       res.redirect("/community");
@@ -261,20 +261,6 @@ app.get("/community/:communityId/feeds", async (req, res) => {
 });
 
 app.get("/community/:communityId/main", async (req, res) => {
-  const { communityId } = req.params;
-  const community = await Community.findById(communityId);
-  const userId = req.session.userId;
-  const user = await User.findById(userId);
-  if(!user){
-    res.status(404).send("User not found!");
-  }
-  const newUploadPost = await uploadPost.find({ community: communityId });
-  if (!newUploadPost) {
-    return res.status(404).send("newUploadPost not found");
-  }
-  
-  res.render("main.ejs", { community, newUploadPost, user });
-
   try {
     const { communityId } = req.params;
     console.log("Route Parameter (communityId):", communityId);
@@ -302,31 +288,11 @@ app.get("/community/:communityId/main", async (req, res) => {
     console.error("Error in /community/:communityId/main:", error);
     res.status(500).send("Server error");
   }
-
 });
 
-// app.post(
-//   "/community/:communityId/main",
-//   upload.single("upload[image]"), isApproved,
-//   async (req, res) => {
-//     const { communityId } = req.params;
-//     const id = req.session.userId;
-//     const user = await User.findById(id);
-//     console.log(user);
-//     const newUploadPost = new uploadPost(req.body.upload);
-//     newUploadPost.community = communityId;
-//     newUploadPost.user.name = user.adminData.name;
-//     newUploadPost.user.image = user.image;
-
-//     let url = req.file.path;
-//     let filename = req.file.filename;
-//     newUploadPost.image = { url, filename };
-//     const posting = await newUploadPost.save();
-//     console.log(posting);
-//     res.redirect(`/community/${communityId}/main`);
-//   }
-// );
- app.post("/community/:communityId/main",upload.single("upload[image]"),
+app.post(
+  "/community/:communityId/main",
+  upload.single("upload[image]"),
   async (req, res) => {
     try {
       // Validate file upload
@@ -375,6 +341,8 @@ app.get("/community/:communityId/main", async (req, res) => {
     }
   }
 );
+
+
 
 app.get("/community/:communityId/link", async (req, res) => {
   const { communityId } = req.params;
@@ -448,17 +416,17 @@ app.get("/community/:communityId/company", async (req, res) => {
   res.render("company.ejs", { community });
 });
 
-// function ensureAuthenticate(req, res, next) {
-//   if (req.isAuthenticated()) {
-//     return next();
-//   }
-//   res.redirect("/admin/login");
-// }
+function ensureAuthenticate(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  res.redirect("/admin/login");
+}
 
 // Use chat routes
 app.use(chatRoutes);
 app.use("/", approvalRoute);
-app.use("/", profileRoute)
+app.use("/", profileRoute);
 app.use("/", communityApproval);
 
 // Error Handling Middleware
@@ -469,7 +437,8 @@ app.use((err, req, res, next) => {
 
 // Start Server
 const PORT = process.env.PORT || 8080;
-app.listen(PORT, () =>
+const server = app.listen(PORT, () =>
   console.log(`Server is running on http://localhost:${PORT}`)
 );
 
+module.exports = app;
