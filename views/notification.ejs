@@ -1,5 +1,50 @@
 <%layout('/layouts/boilerplate')%>
+<style>
+    .container{
+        height: auto;
+        width: 500px;
+        border: 1px solid #f9d8a6;
+        border-radius: 15px;
+        background-color: #fee4bd;
+        margin-top: 23px;
+        padding: 20px;
+    }
+    .heading{
+        text-align: center;
+        margin: 10px auto;
+        font-size: larger;
+        font-weight: bolder;
+        width: fit-content;
+    }
+    .btn{
+        border: 2px solid #f9d8a6;
+    }
+
+    @media (max-width: 430px){
+        .container{
+            width: 400px;
+        }
+    }
+</style>
 <body>
-    <h1>Notification</h1>
+    <div>
+        <h1 class="heading" style="color: #ea8c00;">Membership request</h1>
+        <%for(let user of users){%>
+            <div class="container">
+                <div>Name: <%=user.name%></div>
+                <div class="flex gap-52">
+                    <span>Role: <%=user.role%></span>
+                    <!-- <img src="<%=user.image.url%>" alt="img" style="height: 52px; width: 52px;"> -->
+                </div>
+                <div class="flex gap-52">
+                    <span>Company: <%=user.company%></span>
+                    <img src="<%=user.image.url%>" alt="img" style="height: 75px; width: 75px; border-radius: 15px;">
+                </div>
+                <form action="/community/<%=community.id%>/adminApproval/<%=user.id%>/show" method="get">
+                    <button class="btn mt-2">see</button>
+                </form>
+            </div>
+        <%}%>
+    </div>
 </body>
 </html>

@@ -27,11 +27,12 @@ const uploadPost = require("./models/uploadPost");
 const { isLoggedIn, isApproved } = require("./middleware");
 const User = require("./models/user");
 const Approvaladmin = require("./models/adminApproval");
-const CommunityUser = require( "./models/communityUser" );
+const CommunityUser = require("./models/communityUser");
+const Notification = require("./models/notification");
+const ApprovalCommunity = require( "./models/approveCommunity" );
 
 const app = express();
 const MONGO_URL = process.env.ATLAS;
-
 
 // Multer configuration for file uploads
 const upload = multer({
@@ -71,7 +72,7 @@ mongoose
   .catch((err) => {
     console.error("Database connection error:", err);
   });
-  
+
 // Middleware Setup
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -87,21 +88,19 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    store: MongoStore.create({mongoUrl: process.env.ATLAS}),
-    cookie: { maxAge: 1000 * 60 * 60 *24 * 7},
+    store: MongoStore.create({ mongoUrl: process.env.ATLAS }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
   })
 );
 
-
 //Middleware to check authentication
-const isAuthenticated = (req,res,next)=>{
-  if(req.session.userId){
+const isAuthenticated = (req, res, next) => {
+  if (req.session.userId) {
     return next();
   }
   res.redirect("/admin/login");
 };
 
-  
 // Home Route
 app.get("/", (req, res) => {
   res.render("home.ejs");
@@ -121,7 +120,7 @@ app.get("/community", async (req, res) => {
   }
 });
 
-app.get("/createCommunity",isAuthenticated, (req, res) => {
+app.get("/createCommunity", isAuthenticated, (req, res) => {
   res.render("commForm");
 });
 
@@ -277,7 +276,7 @@ app.get("/community/:communityId/main", async (req, res) => {
 
     let user = null;
     if (communityid === communityId) {
-      user = await CommunityUser.findOne({communityId})
+      user = await CommunityUser.findOne({ communityId });
       console.log("User Found:", user);
     } else {
       console.log("No matching user for this community");
@@ -351,9 +350,6 @@ app.post(
   }
 );
 
-
-
-
 app.get("/community/:communityId/link", async (req, res) => {
   const { communityId } = req.params;
   const community = await Community.findById(communityId);
@@ -411,10 +407,18 @@ app.get("/community/:communityId/meeting", async (req, res) => {
 app.get("/community/:communityId/notification", async (req, res) => {
   const { communityId } = req.params;
   const community = await Community.findById(communityId);
-  if (!community) {
-    return res.status(404).send("community not found");
-  }
-  res.render("notification.ejs", { community });
+  const communityid = req.session.user?.communityId; // Access the communityId from session.user
+    console.log("Session Data (req.session.user.communityId):", communityid);
+
+    let user = null;
+    if (communityid === communityId) {
+      user = await CommunityUser.findOne({ communityId });
+      console.log("User Found:", user);
+    } else {
+      console.log("No matching user for this community");
+    }
+  const users = await ApprovalCommunity.find({});
+  res.render("notification.ejs", { community, users, user });
 });
 
 app.get("/community/:communityId/company", async (req, res) => {
