@@ -112,7 +112,7 @@ router.get("/admin/approval", (req,res)=>{
     res.render("admin/approvalForm");
 });
 
-router.post("/adminApproval", upload.single("approval[image]"), async(req,res)=>{
+router.post("/admin/approval", upload.single("approval[image]"), async(req,res)=>{
     try {
         const { name, email, bio, role, company, reason } = req.body.approval;
 
@@ -159,13 +159,14 @@ router.post("/adminApproval", upload.single("approval[image]"), async(req,res)=>
             subject: "New Membership Request",
             html: sanitizedHTML,
         });
-
-        res.status(200).send("Membership request submitted successfully!");
+        res.render("admin/memberRequest/success.ejs");
+        // res.status(200).send("Membership request submitted successfully!");
     } catch (err) {
         console.error("Error processing request:", err);
         res.status(500).send("An error occurred while processing the request.");
     }
 });
+
 
 router.post('/adminApprove', async (req, res) => {
     const { email, approved } = req.body;
