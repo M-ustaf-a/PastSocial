@@ -20,9 +20,15 @@
         border: 2px solid #f9d8a6;
     }
 
+    @media (max-width: 768px) {
+        .container {
+            width: min(90%, 450px);
+        }
+    }
+
     @media (max-width: 430px){
         .container{
-            width: 390px;
+            width: min(95%, 390px);
         }
     }
 </style>
