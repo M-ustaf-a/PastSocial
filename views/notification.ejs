@@ -19,16 +19,25 @@
     .btn{
         border: 2px solid #f9d8a6;
     }
+    .userImg{
+        gap: 250px;
+    }
 
     @media (max-width: 768px) {
         .container {
             width: min(90%, 450px);
+        }
+        .userImg{
+            gap: 200px;
         }
     }
 
     @media (max-width: 430px){
         .container{
             width: min(95%, 390px);
+        }
+        .userImg{
+            gap: 100px;
         }
     }
 </style>
@@ -42,7 +51,7 @@
                     <span>Role: <%=user.role%></span>
                     <!-- <img src="<%=user.image.url%>" alt="img" style="height: 52px; width: 52px;"> -->
                 </div>
-                <div class="flex gap-52">
+                <div class="flex userImg">
                     <span>Company: <%=user.company%></span>
                     <img src="<%=user.image.url%>" alt="img" style="height: 75px; width: 75px; border-radius: 15px;">
                 </div>
