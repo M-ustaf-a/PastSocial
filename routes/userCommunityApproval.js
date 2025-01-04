@@ -179,7 +179,7 @@ router.post(
         });
   
         res.send('Membership approved and credentials sent.');
-      } else {
+      } else if(on === 'reject') {
         // await member.deleteOne();
   
         // Notify the user of rejection
