@@ -34,7 +34,7 @@
     .profile-menu {
         display: flex;
         gap: 10px;
-        margin-left: 90%;
+        margin-left: 70%;
     }
     .profile-menu img {
         border-radius: 50%;
@@ -47,7 +47,14 @@
         border-radius: 50%; 
         margin-left: 100%;
     }
-
+    .dropdown-menu{
+        background-color: #fee4bd;
+        border: 1px solid #f9d8a6;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown-item{
+        color: #A82400;
+    }
     /* Responsive adjustments for smaller screens */
     
     @media (max-width: 1334px) {
@@ -127,7 +134,16 @@
                 <div class="profile-menu"><a href="/community/<%=community.id%>/login">Login</a></div>
             <%}else{%>
             <div class="profile-menu" style="display: block;">
-               <img src="<%=user.image.url%>" alt="Profile Picture">
+               <!-- <img src="<%=user.image.url%>" alt="Profile Picture"> -->
+               <div class="dropdown">
+                <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="<%=user.image.url%>" alt="Profile Picture">
+                </button>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="">Profile</a></li>
+                  <li><a class="dropdown-item" href="/community/<%=community.id%>/logout">logout</a></li>
+                </ul>
+              </div>
             </div>
             <%}%>
      </div>

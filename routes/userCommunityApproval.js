@@ -347,6 +347,7 @@ router.get("/community/:communityId/logout", (req,res)=>{
       console.error("Error during logout:", err);
       res.redirect(`/community/${communityId}/login`)
     }
+    res.redirect(`/community/${communityId}/main`);
   })
 })
 
