@@ -284,7 +284,7 @@ router.get(
       console.log("Community details:", community);
 
       // Render the view
-      res.render("ApprovalShow", { community, user, userId });
+      res.render("approvalShow", { community, user, userId });
     } catch (error) {
       console.error("Error fetching data:", error);
       res.status(500).send("Internal Server Error");
