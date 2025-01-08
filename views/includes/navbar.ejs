@@ -49,6 +49,7 @@
         border-radius: 50%;
         width: 30px;
         height: 30px;
+        margin-left: 4%;
     }
     .img-company{
         height: 30px; 
@@ -100,9 +101,13 @@
         .header-logo {
             font-size: 1.1rem;
         }
-        .profile-menu{
+        .profile-menu-user{
             margin-left: 50%;
         }
+        .profile-menu-user img{
+            margin-left: 7%;
+        }
+
         .dropdown-toggle {
             width: 30px;
         }
@@ -149,7 +154,7 @@
                <!-- <img src="<%=user.image.url%>" alt="Profile Picture"> -->
                <div class="dropdown">
                 <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=user.image.url%>" alt="Profile Picture" style="margin-left: 7%; margin-top: 7.5%;">
+                    <img src="<%=user.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;">
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="">Profile</a></li>
