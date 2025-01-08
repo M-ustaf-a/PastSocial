@@ -20,6 +20,7 @@ const crypto = require("crypto");
 const profileRoute = require("./routes/profile");
 const communityApproval = require("./routes/userCommunityApproval");
 const checkCommunity = require("./middleware");
+const checkAdmin = require("./middleware");
 
 // Import chat routes and socket initialization
 const { router: chatRoutes, initializeSocket } = require("./routes/chat");
@@ -411,14 +412,16 @@ app.get("/community/:communityId/notification", async (req, res) => {
     console.log("Session Data (req.session.user.communityId):", communityid);
 
     let user = null;
+    let users = null;
     if (communityid === communityId) {
       user = await CommunityUser.findOne({ communityId });
       console.log("User Found:", user);
+      users = await ApprovalCommunity.find({});
+      res.render("notification.ejs", { community, users, user });
     } else {
       console.log("No matching user for this community");
+      res.redirect( 'login');
     }
-  const users = await ApprovalCommunity.find({});
-  res.render("notification.ejs", { community, users, user });
 });
 
 app.get("/community/:communityId/company", async (req, res) => {

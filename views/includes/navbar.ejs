@@ -35,11 +35,20 @@
         display: flex;
         gap: 10px;
         margin-left: 70%;
+        height: 30px;
+        width: 30px;
+        border: 1px solid #ffc267;
+        border-radius: 50%;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        background-color: #ffc267;
     }
     .profile-menu img {
+        margin-left: 4%;
+        margin-top: 5%;
         border-radius: 50%;
-        width: 35px;
-        height: 35px;
+        width: 25px;
+        height: 25px;
+        padding: 2px;
     }
     .img-company{
         height: 30px; 
@@ -93,9 +102,13 @@
         }
         .profile-menu{
             margin-left: 50%;
+            margin-top: 0%;
+            height: 35px;
+            width: 35px;
         }
         .profile-menu img {
-            margin-left: 100%;
+            margin-left: 16%;
+            margin-top: 16%;
             width: 25px;
             height: 25px;
         }
@@ -131,13 +144,17 @@
                 <%}%>
             </a>
             <%if(!user){%>
-                <div class="profile-menu"><a href="/community/<%=community.id%>/login">Login</a></div>
+                <div class="profile-menu">
+                    <a href="/community/<%=community.id%>/login">
+                      <img src="/user-avatar.png" alt="Login">
+                    </a>
+                </div>
             <%}else{%>
-            <div class="profile-menu" style="display: block;">
+            <div class="profile-menu" style="display: block;;">
                <!-- <img src="<%=user.image.url%>" alt="Profile Picture"> -->
                <div class="dropdown">
                 <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=user.image.url%>" alt="Profile Picture">
+                    <img src="<%=user.image.url%>" alt="Profile Picture" style="margin-left: 7%; margin-top: 7.5%;">
                 </button>
                 <ul class="dropdown-menu">
                   <li><a class="dropdown-item" href="">Profile</a></li>
