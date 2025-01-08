@@ -42,13 +42,13 @@
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         background-color: #ffc267;
     }
-    .profile-menu img {
-        margin-left: 4%;
-        margin-top: 5%;
+    .profile-menu-user{
+        margin-left: 65%;
+    }
+    .profile-menu-user img {
         border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        padding: 2px;
+        width: 30px;
+        height: 30px;
     }
     .img-company{
         height: 30px; 
@@ -74,7 +74,7 @@
             gap: 0;
             margin-left: 65%;
         }
-        .profile-menu img {
+        .profile-menu-user img {
             margin-left: 70%;
             width: 30px;
             height: 30px;
@@ -102,16 +102,11 @@
         }
         .profile-menu{
             margin-left: 50%;
-            margin-top: 0%;
-            height: 35px;
-            width: 35px;
         }
-        .profile-menu img {
-            margin-left: 16%;
-            margin-top: 16%;
-            width: 25px;
-            height: 25px;
+        .dropdown-toggle {
+            width: 30px;
         }
+
         .nav-icons{
             gap: 8%;
             margin-left: 0%;
@@ -150,7 +145,7 @@
                     </a>
                 </div>
             <%}else{%>
-            <div class="profile-menu" style="display: block;;">
+            <div class="profile-menu-user" style="display: block;;">
                <!-- <img src="<%=user.image.url%>" alt="Profile Picture"> -->
                <div class="dropdown">
                 <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
