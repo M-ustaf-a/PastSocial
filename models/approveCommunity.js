@@ -34,6 +34,10 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
+    isRead: {
+        type: Boolean,
+        default: false,
+    },
     createAt: {
         type: Date,
         default: Date.now,

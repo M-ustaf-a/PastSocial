@@ -1,69 +1,97 @@
 <%layout('/layouts/boilerplate')%>
+<head>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=Lato&family=Montserrat:wght@300;400;500;600;700&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Plus+Jakarta+Sans:wght@300;400;500;600&family=Poppins&family=Raleway:wght@100&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+    rel="stylesheet"
+  />
+</head>
 <style>
+  .container {
+    height: auto;
+    width: min(500px, 95%);
+    border: 1px solid #f9d8a6;
+    border-radius: 10px;
+    background-color: #fee4bd;
+    margin: 23px auto;
+    padding: 5px;
+  }
+  .heading {
+    text-align: center;
+    margin: 10px auto;
+    font-size: larger;
+    font-weight: bolder;
+    width: fit-content;
+  }
+  .btn {
+    border: 2px solid #f9d8a6;
+  }
+  .userImg {
+    gap: 250px;
+  }
+
+  @media (max-width: 768px) {
     .container {
-        height: auto;
-        width: min(500px, 95%);
-        border: 1px solid #f9d8a6;
-        border-radius: 15px;
-        background-color: #fee4bd;
-        margin: 23px auto;
-        padding: 20px;
+      width: min(90%, 450px);
     }
-    .heading{
-        text-align: center;
-        margin: 10px auto;
-        font-size: larger;
-        font-weight: bolder;
-        width: fit-content;
+    .userImg {
+      gap: 200px;
     }
-    .btn{
-        border: 2px solid #f9d8a6;
-    }
-    .userImg{
-        gap: 250px;
-    }
+  }
 
-    @media (max-width: 768px) {
-        .container {
-            width: min(90%, 450px);
-        }
-        .userImg{
-            gap: 200px;
-        }
+  @media (max-width: 430px) {
+    .container {
+      width: min(95%, 390px);
     }
-
-    @media (max-width: 430px){
-        .container{
-            width: min(95%, 390px);
-        }
-        .userImg{
-            gap: 100px;
-        }
+    .userImg {
+      gap: 15px;
     }
+  }
 </style>
 <body>
-    <div>
-        <h1 class="heading" style="color: #ea8c00;">Membership request</h1>
-        <%if(users == null){%>
-         <h1>Membership request</h1>
-        <%}else{%>
-            <%for(let user of users){%>
-                <div class="container">
-                    <div>Name: <%=user.name%></div>
-                    <div class="flex">
-                        <span>Role: <%=user.role%></span>
-                        <!-- <img src="<%=user.image.url%>" alt="img" style="height: 52px; width: 52px;"> -->
-                    </div>
-                    <div class="flex userImg">
-                        <span>Company: <%=user.company%></span>
-                        <img src="<%=user.image.url%>" alt="img" style="height: 75px; width: 75px; border-radius: 15px;">
-                    </div>
-                    <form action="/community/<%=community.id%>/adminApproval/<%=user.id%>/show" method="get">
-                        <button class="btn mt-2">see</button>
-                    </form>
+  <div>
+    <h1 class="heading" style="color: #ea8c00">Membership request</h1>
+    <%if(users == null){%>
+    <h1>Membership request</h1>
+    <%}else{%> <%for(let user of users){%>
+    <form
+      action="/community/<%=community.id%>/adminApproval/<%=user.id%>/show"
+      method="get"
+    >
+      <div class="container">
+        <button>
+          <div class="flex userImg">
+            <%if(!user.isRead){%>
+                <div
+                  style="
+                    font-family: Lato, serif;
+                    font-weight: bolder;
+                    font-style: normal;
+                  "
+                >
+                  <%=user.name%> is sent to approval request!
+                </div>
+            <%}else{%>
+                <div
+                  style="
+                    font-family: Lato, serif;
+                    font-weight: 400;
+                    font-style: normal;
+                  "
+                >
+                  <%=user.name%> is sent to approval request!
                 </div>
             <%}%>
-        <%}%>
-    </div>
+            <img
+              src="<%=user.image.url%>"
+              alt="img"
+              style="height: 50px; width: 50px; border-radius: 8px"
+            />
+          </div>
+        </button>
+      </div>
+    </form>
+    <%}%> <%}%>
+  </div>
 </body>
-</html>

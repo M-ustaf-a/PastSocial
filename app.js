@@ -410,13 +410,12 @@ app.get("/community/:communityId/notification", async (req, res) => {
   const community = await Community.findById(communityId);
   const communityid = req.session.user?.communityId; // Access the communityId from session.user
     console.log("Session Data (req.session.user.communityId):", communityid);
-
     let user = null;
     let users = null;
     if (communityid === communityId) {
       user = await CommunityUser.findOne({ communityId });
       console.log("User Found:", user);
-      users = await ApprovalCommunity.find({});
+      users = await ApprovalCommunity.find({}).sort({createAt:-1});
       res.render("notification.ejs", { community, users, user });
     } else {
       console.log("No matching user for this community");

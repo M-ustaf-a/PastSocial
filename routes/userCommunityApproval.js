@@ -103,6 +103,8 @@ router.post(
         communityUser.status = true;
         await communityUser.save();
         await community.save();
+        user.deleteOne();
+        await user.save();
         await transporter.sendMail({
           from: `"Community Platform" <${process.env.EMAIL_USER}>`,
           
@@ -271,6 +273,10 @@ router.get(
 
       // Fetch the user by ID
       const user = await ApprovalCommunity.findById(userId);
+      console.log(user);
+      user.isRead = true;
+      await user.save();
+      console.log(user);
       if (!user) {
         return res.status(404).send("User not found");
       }
@@ -342,6 +348,7 @@ router.post("/community/:communityId/login", async (req, res) => {
 
 router.get("/community/:communityId/logout", (req,res)=>{
   let {communityId} = req.body;
+  console.log(communityId);
   req.session.destroy((err)=>{
     if(err){
       console.error("Error during logout:", err);
