@@ -89,39 +89,114 @@
       }
 
       .profile-menu-user {
+        position: relative;
         display: flex;
-        gap: 10px;
-        height: 30px;
-        width: 30px;
-        border-radius: 50%;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-
-      .profile-menu-user img {
-        border-radius: 50%;
-        width: 40px;
+        align-items: center;
+        justify-content: center;
+        margin: 10px;
+        min-width: 40px;
         height: 40px;
-      }
-      .dropdown-toggle {
+    }
+    
+    .profile-menu-user .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    
+    .profile-menu-user .dropdown-toggle {
+        padding: 0;
         border: none;
         background: none;
-      }
-      .dropdown-menu {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .profile-menu-user img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s ease;
+    }
+    
+    .profile-menu-user img:hover {
+        transform: scale(1.05);
+    }
+    
+    .dropdown-menu {
         background-color: #fee4bd;
         border: 1px solid #f9d8a6;
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      }
-      .dropdown-item {
+        min-width: 200px;
+        padding: 8px 0;
+    }
+    
+    .dropdown-item {
         color: #a82400;
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: background-color 0.2s ease;
+    }
+    
+    .dropdown-item:hover {
+        background-color: #f9d8a6;
+    }
+    
+    .dropdown-item svg {
+        width: 16px;
+        height: 16px;
+    }
+    @media screen and (max-width: 768px) {
+      .profile-menu-user {
+          margin: 8px;
+          min-width: 35px;
+          height: 35px;
       }
-      @media screen and (max-width: 768px) {
-        .rows {
-          margin-bottom: 30px;
-        }
-        .create-comm {
-          display: none;
-        }
+  
+      .profile-menu-user img {
+          width: 35px;
+          height: 35px;
       }
+  
+      .dropdown-menu {
+          position: fixed;
+          right: 10px;
+          left: auto;
+          min-width: 180px;
+      }
+  
+      .dropdown-item {
+          padding: 10px 16px;
+      }
+  }
+  
+  @media screen and (max-width: 480px) {
+      .profile-menu-user {
+          margin: 6px;
+          min-width: 32px;
+          height: 32px;
+      }
+  
+      .profile-menu-user img {
+          width: 32px;
+          height: 32px;
+      }
+  
+      .dropdown-menu {
+          min-width: 160px;
+          right: 5px;
+      }
+  
+      .dropdown-item {
+          font-size: 14px;
+          padding: 8px 12px;
+      }
+  }
     </style>
   </head>
   <body>
@@ -210,12 +285,6 @@
                     <button class="button">No</button>
                   </form>
                 </div>
-                <!-- <%if(user){%>
-                                      <form action="/admin/logout" method="get">
-                                        <button class="button">Logout</button>
-                                      </form>
-                                      <%}%> -->
-              </div>
               <%}%>
             </div>
           </span>

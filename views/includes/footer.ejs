@@ -1,18 +1,15 @@
     <style>
-        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+        
         body {
             font-family: Arial, sans-serif;
             line-height: 1.6;
         }
-       
-
-      
-
+        
         /* Mobile Header Styles */
         .mobile-header {
             display: none;
@@ -24,15 +21,40 @@
             backdrop-filter: blur(10px);
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
         }
-
+        
         .mobile-top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            position: relative;
+            width: 100%;
             padding: 0.5rem 1rem;
             background-color: transparent;
+            display: flex;
+            justify-content: center; /* Center horizontally */
+            align-items: center; /* Center vertically */
         }
-
+        
+        /* Updated Logo Styles */
+        .logo {
+            position: absolute; /* Position absolutely within mobile-top-bar */
+            left: 50%; /* Move to horizontal center */
+            transform: translateX(-50%); /* Offset by half width for true center */
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo a {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            width: 50px;
+            display: block; /* Prevent any inline spacing issues */
+            margin-top: 32px;
+        }
+        
         .menu-toggle {
             display: none;
             flex-direction: column;
@@ -40,7 +62,7 @@
             border: none;
             cursor: pointer;
         }
-
+        
         .menu-toggle .bar {
             width: 25px;
             height: 3px;
@@ -48,7 +70,7 @@
             margin: 2px 0;
             transition: 0.4s;
         }
-
+        
         .mobile-nav {
             display: none;
             background-color: #fff;
@@ -60,60 +82,61 @@
             overflow-y: auto;
             z-index: 1000;
         }
-
+        
         .mobile-nav ul {
             list-style: none;
             padding: 0;
         }
-
+        
         .mobile-nav ul li {
             padding: 1rem;
             border-top: 1px solid #eee;
         }
-
+        
         .mobile-nav ul li a {
             text-decoration: none;
             color: #333;
         }
-
+        
         .mobile-user-actions a {
             text-decoration: none;
             color: #007bff;
             margin-left: 0.5rem;
         }
-
+        
         /* Responsive Breakpoints */
         @media screen and (max-width: 768px) {
             .desktop-header {
                 display: none;
             }
-
+        
             .mobile-header {
                 display: block;
+                height: 47px;
             }
-
+        
             .mobile-top-bar {
                 display: flex;
             }
-
+        
             .menu-toggle {
                 display: flex;
             }
         }
     </style>
 <body>
-    
-
     <!-- Mobile Header -->
-    <header class="mobile-header">
-        <div class="mobile-top-bar">
-            <div class="logo" style="margin-left: 44%;">
-                <a href="/commForm">
-                    <img src="/create.png" alt="create" height="45px" width="45px">
-                </a>
+    <% if(user){ %>
+        <header class="mobile-header">
+            <div class="mobile-top-bar">
+                <div class="logo">
+                    <a href="/commForm">
+                        <img src="/create.png" alt="create" height="45px" width="45px">
+                    </a>
+                </div>
             </div>
-        </div>
-       
-    </header>
+           
+        </header>
+    <%}%>
 
 </body>
