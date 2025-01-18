@@ -18,11 +18,12 @@ router.get("/admin/profiles/store", isAuthenticated, async (req, res) => {
       if (!user) {
         return res.status(404).send("User not found");
       }
-  
-      const communities = await Community.find({ owner: id }); // Filter communities by owner
-  
+      console.log(user);
+      const communities = await Community.find({});
+
+      console.log(communities);
       // Render profile with user and their communities
-      res.render("profile/store.ejs", { user, communities });
+      res.render("profile/store.ejs", { user, communities, id });
     } catch (error) {
       console.error(error);
       res.status(500).send("Internal server error");

@@ -421,14 +421,15 @@ app.get("/community/:communityId/video", async (req, res) => {
     if (communityid === communityId) {
       user = await CommunityUser.findOne({ communityId });
       console.log("User Found:", user);
+      res.render("community-posts.ejs", {
+        community: currentCommunity,
+        posts: communityPosts,
+        user
+      });
     } else {
       console.log("No matching user for this community");
+      res.redirect("login")
     }
-    res.render("community-posts.ejs", {
-      community: currentCommunity,
-      posts: communityPosts,
-      user
-    });
   } catch (error) {
     console.error("Error fetching community posts:", error);
     res.status(500).send("An error occurred while fetching community posts");
@@ -437,28 +438,46 @@ app.get("/community/:communityId/video", async (req, res) => {
 
 app.get("/community/:communityId/group", async (req, res) => {
   const { communityId } = req.params;
+  const communityid = req.session.user?.communityId;
   const community = await Community.findById(communityId);
   if (!community) {
     return res.status(404).send("community not found");
   }
-  res.render("group.ejs", { community, communityId });
+  if (communityid === communityId) {
+    res.render("group.ejs", { community, communityId });
+  } else {
+    console.log("No matching user for this community");
+    res.redirect("login")
+  }
 });
 app.get("/community/:communityId/personal", async (req, res) => {
   const { communityId } = req.params;
+  const communityid = req.session.user?.communityId;
   const community = await Community.findById(communityId);
   if (!community) {
     return res.status(404).send("community not found");
   }
-  res.render("personal.ejs", { community, communityId });
+  if (communityid === communityId) {
+    res.render("personal.ejs", { community, communityId });
+  } else {
+    console.log("No matching user for this community");
+    res.redirect("login")
+  }
 });
 
 app.get("/community/:communityId/meeting", async (req, res) => {
   const { communityId } = req.params;
   const community = await Community.findById(communityId);
+  const communityid = req.session.user?.communityId;
   if (!community) {
     return res.status(404).send("community not found");
   }
-  res.render("meeting.ejs", { community, communityId });
+  if (communityid === communityId) {
+    res.render("meeting.ejs", { community, communityId });
+  } else {
+    console.log("No matching user for this community");
+    res.redirect("login")
+  }
 });
 
 app.get("/community/:communityId/notification", async (req, res) => {
@@ -490,10 +509,11 @@ app.get("/community/:communityId/company", async (req, res) => {
     if (communityid === communityId) {
       user = await CommunityUser.findOne({ communityId });
       console.log("User Found:", user);
+      res.render("company.ejs", { community, user });
     } else {
       console.log("No matching user for this community");
+      res.redirect("login");
     }
-  res.render("company.ejs", { community, user });
 });
 
 function ensureAuthenticate(req, res, next) {
