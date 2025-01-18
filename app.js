@@ -132,20 +132,60 @@ app.post(
   upload.single("community[thumbnail]"),
   async (req, res) => {
     try {
-      const url = req.file.path;
-      const filename = req.file.filename;
-      const newCommunity = new Community(req.body.community);
+      // Ensure file upload is present
+      if (!req.file) {
+        throw new Error("File upload is required.");
+      }
 
-      newCommunity.thumbnail = { url: url, filename: filename };
+      // Extract file details
+      const { path: url, filename } = req.file;
+
+      // Retrieve user ID from the session
+      const userId = req.session.userId; // Ensure `userId` is set correctly in the session
+
+      // Validate userId as a valid ObjectId
+      if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        throw new Error("Invalid or missing user ID.");
+      }
+
+      // Fetch the user from the database
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found.");
+      }
+
+      // Create a new community instance with provided form data
+      const newCommunity = new Community(req.body.community);
+      newCommunity.thumbnail = { url, filename };
+      newCommunity.userid = userId;
+
+      // Save the new community
       await newCommunity.save();
 
+      // Create and save a new CommunityUser instance
+      const newUser = new CommunityUser({
+        name: user.adminData.name,
+        email: user.email,
+        password: user.password,
+        role: user.adminData.role,
+        image: user.image,
+        status: true,
+        communityId: newCommunity._id,
+        company: user.adminData.company,
+      });
+      await newUser.save();
+
+      // Redirect to the community page
       res.redirect("/community");
     } catch (error) {
-      console.error("Community creation error:", error);
-      res.redirect("/commForm");
+      // Log the error and redirect to the community creation page
+      console.error("Community creation error:", error.message);
+      res.redirect("/createCommunity");
     }
   }
 );
+
+
 
 // Show New Post Form for a Specific Community
 app.get("/community/:communityId/posts/new", async (req, res) => {
@@ -354,10 +394,18 @@ app.post(
 app.get("/community/:communityId/link", async (req, res) => {
   const { communityId } = req.params;
   const community = await Community.findById(communityId);
+  const communityid = req.session.user?.communityId;
   if (!community) {
     return res.status(404).send("community not found");
   }
-  res.render("link.ejs", { community });
+  let user = null;
+    if (communityid === communityId) {
+      user = await CommunityUser.findOne({ communityId });
+      console.log("User Found:", user);
+    } else {
+      console.log("No matching user for this community");
+    }
+  res.render("link.ejs", { community, user });
 });
 
 app.get("/community/:communityId/video", async (req, res) => {
@@ -368,10 +416,18 @@ app.get("/community/:communityId/video", async (req, res) => {
 
     // Find posts specific to this community
     const communityPosts = await Post.find({ community: communityId });
-
+    const communityid = req.session.user?.communityId;
+    let user = null;
+    if (communityid === communityId) {
+      user = await CommunityUser.findOne({ communityId });
+      console.log("User Found:", user);
+    } else {
+      console.log("No matching user for this community");
+    }
     res.render("community-posts.ejs", {
       community: currentCommunity,
       posts: communityPosts,
+      user
     });
   } catch (error) {
     console.error("Error fetching community posts:", error);
@@ -426,10 +482,18 @@ app.get("/community/:communityId/notification", async (req, res) => {
 app.get("/community/:communityId/company", async (req, res) => {
   const { communityId } = req.params;
   const community = await Community.findById(communityId);
+  const communityid = req.session.user?.communityId;
   if (!community) {
     return res.status(404).send("community not found");
   }
-  res.render("company.ejs", { community });
+  let user = null;
+    if (communityid === communityId) {
+      user = await CommunityUser.findOne({ communityId });
+      console.log("User Found:", user);
+    } else {
+      console.log("No matching user for this community");
+    }
+  res.render("company.ejs", { community, user });
 });
 
 function ensureAuthenticate(req, res, next) {

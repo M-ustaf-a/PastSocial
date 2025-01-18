@@ -54,7 +54,7 @@
     <h1 class="heading" style="color: #ea8c00">Membership request</h1>
     <%if(users == null){%>
     <h1>Membership request</h1>
-    <%}else{%> <%for(let user of users){%>
+    <%}else{for(let user of users){%>
     <form
       action="/community/<%=community.id%>/adminApproval/<%=user.id%>/show"
       method="get"

@@ -14,9 +14,8 @@ const userSchema = new Schema({
         url: String,
         filename: String,
     },
-    user:{
-        type: Object,
-        default: {},
+    userid:{
+        type: String,
     },
     admin: {
         type: String,

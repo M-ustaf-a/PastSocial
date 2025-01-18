@@ -27,8 +27,8 @@ const userSchema = new Schema({
         default: false,
     },
     communityId: {
-        type: Object,
-        default: {},
+        type: String,
+        required: true,
     },
     company: {
         type: String,
