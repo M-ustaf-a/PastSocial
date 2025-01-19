@@ -399,13 +399,15 @@ app.get("/community/:communityId/link", async (req, res) => {
     return res.status(404).send("community not found");
   }
   let user = null;
+  let users = await CommunityUser.find({communityId});
+  console.log(users);
     if (communityid === communityId) {
       user = await CommunityUser.findOne({ communityId });
       console.log("User Found:", user);
     } else {
       console.log("No matching user for this community");
     }
-  res.render("link.ejs", { community, user });
+  res.render("link.ejs", { community, user, users });
 });
 
 app.get("/community/:communityId/video", async (req, res) => {
