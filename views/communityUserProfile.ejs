@@ -299,7 +299,7 @@
 
         async function showPost(button) {
             try {
-                const response = await fetch('/showPost', {
+                const response = await fetch('//community/:communityId/link/:userId/showProfile', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'
@@ -307,11 +307,9 @@
                 });
         
                 if (response.ok) {
-                    const data = await response.json();
-                    button.classList.toggle('followed');
-                    button.textContent = button.classList.contains('followed') ? 'Following' : 'Follow';
+                    
                 } else {
-                    console.error('Failed to follow');
+                    console.error('Failed to show post');
                 }
             } catch (error) {
                 console.error('Error:', error);
