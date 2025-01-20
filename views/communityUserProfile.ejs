@@ -131,6 +131,8 @@
         /* Content Tabs */
         .content-tabs {
             display: flex;
+            justify-content: center;
+            gap: 40px;
             margin-bottom: 20px;
             border-bottom: 2px solid rgba(168, 36, 0, 0.2);
             padding-bottom: 10px;
@@ -140,26 +142,39 @@
             padding: 10px 20px;
             cursor: pointer;
             position: relative;
-            margin-left: 20%;
         }
-        .tab-icon {
-            fill: currentColor;
-            color: #A82400;
-            opacity: 0.5; /* Make non-active tabs slightly transparent */
+
+        .tab button {
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .tab button:hover {
+            transform: scale(1.1);
         }
 
         .tab svg {
             color: #A82400;
             opacity: 0.5;
-            transition: opacity 0.3s ease;
-        }
-        
-        .tab.active .tab-icon {
-            opacity: 1; 
+            transition: all 0.3s ease;
         }
 
         .tab.active svg {
             opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: #A82400;
         }
         
         /* Remove these previous rules since we're handling it differently now */
@@ -222,11 +237,13 @@
 <body>
     <header class="header">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <a href="/community/<%=community.id%>/link">
-                <h1 style="color: #A82400; margin: 20px;">
-                    <img src="/group.png" alt="group-icon" height="35" width="35">
-                </h1>
-            </a>
+            <form action="/community/<%=community.id%>/link" method="get">
+                <button style="background-color: transparent; border: none; cursor: pointer;">
+                    <h1 style="color: #A82400; margin: 20px;">
+                        <img src="/group.png" alt="group-icon" height="35" width="35">
+                    </h1>
+                </button>
+            </form>
         </div>
     </header>
     <div class="profile-container">
@@ -243,7 +260,7 @@
             </div>
             <h1 class="profile-name"><%=user.name%></h1>
             <div class="profile-username">Mustafa</div>
-            <small class="profile-bio">Technologist ✨</small><br><br>
+            <small class="profile-bio">Technologist✨</small><br><br>
             <small style="color: rgb(96, 93, 93);"><%=user.role%> at <%=user.company%></small>
             
             <div class="action-buttons" style="margin-top: 15px;">
@@ -270,7 +287,7 @@
 
         <div class="content-tabs">
             <div class="tab">
-                <button style="background-color: transparent; border: none; cursor: pointer;" onclick="showPost(this)">
+                <button onclick="showPost(this)" aria-label="Show Post">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-seam" viewBox="0 0 16 16">
                         <path d="M8.186 1.113a.5.5 0 0 0-.372 0L1.846 3.5l2.404.961L10.404 2zm3.564 1.426L5.596 5 8 5.961 14.154 3.5zm3.25 1.7-6.5 2.6v7.922l6.5-2.6V4.24zM7.5 14.762V6.838L1 4.239v7.923zM7.443.184a1.5 1.5 0 0 1 1.114 0l7.129 2.852A.5.5 0 0 1 16 3.5v8.662a1 1 0 0 1-.629.928l-7.185 2.874a.5.5 0 0 1-.372 0L.63 13.09a1 1 0 0 1-.63-.928V3.5a.5.5 0 0 1 .314-.464z"/>
                     </svg>
@@ -278,14 +295,14 @@
                 
             </div>
             <div class="tab">
-                <button style="background-color: transparent; border: none; cursor: pointer;" onclick="showLike(this)">
+                <button onclick="showLike(this)" aria-label="Show Likes">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
                         <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
                     </svg>
                 </button>
             </div>
             <div class="tab">
-                <button style="background-color: transparent; border: none; cursor: pointer;" onclick="showComment(this)">
+                <button onclick="showComment(this)" aria-label="Show Comments">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-chat-square-quote" viewBox="0 0 16 16">
                         <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1h-2.5a2 2 0 0 0-1.6.8L8 14.333 6.1 11.8a2 2 0 0 0-1.6-.8H2a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1zM2 0a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2.5a1 1 0 0 1 .8.4l1.9 2.533a1 1 0 0 0 1.6 0l1.9-2.533a1 1 0 0 1 .8-.4H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2z"/>
                         <path d="M7.066 4.76A1.665 1.665 0 0 0 4 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112zm4 0A1.665 1.665 0 0 0 8 5.668a1.667 1.667 0 0 0 2.561 1.406c-.131.389-.375.804-.777 1.22a.417.417 0 1 0 .6.58c1.486-1.54 1.293-3.214.682-4.112z"/>
