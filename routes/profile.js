@@ -1,6 +1,7 @@
 const express = require("express");
 const Community = require( "../models/community" );
 const User = require( "../models/user" );
+const CommunityUser = require( "../models/communityUser" );
 const router = express.Router();
 
 
@@ -64,6 +65,16 @@ router.get("/admin/profiles/saved", async(req,res)=>{
         console.error(error);
         res.status(500).send("Internal server error");
     }
+});
+
+//show the community user profile
+router.get("/community/:communityId/link/:userId/showProfile", async(req,res)=>{
+  const {communityId, userId} = req.params;
+  const community = await Community.findById(communityId);
+  console.log(community);
+  const user = await CommunityUser.findById(userId);
+  console.log(user);
+  res.render("communityUserProfile.ejs", {community,user})
 })
 
 module.exports = router;

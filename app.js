@@ -314,16 +314,18 @@ app.get("/community/:communityId/main", async (req, res) => {
 
     const communityid = req.session.user?.communityId; // Access the communityId from session.user
     console.log("Session Data (req.session.user.communityId):", communityid);
-
+    let userid = req.session.userId;
+    let users = await CommunityUser.findOne({userid});
+    console.log(users);
     let user = null;
     if (communityid === communityId) {
       user = await CommunityUser.findOne({ communityId });
-      console.log("User Found:", user);
+      // console.log("User Found:", user);
     } else {
       console.log("No matching user for this community");
     }
 
-    res.render("main.ejs", { community, newUploadPost, user });
+    res.render("main.ejs", { community, newUploadPost, user, users });
   } catch (error) {
     console.error("Error in /community/:communityId/main:", error);
     res.status(500).send("Server error");
