@@ -33,6 +33,7 @@ router.get("/api/community/communities", async(req,res)=>{
     const userid = req.session.userId;
     const communities = await Community.find({});
     res.json(communities);
+    console.log(communities);
   }catch(err){
     console.log(err);
   }

@@ -250,6 +250,14 @@
             border-radius: 10px;
             margin: 20px 0;
         }
+        @media (max-width: 650px){
+            .description{
+                display: none;
+            }
+            .community-thumbnail img{
+                width: 520px;
+            }
+        }
 
         @media (max-width: 600px) {
             .profile-container {
@@ -285,6 +293,12 @@
 
             .stat-number {
                 font-size: 20px;
+            }
+        }
+        @media(max-width: 450px){
+            .community-thumbnail img{
+                width: 100%;
+                object-fit: cover;
             }
         }
     </style>
@@ -478,16 +492,21 @@
                     case 'community':
                         itemElement.innerHTML = `
                             <div class="community-header">
-                                <h3>${item.title || 'Untitled Post'}</h3>
-                                <p>${item.description || ''}</p>
-                                ${item.image ? `
-                                    <img 
-                                        src="${item.image}" 
-                                        alt="${item.title}" 
-                                        style="max-width: 100%; border-radius: 8px; margin-top: 10px;"
-                                        loading="lazy"
-                                    >
-                                ` : ''}
+                                <a href="/community/${item._id}/main" style="text-decoration: none">
+                                    <h3>${item.title || 'Untitled Post'}</h3>
+                                    <div class="community-thumbnail" style="display: flex; gap: 10px;">
+                                        ${item.thumbnail ? `
+                                            <img 
+                                                src="${item.thumbnail.url}" 
+                                                alt="${item.title}" 
+                                                style="border-radius: 8px; margin-top: 10px;"
+                                                loading="lazy"
+                                            >
+                                        ` : ''}
+                                        <p class="description" style="margin-top: 10px;">${item.description}</p>
+                                    </div>
+                                </a>
+                                
                             </div>
                             <div class="community-footer" style="margin-top: 15px; font-size: 0.9em; color: #A82400; opacity: 0.7;">
                                 <span>${formatDate(item.date)}</span>
