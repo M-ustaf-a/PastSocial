@@ -416,7 +416,7 @@
             contentContainer.style.display = 'none';
 
             try {
-                const response = await fetch(`/api/community/${type}`, {
+                const response = await fetch(`/api/community/communities`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
@@ -424,10 +424,10 @@
                     },
                     credentials: 'include' // Include cookies if using session authentication
                 });
-
+                console.log(response);
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
-                }
+                } 
 
                 const data = await response.json();
                 displayCommunityData(data, type);

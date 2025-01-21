@@ -118,7 +118,7 @@ router.post("/admin/approval", upload.single("approval[image]"), async(req,res)=
 
         if (!name || !email || !bio || !role || !req.file) {
             return res.status(400).send("All required fields must be provided, including an image.");
-        }
+        } 
 
         const { path: url, filename } = req.file;
 

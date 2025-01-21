@@ -22,17 +22,7 @@ const notificationSchema = new Schema({
     requestId: {
         type: mongoose.Types.ObjectId,
         ref: 'Approval',
-    },
-    adminId: {
-        type: String,
-        required: true,
-    },
-    community: {
-        type: Schema.Types.ObjectId,
-        ref: 'community',
-        required: true
     }
-   
 });
 
 const Notification = mongoose.model("Notification", notificationSchema);
