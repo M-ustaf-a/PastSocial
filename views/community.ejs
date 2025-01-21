@@ -346,7 +346,7 @@
                 border: none;
               "
             >
-              <b><%=community.title%></b>
+              <b style="color: #a82400;"><%=community.title%></b>
             </button>
             <a href="/community/<%= community._id %>/main">
               <div>
@@ -362,7 +362,7 @@
               style="text-decoration: none; color: black; margin-top: 10px"
             >
               <div style="margin-left: 9%">
-                <b>Description</b>
+                <b style="color: #a82400;">Description</b>
                 <p
                   style="
                     overflow-y: scroll;
@@ -370,6 +370,7 @@
                     scrollbar-width: none;
                     height: 60px;
                     width: 90%;
+                    color: #a82400;
                   "
                 >
                   <%= community.description %>
