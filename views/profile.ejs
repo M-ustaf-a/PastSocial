@@ -234,6 +234,11 @@
             line-height: 1.6;
         }
 
+        .community-thumbnail img{
+            width: 250px;
+            height: 200px;
+        }
+
         .loading-spinner {
             display: none;
             text-align: center;
@@ -494,7 +499,7 @@
                             <div class="community-header">
                                 <a href="/community/${item._id}/main" style="text-decoration: none">
                                     <h3>${item.title || 'Untitled Post'}</h3>
-                                    <div class="community-thumbnail" style="display: flex; gap: 10px;">
+                                    <div class="community-thumbnail" style="display: flex; gap: 20px;">
                                         ${item.thumbnail ? `
                                             <img 
                                                 src="${item.thumbnail.url}" 
@@ -503,7 +508,7 @@
                                                 loading="lazy"
                                             >
                                         ` : ''}
-                                        <p class="description" style="margin-top: 10px;">${item.description}</p>
+                                        <p class="description" style="margin-top: 10px; overflow-y: scroll;overflow-x: hidden;scrollbar-width: none; height:200px">${item.description}</p>
                                     </div>
                                 </a>
                                 
