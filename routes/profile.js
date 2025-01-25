@@ -48,7 +48,6 @@ router.get("/api/community/communities", async (req, res) => {
     }
 
     const communities = await Community.find({ userid: userId });
-
     if (communities.length === 0) {
       return res.status(404).json({ message: "No communities found for the user" });
     }
