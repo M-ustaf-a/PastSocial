@@ -321,12 +321,16 @@
 
     <div class="profile-container">
         <div class="profile-cover">
-            <img src="<%=user.image.url%>" alt="Profile Cover">
+            <a href="<%=user.image.url%>">
+                <img src="<%=user.image.url%>" alt="Profile Cover">
+            </a>
         </div>
 
         <div class="profile-info">
             <div class="profile-avatar">
-                <img src="<%=user.image.url%>" alt="Profile">
+                <a href="<%=user.image.url%>">
+                    <img src="<%=user.image.url%>" alt="Profile">
+                </a>
             </div>
             <h1 class="profile-name"><%=user.adminData?.name%></h1>
             <div class="profile-username"><%=user.username%></div>
@@ -334,9 +338,13 @@
             <small style="color: rgb(96, 93, 93);"><%=user.adminData.role%> at <%=user.adminData.company%></small>
             
             <div class="action-buttons">
-                <button class="action-button">Follow</button>
-                <button class="action-button">Message</button>
-                <button class="action-button">Link</button>
+                <%if(!isStatus){%>
+                    <button class="action-button">Follow</button>
+                    <button class="action-button">Link</button>
+                    <button class="action-button">Message</button>
+                <%}else{%>
+                    <button class="action-button">Linkup</button>
+                <%}%>
             </div>
         </div>
 
@@ -372,20 +380,26 @@
                 </button>
             </div>
             <div class="tab">
-                <button onclick="showCommunity(this, 'bookmarks')" aria-label="Show Bookmarks">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                        <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
-                    </svg>
-                </button>
+                <%if(isStatus){%>
+                    <button onclick="showCommunity(this, 'bookmarks')" aria-label="Show Bookmarks">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
+                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                        </svg>
+                    </button>
+                <%}%>
             </div>
         </div>
 
         <div class="loading-spinner">
             Loading...
         </div>
-        <div class="community-content" id="communityData">
-            <!-- Content will be populated dynamically -->
-        </div>
+        <%for(let community of communities){%>
+            <%if(community.userid === userId){%>
+                <div class="community-content" id="communityData">
+                    <!-- Content will be populated dynamically -->    
+                </div>
+            <%}%>
+        <%}%>
     </div>
 
     <script>
@@ -447,7 +461,6 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 } 
-
                 const data = await response.json();
                 displayCommunityData(data, type);
             } catch (error) {

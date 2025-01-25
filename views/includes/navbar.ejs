@@ -210,6 +210,26 @@
         width: 30px;
         height: 30px;
     }
+    .profile-button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+    }
+
+    .profile-image {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid #A82400;
+        transition: transform 0.2s ease;
+    }
+
+    .profile-image:hover {
+        transform: scale(1.1);
+    }
+
     .img-company{
         height: 30px; 
         width: 30px; 
@@ -302,12 +322,12 @@
             <div class="profile-menu-user" style="display: block;;">
                <!-- <img src="<%=user.image.url%>" alt="Profile Picture"> -->
                <div class="dropdown">
-                <button class="dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=user.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;">
+                <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="<%=user.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;" class="profile-image">
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="">Profile</a></li>
-                  <li><a class="dropdown-item" href="/community/<%=community.id%>/logout">logout</a></li>
+                  <li><a class="dropdown-item" href="/community/<%=community.id%>/<%=user.id%>/showProfile">Profile</a></li>
+                  <li><a class="dropdown-item" href="/community/<%=community._id%>/logout">logout</a></li>
                 </ul>
               </div>
             </div>

@@ -23,6 +23,21 @@
            background-color: #A82400;
            color: white;
         }
+        .action-button{
+            padding: 9px 16px;
+            border: 2px solid #A82400;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: none;
+            color: #A82400;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        .action-button:hover{
+            background-color: #A82400;
+            color: blanchedalmond;
+        }
     </style>
 </head>
 <body>
@@ -42,9 +57,9 @@
                     <input type="password" name="password" id="password" placeholder="password" class="form-control">
                 </div>
                 <div style="display: flex; gap: 20px;">
-                    <button class="btn btn-custom btn-block">Login</button>
-                    <div style=" padding: 10px; border-radius: 25px; background-color: rgb(255, 205, 130);">
-                        <a href="/admin/approval" style="text-decoration: none; color: #A82400;">
+                    <button class="action-button">Login</button>
+                    <div class="mt-2">
+                        <a href="/admin/approval" style="text-decoration: none;" class="action-button">
                             Approval
                         </a>
                     </div>

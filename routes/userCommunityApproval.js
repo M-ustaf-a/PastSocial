@@ -95,13 +95,9 @@ router.post(
       })
       await newUser.save();
       if (approved == "on") {
-        const communityUser = await CommunityUser.findOne({email});
         const community = await Community.findById(communityId);
         const image1 = user.image;
-        communityUser.image = image1;
-        community.user = communityUser;
-        communityUser.status = true;
-        await communityUser.save();
+        console.log(image1);
         await community.save();
         user.deleteOne();
         await user.save();

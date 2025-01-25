@@ -1,5 +1,4 @@
 <%- layout('/layouts/boilerplate.ejs') %>
-<%- layout('/layouts/boilerplate.ejs') %>
 <style>
     body {
         background: blanchedalmond;
@@ -24,11 +23,13 @@
         overflow-x: hidden;
         scrollbar-width: none;
     }
-    .title{
+
+    .title {
         padding: 5px;
+        color: #ea8c00;
     }
 
-    .content-details{
+    .content-details {
         padding: 10px;
     }
 
@@ -71,6 +72,23 @@
         display: flex;
         width: 100%;
         margin-top: 1rem;
+    }
+
+    .title-input {
+        padding: 5px;
+        margin-bottom: 5px;
+        border-radius: 10px;
+        padding-left: 20px;
+        background-color: #ffebcd;
+    }
+
+    .content-input {
+        background-color: #ffebcd;
+        border-radius: 0.75rem;
+    }
+
+    .username {
+        color: #A82400;
     }
 
     @media (max-width: 767px) {
@@ -116,7 +134,8 @@
             top: 50%;
             transform: translateY(-50%);
         }
-        .post-image img{
+
+        .post-image img {
             height: 200px;
         }
 
@@ -128,41 +147,40 @@
     }
 </style>
 
-
 <div class="container mx-auto px-1">
-        <%if(user){%>
-            <form action="/community/<%= community.id %>/main" method="post" enctype="multipart/form-data" class="post-form">
-                <section class="form-card">
-                    <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                        <a href="" class="self-center">
-                            <img src="<%=users.image.url%>" class="profile-img">
-                        </a>
-                        <div class="flex-grow w-full">
-                            <input type="text" name="upload[title]" placeholder="Future of humanity" style="padding: 5px; margin-bottom: 5px; border-radius: 10px; padding-left: 20px; background-color: #ffebcd;" required>
-                            <textarea name="upload[content]" placeholder="What's your insight today?" class="w-full h-24 p-4 bg-[#ffebcd] rounded-xl focus:ring-2 focus:ring-[#ffe6bf] transition" required></textarea>
-                            <div class="flex flex-col md:flex-row justify-between items-center mt-2 space-y-2 md:space-y-0">
-                                <div class="flex space-x-4 w-full justify-start">
-                                    <input type="file" name="upload[image]" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#A82400] file:text-white hover:file:bg-[#8A1F00]" required>
-                                </div>
-                                <button class="px-6 py-2 bg-[#A82400] text-white rounded-full w-full md:w-auto text-center">Publish</button>
+    <% if(user) { %>
+        <form action="/community/<%= community.id %>/main" method="post" enctype="multipart/form-data" class="post-form">
+            <section class="form-card">
+                <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
+                    <a href="/community/<%=community.id%>/<%=user.id%>/showProfile" class="self-center">
+                        <img src="<%= user.image.url %>" class="profile-img" alt="Profile Image">
+                    </a>
+                    <div class="flex-grow w-full">
+                        <input type="text" name="upload[title]" placeholder="Future of humanity" class="w-full title-input" required>
+                        <textarea name="upload[content]" placeholder="What's your insight today?" class="w-full h-24 p-4 content-input focus:ring-2 focus:ring-[#ffe6bf] transition" required></textarea>
+                        <div class="flex flex-col md:flex-row justify-between items-center mt-2 space-y-2 md:space-y-0">
+                            <div class="flex space-x-4 w-full justify-start">
+                                <input type="file" name="upload[image]" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#A82400] file:text-white hover:file:bg-[#8A1F00]" required>
                             </div>
+                            <button class="px-6 py-2 bg-[#A82400] text-white rounded-full w-full md:w-auto text-center">Publish</button>
                         </div>
                     </div>
-                </section>
-            </form>
-        <%}%> 
+                </div>
+            </section>
+        </form>
+    <% } %> 
     
     <main class="space-y-5 mt-8">
         <% for(let uploadPost of newUploadPost) { %>
             <article class="content-card post-content">
                 <div class="content-details">
                     <div class="flex">
-                        <div style="display: flex; padding: 10px;">
-                            <a href="/profile">
-                                <img src="<%=uploadPost.user.image.url%>" class="w-12 h-12 rounded-full mr-4 border-2 border-indigo-200">
+                        <div class="flex p-2">
+                            <a href="">
+                                <img src="<%= uploadPost.user.image.url %>" class="w-12 h-12 rounded-full mr-4 border-2 border-indigo-200" alt="User Profile">
                             </a>
                             <span>
-                                <h3 class="font-bold text-lg" style="color: #A82400;"><%=uploadPost.user.name%></h3>
+                                <h3 class="font-bold text-lg username"><%= uploadPost.user.name %></h3>
                                 <p class="text-sm text-gray-500"></p>
                             </span>
                         </div>
@@ -174,16 +192,10 @@
                                 <img src="<%= uploadPost.image.url %>" alt="Post media">
                             </a>
                         </div>
-                    <% }else{%>
-                        <div class="post-image" style="display: none;">
-                            <a href="<%= uploadPost.image.url %>">
-                                <img src="<%= uploadPost.image.url %>" alt="Post media">
-                            </a>
-                        </div>
                     <% } %>
                     
                     <div class="mb-1 mt-1">
-                        <h2 class="title text-xl font-bold mb-1 text-gray-900" style="color: #ea8c00;"><%=uploadPost.title%></h2>
+                        <h2 class="title text-xl font-bold mb-1 text-gray-900"><%= uploadPost.title %></h2>
                         <p class="content text-gray-600"><%= uploadPost.content %></p>
                     </div>
                     
@@ -202,10 +214,10 @@
                                 <span>Comments</span>
                             </button>
                             <button class="flex items-center">
-                                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-up-right-circle-fill" viewBox="0 0 16 16">
+                                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z"/>
-                                  </svg>
-                                <span>share</span>
+                                </svg>
+                                <span>Share</span>
                             </button>
                         </div>
                     </div>

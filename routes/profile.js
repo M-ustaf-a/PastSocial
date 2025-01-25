@@ -12,15 +12,26 @@ const isAuthenticated = (req,res,next)=>{
     res.redirect("/admin/login");
 };
 
-router.get("/community/adminProfile",isAuthenticated, async(req,res)=>{
+router.get("/community/:userid", async(req,res)=>{
   try{
-    const userid = req.session.userId;
-    const user = await User.findById(userid);
-    if(!user){
-      return res.status(404).send('user not found');
-    }
+    const userId = req.session.userId;
+    const {userid} = req.params;
     const communities = await Community.find({});
-    res.render("profile.ejs", {communities,user});
+    let isStatus = false;
+    if(userid === userId){
+      const user = await User.findById(userId);
+      if(!user){
+        return res.status(404).send('user not found');
+      }
+      isStatus = true;
+      res.render("profile.ejs", {user,isStatus, userId, communities});
+    }else{
+      const user = await User.findById(userid);
+      if(!user){
+        return res.status(404).send('user not found');
+      }
+      res.render('profile.ejs', {user, isStatus, userId, communities});
+    }
   }catch(err){
     console.log(err);
   }
@@ -28,19 +39,30 @@ router.get("/community/adminProfile",isAuthenticated, async(req,res)=>{
 
 // api for show community in admin profile
 
-router.get("/api/community/communities", async(req,res)=>{
-  try{
-    const userid = req.session.userId;
-    const communities = await Community.find({});
+router.get("/api/community/communities", async (req, res) => {
+  try {
+    const userId = req.session?.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized: User not logged in" });
+    }
+
+    const communities = await Community.find({ userid: userId });
+
+    if (communities.length === 0) {
+      return res.status(404).json({ message: "No communities found for the user" });
+    }
+
     res.json(communities);
-    console.log(communities);
-  }catch(err){
-    console.log(err);
+  } catch (err) {
+    console.error("Error fetching communities:", err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-})
+});
+
 
 //show the community user profile
-router.get("/community/:communityId/link/:userId/showProfile", async(req,res)=>{
+router.get("/community/:communityId/:userId/showProfile", async(req,res)=>{
   const {communityId, userId} = req.params;
   const community = await Community.findById(communityId);
   console.log(community);

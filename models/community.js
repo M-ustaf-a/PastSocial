@@ -14,12 +14,17 @@ const userSchema = new Schema({
         url: String,
         filename: String,
     },
-    userid:{
-        type: String,
+    useradmin: {
+       type: Object,
+       default: {},
     },
     admin: {
         type: String,
         required: true
+    },
+    userid: {
+        type: String,
+        required: true,
     }
 });
 

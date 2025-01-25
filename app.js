@@ -157,7 +157,8 @@ app.post(
       // Create a new community instance with provided form data
       const newCommunity = new Community(req.body.community);
       newCommunity.thumbnail = { url, filename };
-      newCommunity.userid = userId;
+      newCommunity.useradmin = user;
+      newCommunity.userid = user._id;
 
       // Save the new community
       await newCommunity.save();
@@ -303,7 +304,7 @@ app.get("/community/:communityId/feeds", async (req, res) => {
 app.get("/community/:communityId/main", async (req, res) => {
   try {
     const { communityId } = req.params;
-    console.log("Route Parameter (communityId):", communityId);
+    // console.log("Route Parameter (communityId):", communityId);
 
     const community = await Community.findById(communityId);
     if (!community) {
@@ -313,19 +314,19 @@ app.get("/community/:communityId/main", async (req, res) => {
     const newUploadPost = await uploadPost.find({ community: communityId });
 
     const communityid = req.session.user?.communityId; // Access the communityId from session.user
-    console.log("Session Data (req.session.user.communityId):", communityid);
+    // console.log("Session Data (req.session.user.communityId):", communityid);
     let userid = req.session.userId;
     let users = await CommunityUser.findOne({userid});
     console.log(users);
     let user = null;
     if (communityid === communityId) {
-      user = await CommunityUser.findOne({ communityId });
+      user = await CommunityUser.findOne({ communityId: communityid });
       // console.log("User Found:", user);
     } else {
       console.log("No matching user for this community");
     }
 
-    res.render("main.ejs", { community, newUploadPost, user, users });
+    res.render("main.ejs", { community, newUploadPost, user, users,userid });
   } catch (error) {
     console.error("Error in /community/:communityId/main:", error);
     res.status(500).send("Server error");
