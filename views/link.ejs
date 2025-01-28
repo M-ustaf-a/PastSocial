@@ -101,21 +101,23 @@
 
 <div class="grid-wrapper">
     <%for(let user of users){%>
-        <div class="container">
-            <div class="box">
-                <img src="<%=user.image.url%>" alt="profile-img">
-                <div>
-                    <a href="/community/<%=community.id%>/<%=user.id%>/showProfile" style="text-decoration: none; color: inherit;">
-                        <h1><%=user.name%></h1>
-                        <small class="role"><%=user.role%> at <%=user.company%></small>
-                    </a>
-                    <div class="button-group">
-                        <button class="follow-btn" onclick="handleFollow(this)">Follow</button>
-                        <button class="link-btn" onclick="handleLink(this)">Link</button>
+        <%if(matchedUser){%>
+            <div class="container">
+                <div class="box">
+                    <img src="<%=user.image.url%>" alt="profile-img">
+                    <div>
+                        <a href="/community/<%=community.id%>/<%=user.id%>/showProfile" style="text-decoration: none; color: inherit;">
+                            <h1><%=user.name%></h1>
+                            <small class="role"><%=user.role%> at <%=user.company%></small>
+                        </a>
+                        <div class="button-group">
+                            <button class="follow-btn" onclick="handleFollow(this)">Follow</button>
+                            <button class="link-btn" onclick="handleLink(this)">Link</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <%}%>
     <%}%>
 </div>
 

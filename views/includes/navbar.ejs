@@ -312,22 +312,27 @@
                     </div>
                 <%}%>
             </a>
-            <%if(!user){%>
-                <div class="profile-menu">
-                    <a href="/community/<%=community.id%>/login">
-                      <img src="/user-avatar.png" alt="Login">
-                    </a>
-                </div>
+            <%if(!currUser){%>
+                <div class="profile-menu" style="display: block;;">
+                    <div class="dropdown">
+                     <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/user-avatar.png" alt="Login">
+                     </button>
+                     <ul class="dropdown-menu">
+                       <li><a class="dropdown-item" href="/community/<%=community.id%>/login">Login</a></li>
+                       <li><a class="dropdown-item" href="/community/<%=community.id%>/communityApproval">Approval</a></li>
+                     </ul>
+                   </div>
+                 </div>
             <%}else{%>
             <div class="profile-menu-user" style="display: block;;">
-               <!-- <img src="<%=user.image.url%>" alt="Profile Picture"> -->
                <div class="dropdown">
                 <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=user.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;" class="profile-image">
+                    <img src="<%=currUser.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;" class="profile-image">
                 </button>
                 <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/community/<%=community.id%>/<%=user.id%>/showProfile">Profile</a></li>
-                  <li><a class="dropdown-item" href="/community/<%=community._id%>/logout">logout</a></li>
+                  <li><a class="dropdown-item" href="/community/<%=community.id%>/<%=currUser.id%>/showProfile">Profile</a></li>
+                  <li><a class="dropdown-item" href="/community/<%=community.id%>/logout">logout</a></li>
                 </ul>
               </div>
             </div>

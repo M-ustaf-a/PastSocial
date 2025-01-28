@@ -304,32 +304,33 @@ app.get("/community/:communityId/feeds", async (req, res) => {
 app.get("/community/:communityId/main", async (req, res) => {
   try {
     const { communityId } = req.params;
-    // console.log("Route Parameter (communityId):", communityId);
 
+    // Validate if communityId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(communityId)) {
+      return res.status(400).send("Invalid community ID");
+    }
+
+    // Retrieve the current user's ID from the session
+    const currUserId = req.session?.user?.id;
+
+    // Fetch the current user
+    const currUser = await CommunityUser.findById(currUserId);
+    console.log(currUser);
+    // Fetch the community by ID
     const community = await Community.findById(communityId);
     if (!community) {
       return res.status(404).send("Community not found");
     }
 
-    const newUploadPost = await uploadPost.find({ community: communityId });
+    // Fetch posts uploaded in the community
+    const newUploadPost = await uploadPost.find({ communityId });
+    console.log("Fetched Posts:", newUploadPost);
 
-    const communityid = req.session.user?.communityId; // Access the communityId from session.user
-    // console.log("Session Data (req.session.user.communityId):", communityid);
-    let userid = req.session.userId;
-    let users = await CommunityUser.findOne({userid});
-    console.log(users);
-    let user = null;
-    if (communityid === communityId) {
-      user = await CommunityUser.findOne({ communityId: communityid });
-      // console.log("User Found:", user);
-    } else {
-      console.log("No matching user for this community");
-    }
-
-    res.render("main.ejs", { community, newUploadPost, user, users,userid });
+    // Render the main view with the fetched data
+    res.render("main", { currUser, community, newUploadPost });
   } catch (error) {
     console.error("Error in /community/:communityId/main:", error);
-    res.status(500).send("Server error");
+    res.status(500).send("Internal Server Error");
   }
 });
 
@@ -394,24 +395,62 @@ app.post(
   }
 );
 
+
 app.get("/community/:communityId/link", async (req, res) => {
-  const { communityId } = req.params;
-  const community = await Community.findById(communityId);
-  const communityid = req.session.user?.communityId;
-  if (!community) {
-    return res.status(404).send("community not found");
-  }
-  let user = null;
-  let users = await CommunityUser.find({communityId});
-  console.log(users);
-    if (communityid === communityId) {
-      user = await CommunityUser.findOne({ communityId });
-      console.log("User Found:", user);
+  try {
+    const { communityId } = req.params;
+
+    // Validate if communityId is a valid ObjectId
+    if (!mongoose.Types.ObjectId.isValid(communityId)) {
+      return res.status(400).send("Invalid community ID");
+    }
+
+    // Fetch the community by ID
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).send("Community not found");
+    }
+
+    // Get current user ID from the session
+    const currUserId = req.session.user.id;
+    if (!mongoose.Types.ObjectId.isValid(currUserId)) {
+      console.error("Invalid current user ID in session");
+      return res.status(400).send("Invalid session data");
+    }
+
+    // Fetch the current user by ID
+    const currUser = await CommunityUser.findById(currUserId);
+
+    // Retrieve the current user's community ID from the session
+    const sessionCommunityId = req.session.user?.communityId;
+
+    // Fetch all users in the specified community
+    const users = await CommunityUser.find({ communityId });
+
+    // Check if the current user belongs to the requested community
+    let matchedUser = null;
+    if (sessionCommunityId === communityId) {
+      matchedUser = users.find(user => user._id.toString() === currUserId);
+      console.log("Matched User Found:", matchedUser);
     } else {
       console.log("No matching user for this community");
     }
-  res.render("link.ejs", { community, user, users });
+
+    // Render the view with the required data
+    res.render("link.ejs", {
+      community,
+      matchedUser,
+      users,
+      currUser,
+    });
+  } catch (error) {
+    console.error("Error in fetching community data:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
+
+
+
 
 app.get("/community/:communityId/video", async (req, res) => {
   const { communityId } = req.params;
@@ -546,4 +585,3 @@ const server = app.listen(PORT, () =>
   console.log(`Server is running on http://localhost:${PORT}`)
 );
 
-module.exports = app;

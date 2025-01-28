@@ -28,5 +28,5 @@ const uploadPostSchema = new Schema({
         filename: String,
     },
 });
-
-module.exports = mongoose.model("UploadPost", uploadPostSchema);
+const uploadPost = mongoose.model("uploadPost", uploadPostSchema);
+module.exports = uploadPost;

@@ -90,6 +90,7 @@ router.post(
         email: user.email,
         password: hashedPassword,
         role: user.role,
+        image: user.image,
         company: user.company,
         communityId: communityId,
       })
@@ -342,15 +343,15 @@ router.post("/community/:communityId/login", async (req, res) => {
   }
 });
 
-router.get("/community/:communityId/logout", (req,res)=>{
-  let {communityId} = req.body;
-  console.log(communityId);
+router.get("/community/:id/logout", (req,res)=>{
+  let {id} = req.body;
+  console.log(id);
   req.session.destroy((err)=>{
     if(err){
       console.error("Error during logout:", err);
-      res.redirect(`/community/${communityId}/login`)
+      res.redirect(`/community/${id}/login`)
     }
-    res.redirect(`/community/${communityId}/main`);
+    res.redirect(`/community/${id}/main`);
   })
 })
 

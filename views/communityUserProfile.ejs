@@ -264,9 +264,13 @@
             <small style="color: rgb(96, 93, 93);"><%=user.role%> at <%=user.company%></small>
             
             <div class="action-buttons" style="margin-top: 15px;">
-                <button class="action-button">Follow</button>
-                <button class="action-button">Message</button>
-                <button class="action-button">Link</button>
+                <%if(!user){%>
+                    <button class="action-button">Follow</button>
+                    <button class="action-button">Message</button>
+                    <button class="action-button">Link</button>
+                <%}else{%>
+                    <button class="action-button">Linkup</button>
+                <%}%>
             </div>
         </div>
 
