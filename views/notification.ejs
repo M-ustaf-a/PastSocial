@@ -63,25 +63,25 @@
         <button>
           <div class="flex userImg">
             <%if(!user.isRead){%>
-                <div
-                  style="
-                    font-family: Lato, serif;
-                    font-weight: bolder;
-                    font-style: normal;
-                  "
-                >
-                  <%=user.name%> is sent to approval request!
-                </div>
+            <div
+              style="
+                font-family: Lato, serif;
+                font-weight: bolder;
+                font-style: normal;
+              "
+            >
+              <%=user.name%> is sent to approval request!
+            </div>
             <%}else{%>
-                <div
-                  style="
-                    font-family: Lato, serif;
-                    font-weight: 400;
-                    font-style: normal;
-                  "
-                >
-                  <%=user.name%> is sent to approval request!
-                </div>
+            <div
+              style="
+                font-family: Lato, serif;
+                font-weight: 400;
+                font-style: normal;
+              "
+            >
+              <%=user.name%> is sent to approval request!
+            </div>
             <%}%>
             <img
               src="<%=user.image.url%>"
