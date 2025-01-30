@@ -293,7 +293,7 @@ router.get(
       res.status(500).send("Internal Server Error");
     }
   }
-);
+); 
 
 router.get("/community/:communityId/login", async(req,res)=>{
   const {communityId} = req.params;
@@ -331,12 +331,24 @@ router.post("/community/:communityId/login", async (req, res) => {
       return res.status(401).send("Incorrect password.");
     }
 
-    // Set session data
-    req.session.user = { id: user._id, communityId };
-    console.log("Session Data Set:", req.session.user);
+    // Ensure session exists
+    if (!req.session) {
+      return res.status(500).send("Session not initialized.");
+    }
 
-    // Redirect to the community's main page
-    res.redirect(`/community/${communityId}/main`);
+    // Set session data correctly
+    req.session.communityUser = { id: user._id.toString(), communityId };
+    console.log("Session Data Set:", req.session.communityUser);
+
+    // Save session before redirecting
+    req.session.save((err) => {
+      if (err) {
+        console.error("Session save error:", err);
+        return res.status(500).send("Failed to save session.");
+      }
+      res.redirect(`/community/${communityId}/main`);
+    });
+
   } catch (err) {
     console.error("Error in login system:", err);
     res.status(500).send("An error occurred during login.");

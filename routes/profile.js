@@ -24,7 +24,7 @@ router.get("/community/:userid", async(req,res)=>{
         return res.status(404).send('user not found');
       }
       isStatus = true;
-      res.render("profile.ejs", {user,isStatus, userId, communities});
+      res.render("profile.ejs", {user, isStatus, userId, communities});
     }else{
       const user = await User.findById(userid);
       if(!user){
@@ -66,8 +66,12 @@ router.get("/community/:communityId/:userId/showProfile", async(req,res)=>{
   const community = await Community.findById(communityId);
   console.log(community);
   const user = await CommunityUser.findById(userId);
-  console.log(user);
-  res.render("communityUserProfile.ejs", {community,user})
+  const currUserId = req.session.communityUser.id;
+  let isStatus = false;
+  if(currUserId === userId){
+    isStatus = true
+  }
+  res.render("communityUserProfile.ejs", {community,user,isStatus})
 })
 
 module.exports = router;

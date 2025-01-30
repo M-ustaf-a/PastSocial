@@ -1,4 +1,4 @@
-<%layout('/layouts/boilerplate.ejs')%>
+<% layout('/layouts/boilerplate.ejs') %>
 
 <style>
     .grid-wrapper {
@@ -24,27 +24,23 @@
         width: 100%;
         padding: 20px;
     }
+
     @media (max-width: 768px) {
         .grid-wrapper {
             grid-template-columns: 1fr;
-            gap: 0px;
             width: 100%;
         }
-        .container{
-            border-radius: 0px;
-            margin-top: 0px;
+        .container {
+            border-radius: 0;
+            margin-top: 0;
             background-color: rgb(255, 230, 194);
-            width: 100%;
         }
     }
-    @media(max-width: 480px){
-        .container{
-            border-radius: 0px;
-            margin-top: 0px;
+
+    @media (max-width: 480px) {
+        .container {
+            border-radius: 0;
             background-color: rgb(255, 230, 194);
-        }
-        .grid-wrapper{
-            gap: 0px;
         }
     }
 
@@ -100,39 +96,35 @@
 </style>
 
 <div class="grid-wrapper">
-    <%for(let user of users){%>
-        <%if(matchedUser){%>
-            <div class="container">
-                <div class="box">
-                    <img src="<%=user.image.url%>" alt="profile-img">
-                    <div>
-                        <a href="/community/<%=community.id%>/<%=user.id%>/showProfile" style="text-decoration: none; color: inherit;">
-                            <h1><%=user.name%></h1>
-                            <small class="role"><%=user.role%> at <%=user.company%></small>
-                        </a>
-                        <div class="button-group">
-                            <button class="follow-btn" onclick="handleFollow(this)">Follow</button>
-                            <button class="link-btn" onclick="handleLink(this)">Link</button>
-                        </div>
+    <% users.forEach(user => { %>
+        <div class="container">
+            <div class="box">
+                <img src="<%= user.image ? user.image.url : '/default-avatar.png' %>" alt="profile-img">
+                <div>
+                    <a href="/community/<%= community.id %>/<%= user.id %>/showProfile" style="text-decoration: none; color: inherit;">
+                        <h1><%= user.name %></h1>
+                        <small class="role"><%= user.role %> at <%= user.company %></small>
+                    </a>
+                    <div class="button-group">
+                        <button class="follow-btn" onclick="handleFollow('<%= user.id %>', this)">Follow</button>
+                        <button class="link-btn" onclick="handleLink('<%= user.id %>', this)">Link</button>
                     </div>
                 </div>
             </div>
-        <%}%>
-    <%}%>
+        </div>
+    <% }) %>
 </div>
 
 <script>
-async function handleFollow(button) {
+async function handleFollow(userId, button) {
     try {
         const response = await fetch('/follow', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
         });
 
         if (response.ok) {
-            const data = await response.json();
             button.classList.toggle('followed');
             button.textContent = button.classList.contains('followed') ? 'Following' : 'Follow';
         } else {
@@ -143,17 +135,15 @@ async function handleFollow(button) {
     }
 }
 
-async function handleLink(button) {
+async function handleLink(userId, button) {
     try {
         const response = await fetch('/link', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            }
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId })
         });
 
         if (response.ok) {
-            const data = await response.json();
             button.classList.toggle('followed');
             button.textContent = button.classList.contains('followed') ? 'Linked' : 'Link';
         } else {

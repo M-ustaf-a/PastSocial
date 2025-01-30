@@ -237,13 +237,13 @@
 <body>
     <header class="header">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <form action="/community/<%=community.id%>/link" method="get">
+            <a href="/community/<%=community.id%>/link">
                 <button style="background-color: transparent; border: none; cursor: pointer;">
                     <h1 style="color: #A82400; margin: 20px;">
                         <img src="/group.png" alt="group-icon" height="35" width="35">
                     </h1>
                 </button>
-            </form>
+            </a>
         </div>
     </header>
     <div class="profile-container">
@@ -264,7 +264,7 @@
             <small style="color: rgb(96, 93, 93);"><%=user.role%> at <%=user.company%></small>
             
             <div class="action-buttons" style="margin-top: 15px;">
-                <%if(!user){%>
+                <%if(!isStatus){%>
                     <button class="action-button">Follow</button>
                     <button class="action-button">Message</button>
                     <button class="action-button">Link</button>

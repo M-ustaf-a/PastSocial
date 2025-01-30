@@ -301,6 +301,7 @@ app.get("/community/:communityId/feeds", async (req, res) => {
   res.render("feeds.ejs", { community, notification });
 });
 
+// Route to get community main page
 app.get("/community/:communityId/main", async (req, res) => {
   try {
     const { communityId } = req.params;
@@ -311,11 +312,10 @@ app.get("/community/:communityId/main", async (req, res) => {
     }
 
     // Retrieve the current user's ID from the session
-    const currUserId = req.session?.user?.id;
-
+    const currUserId = req.session?.communityUser?.id;
     // Fetch the current user
     const currUser = await CommunityUser.findById(currUserId);
-    console.log(currUser);
+
     // Fetch the community by ID
     const community = await Community.findById(communityId);
     if (!community) {
@@ -323,7 +323,8 @@ app.get("/community/:communityId/main", async (req, res) => {
     }
 
     // Fetch posts uploaded in the community
-    const newUploadPost = await uploadPost.find({ communityId });
+    const newUploadPost = await uploadPost.find({ community: communityId }).populate("user", "name image");
+    
     console.log("Fetched Posts:", newUploadPost);
 
     // Render the main view with the fetched data
@@ -334,6 +335,7 @@ app.get("/community/:communityId/main", async (req, res) => {
   }
 });
 
+// Route to handle post uploads
 app.post(
   "/community/:communityId/main",
   upload.single("upload[image]"),
@@ -345,7 +347,7 @@ app.post(
       }
 
       // Validate session user ID
-      const userId = req.session?.user?.id; // Fixed session key structure
+      const userId = req.session?.communityUser?.id; // Fixed session key structure
       if (!userId) {
         return res.status(401).send("User not authenticated.");
       }
@@ -353,7 +355,7 @@ app.post(
       const { communityId } = req.params;
 
       // Validate communityId
-      if (!communityId || !mongoose.Types.ObjectId.isValid(communityId)) {
+      if (!mongoose.Types.ObjectId.isValid(communityId)) {
         return res.status(400).send("Invalid community ID.");
       }
 
@@ -382,12 +384,18 @@ app.post(
         community: community._id, // Store references as IDs
         user: user._id,
       });
-      newUploadPost.user.name = user.name;
-      newUploadPost.user.image = user.image;
+
       await newUploadPost.save();
 
-      // Redirect to the community's main page
-      res.redirect(`/community/${communityId}/main`);
+      // Save session before redirect
+      req.session.save((err) => {
+        if (err) {
+          console.error("Session save error:", err);
+          return res.status(500).send("Failed to save session.");
+        }
+        res.redirect(`/community/${communityId}/main`);
+      });
+      
     } catch (error) {
       console.error("Error handling post:", error);
       res.status(500).send("An error occurred while processing your request.");
@@ -395,170 +403,319 @@ app.post(
   }
 );
 
+// app.get("/community/:communityId/link", async (req, res) => {
+//   try {
+//     const { communityId } = req.params;
+
+//     // Validate if communityId is a valid ObjectId
+//     if (!mongoose.Types.ObjectId.isValid(communityId)) {
+//       return res.status(400).send("Invalid community ID");
+//     }
+
+//     // Fetch the community by ID
+//     const community = await Community.findById(communityId);
+//     if (!community) {
+//       return res.status(404).send("Community not found");
+//     }
+
+//     // Get current user ID from the session
+//     // const currUserId = req.params;
+//     // if (!mongoose.Types.ObjectId.isValid(currUserId)) {
+//     //   console.error("Invalid current user ID in session");
+//     //   return res.status(400).send("Invalid session data");
+//     // }
+
+//     // Fetch the current user by ID
+//     const currUser = await CommunityUser.findById(currUserId);
+
+//     // Retrieve the current user's community ID from the session
+//     const sessionCommunityId = req.session.user?.communityId;
+
+//     // Fetch all users in the specified community
+//     const users = await CommunityUser.find({ communityId });
+
+//     // Check if the current user belongs to the requested community
+//     let matchedUser = null;
+//     if (sessionCommunityId === communityId) {
+//       matchedUser = users.find(user => user._id.toString() === currUserId);
+//       console.log("Matched User Found:", matchedUser);
+//     } else {
+//       console.log("No matching user for this community");
+//     }
+
+//     // Render the view with the required data
+//     res.render("link.ejs", {
+//       community,
+//       matchedUser,
+//       users,
+//     });
+//   } catch (error) {
+//     console.log("Error in fetching community data:", error);
+//     // res.status(500).send("Internal Server Error");
+//   }
+// });
 
 app.get("/community/:communityId/link", async (req, res) => {
   try {
     const { communityId } = req.params;
+    const currUserId = req.session?.communityUser?.id;
 
-    // Validate if communityId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(communityId)) {
       return res.status(400).send("Invalid community ID");
     }
 
-    // Fetch the community by ID
+    // Fetch the community
     const community = await Community.findById(communityId);
     if (!community) {
-      return res.status(404).send("Community not found");
+      return res.status(404).send("Community not found.");
     }
 
-    // Get current user ID from the session
-    const currUserId = req.session.user.id;
-    if (!mongoose.Types.ObjectId.isValid(currUserId)) {
-      console.error("Invalid current user ID in session");
-      return res.status(400).send("Invalid session data");
-    }
-
-    // Fetch the current user by ID
+    // Fetch the current user
     const currUser = await CommunityUser.findById(currUserId);
 
-    // Retrieve the current user's community ID from the session
-    const sessionCommunityId = req.session.user?.communityId;
+    // Fetch all users excluding the logged-in user
+    const users = await CommunityUser.find({ _id: { $ne: currUserId } });
 
-    // Fetch all users in the specified community
-    const users = await CommunityUser.find({ communityId });
+    console.log("Logged-in User:", currUser);
+    console.log("Available Users:", users);
 
-    // Check if the current user belongs to the requested community
-    let matchedUser = null;
-    if (sessionCommunityId === communityId) {
-      matchedUser = users.find(user => user._id.toString() === currUserId);
-      console.log("Matched User Found:", matchedUser);
-    } else {
-      console.log("No matching user for this community");
-    }
-
-    // Render the view with the required data
-    res.render("link.ejs", {
-      community,
-      matchedUser,
-      users,
-      currUser,
-    });
+    res.render("link", { currUser, users, community });
   } catch (error) {
-    console.error("Error in fetching community data:", error);
+    console.error("Error in /community/:communityId/link:", error);
     res.status(500).send("Internal Server Error");
   }
 });
 
 
 
-
 app.get("/community/:communityId/video", async (req, res) => {
-  const { communityId } = req.params;
   try {
-    // Find the specific community
-    const currentCommunity = await Community.findById(communityId);
+    const { communityId } = req.params;
 
-    // Find posts specific to this community
-    const communityPosts = await Post.find({ community: communityId });
-    const communityid = req.session.user?.communityId;
-    let user = null;
-    if (communityid === communityId) {
-      user = await CommunityUser.findOne({ communityId });
-      console.log("User Found:", user);
-      res.render("community-posts.ejs", {
-        community: currentCommunity,
-        posts: communityPosts,
-        user
-      });
-    } else {
-      console.log("No matching user for this community");
-      res.redirect("login")
+    // Ensure communityId is valid
+    if (!mongoose.Types.ObjectId.isValid(communityId)) {
+      return res.status(400).send("Invalid community ID");
     }
+
+    // Fetch the specific community
+    const currentCommunity = await Community.findById(communityId);
+    if (!currentCommunity) {
+      return res.status(404).send("Community not found");
+    }
+
+    // Fetch posts for this community
+    const communityPosts = await Post.find({ community: communityId });
+
+    // Retrieve logged-in user details from session
+    const sessionUser = req.session?.communityUser;
+    if (!sessionUser) {
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to the current community
+    if (sessionUser.communityId !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Fetch the correct user based on session
+    const currUser = await CommunityUser.findById(sessionUser.id);
+    if (!currUser) {
+      return res.status(404).send("User not found");
+    }
+
+    console.log("User Found:", currUser);
+
+    res.render("community-posts.ejs", {
+      community: currentCommunity,
+      posts: communityPosts,
+      currUser
+    });
+
   } catch (error) {
     console.error("Error fetching community posts:", error);
-    res.status(500).send("An error occurred while fetching community posts");
+    res.status(500).send("An error occurred while fetching community posts.");
   }
 });
 
-app.get("/community/:communityId/group", async (req, res) => {
-  const { communityId } = req.params;
-  const communityid = req.session.user?.communityId;
-  const community = await Community.findById(communityId);
-  if (!community) {
-    return res.status(404).send("community not found");
-  }
-  if (communityid === communityId) {
-    res.render("group.ejs", { community, communityId });
-  } else {
-    console.log("No matching user for this community");
-    res.redirect("login")
-  }
-});
+//Personal message
+
 app.get("/community/:communityId/personal", async (req, res) => {
-  const { communityId } = req.params;
-  const communityid = req.session.user?.communityId;
-  const community = await Community.findById(communityId);
-  if (!community) {
-    return res.status(404).send("community not found");
-  }
-  if (communityid === communityId) {
+  try {
+    const { communityId } = req.params;
+    const sessionUser = req.session?.communityUser;
+
+    // Ensure community exists
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).send("Community not found");
+    }
+
+    // Ensure user is authenticated
+    if (!sessionUser) {
+      console.log("User not logged in, redirecting to login");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to this community
+    if (sessionUser.communityId.toString() !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
     res.render("personal.ejs", { community, communityId });
-  } else {
-    console.log("No matching user for this community");
-    res.redirect("login")
+  } catch (error) {
+    console.error("Error fetching personal page:", error);
+    res.status(500).send("An error occurred while fetching the personal page.");
   }
 });
+
+
+//Group message
+app.get("/community/:communityId/group", async (req, res) => {
+  try {
+    const { communityId } = req.params;
+    const sessionUser = req.session?.communityUser;
+
+    // Ensure community exists
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).send("Community not found");
+    }
+
+    // Ensure user is authenticated
+    if (!sessionUser) {
+      console.log("User not logged in, redirecting to login");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to this community
+    if (sessionUser.communityId !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    res.render("group.ejs", { community, communityId });
+  } catch (error) {
+    console.error("Error fetching group page:", error);
+    res.status(500).send("An error occurred while fetching the group page.");
+  }
+});
+
 
 app.get("/community/:communityId/meeting", async (req, res) => {
-  const { communityId } = req.params;
-  const community = await Community.findById(communityId);
-  const communityid = req.session.user?.communityId;
-  if (!community) {
-    return res.status(404).send("community not found");
-  }
-  if (communityid === communityId) {
+  try {
+    const { communityId } = req.params;
+    const sessionUser = req.session?.communityUser;
+
+    // Ensure community exists
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).send("Community not found");
+    }
+
+    // Ensure user is authenticated
+    if (!sessionUser) {
+      console.log("User not logged in, redirecting to login");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to this community
+    if (sessionUser.communityId.toString() !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
     res.render("meeting.ejs", { community, communityId });
-  } else {
-    console.log("No matching user for this community");
-    res.redirect("login")
+  } catch (error) {
+    console.error("Error fetching meeting page:", error);
+    res.status(500).send("An error occurred while fetching the meeting page.");
   }
 });
+
 
 app.get("/community/:communityId/notification", async (req, res) => {
-  const { communityId } = req.params;
-  const community = await Community.findById(communityId);
-  const communityid = req.session.user?.communityId; // Access the communityId from session.user
-    console.log("Session Data (req.session.user.communityId):", communityid);
-    let user = null;
-    let users = null;
-    if (communityid === communityId) {
-      user = await CommunityUser.findOne({ communityId });
-      console.log("User Found:", user);
-      users = await ApprovalCommunity.find({}).sort({createAt:-1});
-      res.render("notification.ejs", { community, users, user });
-    } else {
-      console.log("No matching user for this community");
-      res.redirect( 'login');
+  try {
+    const { communityId } = req.params;
+    const sessionUser = req.session?.communityUser;
+
+    console.log("Session Data (req.session.communityUser):", sessionUser);
+
+    // Ensure community exists
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).send("Community not found");
     }
+
+    // Ensure user is authenticated
+    if (!sessionUser) {
+      console.log("User not logged in, redirecting to login");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to this community
+    if (sessionUser.communityId.toString() !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Fetch user from CommunityUser
+    const currUser = await CommunityUser.findById(sessionUser.id);
+    if (!currUser) {
+      return res.status(404).send("User not found");
+    }
+    console.log("User Found:", currUser);
+
+    // Fetch notifications related to this community
+    const users = await ApprovalCommunity.find({ community: communityId }).sort({ createdAt: -1 });
+
+    res.render("notification.ejs", { community, users, currUser });
+  } catch (error) {
+    console.error("Error fetching notifications:", error);
+    res.status(500).send("An error occurred while fetching notifications.");
+  }
 });
 
+
 app.get("/community/:communityId/company", async (req, res) => {
-  const { communityId } = req.params;
-  const community = await Community.findById(communityId);
-  const communityid = req.session.user?.communityId;
-  if (!community) {
-    return res.status(404).send("community not found");
-  }
-  let user = null;
-    if (communityid === communityId) {
-      user = await CommunityUser.findOne({ communityId });
-      console.log("User Found:", user);
-      res.render("company.ejs", { community, user });
-    } else {
-      console.log("No matching user for this community");
-      res.redirect("login");
+  try {
+    const { communityId } = req.params;
+    const sessionUser = req.session?.communityUser;
+
+    console.log("Session Data (req.session.communityUser):", sessionUser);
+
+    // Ensure community exists
+    const community = await Community.findById(communityId);
+    if (!community) {
+      return res.status(404).send("Community not found");
     }
+
+    // Ensure user is authenticated
+    if (!sessionUser) {
+      console.log("User not logged in, redirecting to login");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to this community
+    if (sessionUser.communityId.toString() !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Fetch the logged-in user
+    const currUser = await CommunityUser.findById(sessionUser.id);
+    if (!currUser) {
+      return res.status(404).send("User not found");
+    }
+    console.log("User Found:", currUser);
+
+    res.render("company.ejs", { community, currUser });
+  } catch (error) {
+    console.error("Error fetching company page:", error);
+    res.status(500).send("An error occurred while fetching the company page.");
+  }
 });
+
 
 function ensureAuthenticate(req, res, next) {
   if (req.isAuthenticated()) {
