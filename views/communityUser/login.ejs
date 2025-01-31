@@ -19,6 +19,9 @@
             min-height: 100vh;
             padding: 20px;
         }
+        header img{
+            width: 75%;
+        }
         .form-container {
             background: #fee4bd;
             border-radius: 20px;
@@ -121,9 +124,28 @@
             opacity: 0;
             cursor: pointer;
         }
+    @media(max-width: 650px){
+        body{
+            display: block;
+        }
+        header img{
+            width: 10%;
+        }
+        .form-container{
+            position: relative;
+            margin-top: 200px;
+            max-width: 660px;
+        }
+    }
+        
     </style>
 </head>
 <body>
+    <header>
+        <a href="/community" class="brand">
+            <img src="/group.png" alt="Community Hub" />
+        </a>
+    </header>
     <div class="form-container">
         <form id="login" action="/community/<%=community.id%>/login" method="post">
             <div id="step1" class="form-step active">

@@ -351,7 +351,7 @@ app.post(
       if (!userId) {
         return res.status(401).send("User not authenticated.");
       }
-
+      
       const { communityId } = req.params;
 
       // Validate communityId
@@ -363,6 +363,7 @@ app.post(
 
       // Find the user by session ID
       const user = await CommunityUser.findById(userId);
+      console.log(user);
       if (!user) {
         return res.status(404).send("User not found.");
       }
@@ -382,7 +383,7 @@ app.post(
         ...req.body.upload,
         image: { url, filename },
         community: community._id, // Store references as IDs
-        user: user._id,
+        user: user,
       });
 
       await newUploadPost.save();
@@ -529,7 +530,8 @@ app.get("/community/:communityId/video", async (req, res) => {
     res.render("community-posts.ejs", {
       community: currentCommunity,
       posts: communityPosts,
-      currUser
+      currUser,
+      communityId
     });
 
   } catch (error) {
@@ -670,7 +672,7 @@ app.get("/community/:communityId/notification", async (req, res) => {
     // Fetch notifications related to this community
     const users = await ApprovalCommunity.find({ community: communityId }).sort({ createdAt: -1 });
 
-    res.render("notification.ejs", { community, users, currUser });
+    res.render("notification.ejs", { community, users, currUser, communityId });
   } catch (error) {
     console.error("Error fetching notifications:", error);
     res.status(500).send("An error occurred while fetching notifications.");
@@ -710,7 +712,7 @@ app.get("/community/:communityId/company", async (req, res) => {
     }
     console.log("User Found:", currUser);
 
-    res.render("company.ejs", { community, currUser });
+    res.render("company.ejs", { community, currUser, communityId });
   } catch (error) {
     console.error("Error fetching company page:", error);
     res.status(500).send("An error occurred while fetching the company page.");

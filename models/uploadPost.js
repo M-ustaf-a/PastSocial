@@ -12,11 +12,8 @@ const uploadPostSchema = new Schema({
     },
 
     user:{
-        name: String,
-        image: {
-            url: String,
-            filename: String,
-        }
+        type: Object,
+        default: {},
     },
     community: {
         type: Schema.Types.ObjectId,

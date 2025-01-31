@@ -356,11 +356,11 @@ router.post("/community/:communityId/login", async (req, res) => {
 });
 
 router.get("/community/:id/logout", (req,res)=>{
-  let {id} = req.body;
+  let {id} = req.params;
   console.log(id);
   req.session.destroy((err)=>{
     if(err){
-      console.error("Error during logout:", err);
+      console.error("Error during logout:", err); 
       res.redirect(`/community/${id}/login`)
     }
     res.redirect(`/community/${id}/main`);
