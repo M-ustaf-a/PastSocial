@@ -97,21 +97,23 @@
 
 <div class="grid-wrapper">
     <% users.forEach(user => { %>
-        <div class="container">
-            <div class="box">
-                <img src="<%= user.image ? user.image.url : '/default-avatar.png' %>" alt="profile-img">
-                <div>
-                    <a href="/community/<%= community.id %>/<%= user.id %>/showProfile" style="text-decoration: none; color: inherit;">
-                        <h1><%= user.name %></h1>
-                        <small class="role"><%= user.role %> at <%= user.company %></small>
-                    </a>
-                    <div class="button-group">
-                        <button class="follow-btn" onclick="handleFollow('<%= user.id %>', this)">Follow</button>
-                        <button class="link-btn" onclick="handleLink('<%= user.id %>', this)">Link</button>
+        <%if(user.communityId === communityId){%>
+            <div class="container">
+                <div class="box">
+                    <img src="<%= user.image ? user.image.url : '/default-avatar.png' %>" alt="profile-img">
+                    <div>
+                        <a href="/community/<%= community.id %>/<%= user.id %>/showProfile" style="text-decoration: none; color: inherit;">
+                            <h1><%= user.name %></h1>
+                            <small class="role"><%= user.role %> at <%= user.company %></small>
+                        </a>
+                        <div class="button-group">
+                            <button class="follow-btn" onclick="handleFollow('<%= user.id %>', this)">Follow</button>
+                            <button class="link-btn" onclick="handleLink('<%= user.id %>', this)">Link</button>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <%}%>
     <% }) %>
 </div>
 

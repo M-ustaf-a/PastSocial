@@ -328,7 +328,7 @@ app.get("/community/:communityId/main", async (req, res) => {
     console.log("Fetched Posts:", newUploadPost);
 
     // Render the main view with the fetched data
-    res.render("main", { currUser, community, newUploadPost });
+    res.render("main", { currUser, community, newUploadPost, communityId });
   } catch (error) {
     console.error("Error in /community/:communityId/main:", error);
     res.status(500).send("Internal Server Error");
@@ -474,12 +474,12 @@ app.get("/community/:communityId/link", async (req, res) => {
     const currUser = await CommunityUser.findById(currUserId);
 
     // Fetch all users excluding the logged-in user
-    const users = await CommunityUser.find({ _id: { $ne: currUserId } });
 
+    const users = await CommunityUser.find({ _id: { $ne: currUserId } });
     console.log("Logged-in User:", currUser);
     console.log("Available Users:", users);
 
-    res.render("link", { currUser, users, community });
+    res.render("link", { currUser, users, communityId, community });
   } catch (error) {
     console.error("Error in /community/:communityId/link:", error);
     res.status(500).send("Internal Server Error");
@@ -638,6 +638,7 @@ app.get("/community/:communityId/notification", async (req, res) => {
   try {
     const { communityId } = req.params;
     const sessionUser = req.session?.communityUser;
+    console.log(sessionUser);
 
     console.log("Session Data (req.session.communityUser):", sessionUser);
 

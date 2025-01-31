@@ -312,19 +312,8 @@
                     </div>
                 <%}%>
             </a>
-            <%if(!currUser){%>
-                <div class="profile-menu" style="display: block;;">
-                    <div class="dropdown">
-                     <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="/user-avatar.png" alt="Login">
-                     </button>
-                     <ul class="dropdown-menu">
-                       <li><a class="dropdown-item" href="/community/<%=community.id%>/login">Login</a></li>
-                       <li><a class="dropdown-item" href="/community/<%=community.id%>/communityApproval">Approval</a></li>
-                     </ul>
-                   </div>
-                 </div>
-            <%}else{%>
+                
+            <%if(currUser && currUser.communityId === communityId){%>
             <div class="profile-menu-user" style="display: block;;">
                <div class="dropdown">
                 <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -336,6 +325,18 @@
                 </ul>
               </div>
             </div>
+            <%}else{%>
+                <div class="profile-menu" style="display: block;;">
+                    <div class="dropdown">
+                     <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="/user-avatar.png" alt="Login">
+                     </button>
+                     <ul class="dropdown-menu">
+                       <li><a class="dropdown-item" href="/community/<%=community.id%>/login">Login</a></li>
+                       <li><a class="dropdown-item" href="/community/<%=community.id%>/communityApproval">Approval</a></li>
+                     </ul>
+                   </div>
+                </div>
             <%}%>
      </div>
 
