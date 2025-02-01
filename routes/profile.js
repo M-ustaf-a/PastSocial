@@ -66,7 +66,7 @@ router.get("/community/:communityId/:userId/showProfile", async(req,res)=>{
   const community = await Community.findById(communityId);
   console.log(community);
   const user = await CommunityUser.findById(userId);
-  const currUserId = req.session.communityUser.id;
+  const currUserId = req.session?.communityUser?.userId;
   let isStatus = false;
   if(currUserId === userId){
     isStatus = true
