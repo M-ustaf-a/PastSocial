@@ -17,7 +17,9 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
+        }
+        header img{
+            width: 75%;
         }
         .form-container {
             background: #fee4bd;
@@ -121,9 +123,34 @@
             opacity: 0;
             cursor: pointer;
         }
+        @media(max-width: 650px){
+            body{
+                display: block;
+            }
+            header{
+                box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+                width: 100%;
+                height: 85px;
+            }
+            header img{
+                width: 10%;
+                margin-left: 20px;
+                margin-top: 20px;
+            }
+            .form-container{
+                position: relative;
+                margin-top: 200px;
+                max-width: 660px;
+            }
+        }
     </style>
 </head>
-<body>
+<body> 
+    <header>
+        <a href="/community" class="brand">
+            <img src="/group.png" alt="Community Hub" />
+        </a>
+    </header>
     <div class="form-container">
         <form id="communityApproval" action="/community/<%=community._id%>/communityApproval" method="post" enctype="multipart/form-data">
             <div id="step1" class="form-step active">
