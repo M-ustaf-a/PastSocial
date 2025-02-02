@@ -18,6 +18,10 @@
             align-items: center;
             min-height: 100vh;
         }
+        .login{
+            margin-bottom: 23px;
+            color: #d34848;
+        }
         header img{
             width: 75%;
         }
@@ -148,11 +152,12 @@
 </head>
 <body>
     <header>
-        <a href="/community" class="brand">
-            <img src="/group.png" alt="Community Hub" />
+        <a href="/community/<%=community.id%>/main" class="brand">
+            <img src="/group.png" alt="Community login" />
         </a>
     </header>
     <div class="form-container">
+        <h1 class="login">Login</h1>
         <form id="login" action="/community/<%=community.id%>/login" method="post">
             <div id="step1" class="form-step active">
                 <div class="input-group">

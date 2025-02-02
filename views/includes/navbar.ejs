@@ -169,6 +169,26 @@
         color: #A82400;
         text-decoration: none;
     }
+    .chatbot {
+        display: flex;
+        align-items: center;
+        margin-left: 64rem;
+        margin-right: 35px;
+        background-color: #ffc267;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    
+    .chatbot img {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        transition: transform 0.2s ease;
+    }
+    
+    .chatbot img:hover {
+        transform: scale(1.1);
+    }
     .nav-icons{
         gap: 40px;
         margin-left: 15rem;
@@ -187,7 +207,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-left: 80%;
         height: 35px;
         width: 35px;
         border: 1px solid #ffc267;
@@ -203,7 +222,7 @@
         object-fit: cover;
     }
     .profile-menu-user{
-        margin-left: 70%;
+        margin-left: auto;
     }
     .profile-menu-user img {
         border-radius: 50%;
@@ -247,6 +266,14 @@
     .dropdown-toggle::after{
         display: none;
     }
+    .d-flex {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 25px;
+        margin-top: 15px;
+        width: 100%;
+    }
     
     /* Responsive adjustments */
     @media (max-width: 1334px) {
@@ -268,6 +295,23 @@
         }
         .img-company{
             margin-left: 10%;
+        }
+        .chatbot {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 35px;
+            background-color: #ffc267;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        
+        .chatbot img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+            cursor: pointer;
         }
     }
     
@@ -295,6 +339,21 @@
             margin: 0 100%;
             color: #A82400;
         }
+        .chatbot {
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+            margin-right: 35px;
+            background-color: #ffc267;
+            border-radius: 50%;
+        }
+        
+        .chatbot img {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            transition: transform 0.2s ease;
+        }
     }
 </style>
 
@@ -314,10 +373,12 @@
                         <i class="fas fa-users text-white"></i>
                     </div>
                 <%}%>
-            </a>
-                
+            </a>  
+            <div class="chatbot">
+                <img src="/bot.png" alt="chatbot assistant" width="34px" height="34px"/>
+            </div>
             <%if(currUser && currUser.communityId === communityId){%>
-            <div class="profile-menu-user" style="display: block;;">
+            <div class="profile-menu-user" style="display: block;">
                <div class="dropdown">
                 <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                     <img src="<%=currUser.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;" class="profile-image">
