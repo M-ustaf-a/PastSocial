@@ -1,0 +1,77 @@
+<!-- views/index.ejs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Bots</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    #chat-container { max-width: 600px; margin: 0 auto; }
+    #chat-log { border: 1px solid #ccc; padding: 10px; height: 300px; overflow-y: scroll; margin-bottom: 20px; }
+    .message { margin-bottom: 10px; }
+    .bot { color: green; }
+    .user { color: blue; }
+    .bot-icon {
+      display: inline-block;
+      margin: 5px;
+      cursor: pointer;
+      padding: 10px 15px;
+      border: 1px solid #888;
+      border-radius: 5px;
+      transition: 0.3s;
+    }
+    .bot-icon:hover {
+      background: #f0f0f0;
+    }
+  </style>
+</head>
+<body>
+  <div id="chat-container">
+    <h1>Community Bots</h1>
+    <div id="chat-log"></div>
+    <h3>Click on a Community Bot to Learn More:</h3>
+    <div id="bot-icons">
+      <!-- Change or add community names as needed -->
+      <div class="bot-icon" data-community="OpenAI">OpenAI</div>
+      <div class="bot-icon" data-community="Technology">Technology</div>
+      <div class="bot-icon" data-community="Arts">Arts</div>
+      <div class="bot-icon" data-community="Sports">Sports</div>
+    </div>
+  </div>
+
+  <script>
+    // Add click event listeners to each bot icon
+    document.querySelectorAll('.bot-icon').forEach(icon => {
+      icon.addEventListener('click', async () => {
+        const community = icon.getAttribute('data-community');
+
+        // Append a user message indicating which community was selected
+        const chatLog = document.getElementById('chat-log');
+        const userMessage = document.createElement('div');
+        userMessage.classList.add('message', 'user');
+        userMessage.textContent = `You selected: ${community}`;
+        chatLog.appendChild(userMessage);
+        chatLog.scrollTop = chatLog.scrollHeight;
+
+        // Fetch the bot response for this community
+        try {
+          const response = await fetch(`/bot?community=${encodeURIComponent(community)}`);
+          const data = await response.json();
+
+          const botMessage = document.createElement('div');
+          botMessage.classList.add('message', 'bot');
+          if (data.answer) {
+            botMessage.textContent = `Bot (${community}): ${data.answer}`;
+          } else {
+            botMessage.textContent = `Bot (${community}): ${data.error}`;
+          }
+          chatLog.appendChild(botMessage);
+          chatLog.scrollTop = chatLog.scrollHeight;
+        } catch (err) {
+          console.error('Error fetching bot response:', err);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

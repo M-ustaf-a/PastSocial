@@ -1,461 +1,340 @@
-<!-- <style>
-    body {
-        background-color: blanchedalmond;
-        padding-top: 140px;
-    }
-    header {
-        background-color: #fee4bd;
-        border-bottom: 1px solid #f9d8a6;
-        padding: 10px 15px;
-        width: 100%;
-        position: fixed;
-        top: 0; 
-        z-index: 1000;
-    }
-    .header-logo {
-        font-weight: bold;
-        font-size: 1.5rem;
-        color: #A82400;
-        text-decoration: none;
-    }
-    .nav-icons{
-        gap: 40px;
-        margin-left: 15rem;
-    }
-    .nav-icons svg {
-        margin: 0 40px;
-        cursor: pointer;
-        gap: 23px;
-        color: #ea8c00;
-    }
-    .nav-icons svg.active{
-        color: #ff5733;
-    }
-    .profile-menu {
-        display: flex;
-        gap: 10px;
-        margin-left: 70%;
-        height: 35px;
-        width: 35px;
-        border: 1px solid #ffc267;
-        border-radius: 50%;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        background-color: #ffc267;
-        padding: 5px;
-    }
-    .profile-menu-user{
-        margin-left: 65%;
-    }
-    .profile-menu-user img {
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
-        margin-left: 4%;
-    }
-    .img-company{
-        height: 30px; 
-        width: 30px; 
-        border-radius: 50%; 
-        margin-left: 100%;
-    }
-    .dropdown-menu{
-        background-color: #fee4bd;
-        border: 1px solid #f9d8a6;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    .dropdown-item{
-        color: #A82400;
-    }
-    /* Responsive adjustments for smaller screens */
-    
-    @media (max-width: 1334px) {
-        .header-logo {
-            font-size: 1.25rem;
-        }
-        .profile-menu {
-            display: flex;
-            gap: 10px;
-            margin-left: 48%;
-            height: 35px;
-            width: 35px;
-            border: 1px solid #ffc267;
-            border-radius: 50%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            background-color: #ffc267;
-            padding: 5px;
-            gap: 0;
-        }
-        .profile-menu-user img {
-            margin-left: 70%;
-            width: 30px;
-            height: 30px;
-        }
-        .nav-icons{
-            gap: 10%;
-            margin-left: 8%;
-        }
-        .nav-icons svg {
-            margin: 0 100%;
-            cursor: pointer;
-            color: #ea8c00;
-        }
-        .nav-icons svg.active{
-            color: #ff5733;
-        }
-        .img-company{
-            margin-left: 10%;
-        }
-    }
-
-    @media (max-width: 480px) {
-        .header-logo {
-            font-size: 1.1rem;
-        }
-        .profile-menu {
-            display: flex;
-            gap: 10px;
-            margin-left: 27%;
-            height: 35px;
-            width: 35px;
-            border: 1px solid #ffc267;
-            border-radius: 50%;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            background-color: #ffc267;
-            padding: 5px;
-        }
-        .profile-menu-user{
-            margin-left: 50%;
-        }
-        .profile-menu-user img{
-            margin-left: 7%;
-        }
-
-        .dropdown-toggle {
-            width: 30px;
-        }
-
-        .nav-icons{
-            gap: 8%;
-            margin-left: 0%;
-        }
-        .nav-icons svg {
-            margin: 0 100%;
-            cursor: pointer;
-            color: #A82400;
-        }
-        .nav-icons svg.active{
-            color: #ff5733;
-        }
-    }
-</style> -->
-
 <style>
     body {
-        background-color: blanchedalmond;
-        padding-top: 140px;
+      background-color: blanchedalmond;
+      padding-top: 140px;
     }
     header {
-        background-color: #fee4bd;
-        border-bottom: 1px solid #f9d8a6;
-        padding: 10px 15px;
-        width: 100%;
-        position: fixed;
-        top: 0; 
-        z-index: 1000;
+      background-color: #fee4bd;
+      border-bottom: 1px solid #f9d8a6;
+      padding: 10px 15px;
+      width: 100%;
+      position: fixed;
+      top: 0;
+      z-index: 1000;
     }
     .header-logo {
-        font-weight: bold;
-        font-size: 1.5rem;
-        color: #A82400;
-        text-decoration: none;
-    }
-    .chatbot {
-        display: flex;
-        align-items: center;
-        margin-left: 64rem;
-        margin-right: 35px;
-        background-color: #ffc267;
-        border-radius: 50%;
-        cursor: pointer;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #A82400;
+      text-decoration: none;
     }
     
-    .chatbot img {
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        transition: transform 0.2s ease;
+    /* Enhanced chatbot styles */
+    .chatbot-container {
+      position: relative;
+      margin-left: 64rem;
+      margin-right: 35px;
     }
     
-    .chatbot img:hover {
-        transform: scale(1.1);
+    .chatbot-button {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #ffd280, #ffc267);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid #ffc267;
+      padding: 5px;
+      width: 45px;
+      height: 45px;
     }
-    .nav-icons{
-        gap: 40px;
-        margin-left: 15rem;
+    
+    .chatbot-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(234, 140, 0, 0.2);
+      border-color: #ea8c00;
+    }
+    
+    .chatbot-content {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      min-width: 250px;
+      background-color: #fee4bd;
+      border: 1px solid #f9d8a6;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 1rem;
+      margin-top: 0.5rem;
+      display: none;
+      z-index: 1000;
+    }
+    
+    .chatbot-content.show {
+      display: block;
+    }
+    
+    /* Navigation and other styles */
+    .nav-icons {
+      gap: 40px;
+      margin-left: 15rem;
     }
     .nav-icons svg {
-        margin: 0 40px;
-        cursor: pointer;
-        gap: 23px;
-        color: #ea8c00;
+      margin: 0 40px;
+      cursor: pointer;
+      gap: 23px;
+      color: #ea8c00;
     }
-    .nav-icons svg.active{
-        color: #ff5733;
+    .nav-icons svg.active {
+      color: #ff5733;
     }
-    /* Updated profile-menu styles */
     .profile-menu {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        height: 35px;
-        width: 35px;
-        border: 1px solid #ffc267;
-        border-radius: 50%;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        background-color: #ffc267;
-        padding: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 35px;
+      width: 35px;
+      border: 1px solid #ffc267;
+      border-radius: 50%;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      background-color: #ffc267;
+      padding: 5px;
     }
     .profile-menu img {
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        object-fit: cover;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
     }
-    .profile-menu-user{
-        margin-left: auto;
+    .profile-menu-user {
+      margin-left: auto;
     }
     .profile-menu-user img {
-        border-radius: 50%;
-        width: 30px;
-        height: 30px;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
     }
     .profile-button {
-        background: none;
-        border: none;
-        padding: 0;
-        cursor: pointer;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
     }
-
     .profile-image {
-        width: 2.5rem;
-        height: 2.5rem;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #A82400;
-        transition: transform 0.2s ease;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #A82400;
+      transition: transform 0.2s ease;
     }
-
     .profile-image:hover {
-        transform: scale(1.1);
+      transform: scale(1.1);
     }
-
-    .img-company{
-        height: 30px; 
-        width: 30px; 
-        border-radius: 50%; 
-        margin-left: 100%;
+    .img-company {
+      height: 30px; 
+      width: 30px; 
+      border-radius: 50%; 
+      margin-left: 100%;
     }
-    .dropdown-menu{
-        background-color: #fee4bd;
-        border: 1px solid #f9d8a6;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    .dropdown-menu {
+      background-color: #fee4bd;
+      border: 1px solid #f9d8a6;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .dropdown-item{
-        color: #A82400;
+    .dropdown-item {
+      color: #A82400;
     }
-    .dropdown-toggle::after{
-        display: none;
+    .dropdown-toggle::after {
+      display: none;
     }
     .d-flex {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        margin-top: 15px;
-        width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 15px;
+      width: 100%;
     }
     
-    /* Responsive adjustments */
     @media (max-width: 1334px) {
-        .header-logo {
-            font-size: 1.25rem;
-        }
-        .profile-menu {
-            margin-left: auto;
-        }
-        .profile-menu-user{
-            margin-left: 65%;
-        }
-        .nav-icons{
-            gap: 10%;
-            margin-left: 8%;
-        }
-        .nav-icons svg {
-            margin: 0 100%;
-        }
-        .img-company{
-            margin-left: 10%;
-        }
-        .chatbot {
-            display: flex;
-            align-items: center;
-            margin-left: 60%;
-            margin-right: px;
-            background-color: #ffc267;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        
-        .chatbot img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            transition: transform 0.2s ease;
-            cursor: pointer;
-        }
+      .header-logo {
+        font-size: 1.25rem;
+      }
+      .profile-menu {
+        margin-left: auto;
+      }
+      .profile-menu-user {
+        margin-left: 65%;
+      }
+      .nav-icons {
+        gap: 10%;
+        margin-left: 8%;
+      }
+      .nav-icons svg {
+        margin: 0 100%;
+      }
+      .img-company {
+        margin-left: 10%;
+      }
+      .chatbot-container {
+        margin-left: 60%;
+      }
     }
     
     @media (max-width: 480px) {
-        .header-logo {
-            font-size: 1.1rem;
-        }
-        .profile-menu {
-            margin-left: auto;
-        }
-        .profile-menu-user{
-            margin-left: auto;
-        }
-        .profile-menu-user img{
-            margin-left: 7%;
-        }
-        .dropdown-toggle {
-            width: 30px;
-        }
-        .nav-icons{
-            gap: 8%;
-            margin-left: 0%;
-        }
-        .nav-icons svg {
-            margin: 0 100%;
-            color: #A82400;
-        }
-        .chatbot {
-            display: flex;
-            align-items: center;
-            margin-left: 35%;
-            margin-right: 9%;
-            background-color: #ffc267;
-            border-radius: 50%;
-        }
-        
-        .chatbot img {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            transition: transform 0.2s ease;
-        }
+      .header-logo {
+        font-size: 1.1rem;
+      }
+      .profile-menu {
+        margin-left: auto;
+      }
+      .profile-menu-user {
+        margin-left: auto;
+      }
+      .profile-menu-user img {
+        margin-left: 7%;
+      }
+      .dropdown-toggle {
+        width: 30px;
+      }
+      .nav-icons {
+        gap: 8%;
+        margin-left: 0%;
+      }
+      .nav-icons svg {
+        margin: 0 100%;
+        color: #A82400;
+      }
+      .chatbot-container {
+        margin-left: 35%;
+        margin-right: 9%;
+      }
     }
-</style>
-
+  </style>
+</head>
 <body>
-<header class="" id="">
+  <header id="">
     <!-- Logo -->
-     <div class="d-flex" style="display: flex; margin-bottom: 25px; margin-top: 15px;">
-            <a href="/company-profile" class="header-logo">
-                
-                <%if(community.thumbnail && community.thumbnail.url){%>
-                    <div style="display: flex; gap: 10px;">
-                        <img src="<%=community.thumbnail.url%>" alt="company logo" class="img-company">
-                        <h1 class="text-lg font-semibold"><%= community.title %></h1>
-                    </div>
-                <%} else {%>
-                    <div class="w-10 h-10 rounded-full mr-3 bg-gray-300 flex items-center justify-center">
-                        <i class="fas fa-users text-white"></i>
-                    </div>
-                <%}%>
-            </a>  
-            <div class="chatbot">
-                <img src="/bot.png" alt="chatbot assistant" width="34px" height="34px"/>
-            </div>
-            <%if(currUser && currUser.communityId === communityId){%>
-            <div class="profile-menu-user" style="display: block;">
-               <div class="dropdown">
-                <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="<%=currUser.image.url%>" alt="Profile Picture" style="margin-top: 7.5%;" class="profile-image">
-                </button>
-                <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" href="/community/<%=community.id%>/<%=currUser.id%>/showProfile">Profile</a></li>
-                  <li><a class="dropdown-item" href="/community/<%=community.id%>/logout">logout</a></li>
-                </ul>
-              </div>
-            </div>
-            <%}else{%>
-                <div class="profile-menu" style="display: block;;">
-                    <div class="dropdown">
-                     <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" fill="currentColor" class="bi bi-person-fill-lock" viewBox="0 0 16 16">
-                            <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
-                        </svg>
-                     </button>
-                     <ul class="dropdown-menu">
-                       <li><a class="dropdown-item" href="/community/<%=community.id%>/login">Login</a></li>
-                       <li><a class="dropdown-item" href="/community/<%=community.id%>/communityApproval">Approval</a></li>
-                     </ul>
-                   </div>
-                </div>
-            <%}%>
-     </div>
+    <div class="d-flex" style="margin-bottom: 25px; margin-top: 15px;">
+      <a href="/company-profile" class="header-logo">
+        <% if (community.thumbnail && community.thumbnail.url) { %>
+          <div style="display: flex; gap: 10px;">
+            <img src="<%= community.thumbnail.url %>" alt="company logo" class="img-company">
+            <h1 class="text-lg font-semibold"><%= community.title %></h1>
+          </div>
+        <% } else { %>
+          <div class="w-10 h-10 rounded-full mr-3 bg-gray-300 flex items-center justify-center">
+            <i class="fas fa-users text-white"></i>
+          </div>
+        <% } %>
+      </a>  
+      
+      <!-- Chatbot -->
+      <div class="chatbot-container">
+        <button class="chatbot-button" id="chatbotButton" aria-expanded="false">
+          <img src="/bot.png" alt="chatbot assistant" width="34" height="34"/>
+        </button>
+        <div class="chatbot-content" id="chatbotContent">
+          <p><%=community.description%></p>
+        </div>
+      </div>
+      
+      <% if (currUser && currUser.communityId === communityId) { %>
+        <div class="profile-menu-user" style="display: block;">
+          <div class="dropdown">
+            <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img src="<%= currUser.image.url %>" alt="Profile Picture" style="margin-top: 7.5%;" class="profile-image">
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/community/<%= community.id %>/<%= currUser.id %>/showProfile">Profile</a></li>
+              <li><a class="dropdown-item" href="/community/<%= community.id %>/logout">Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      <% } else { %>
+        <div class="profile-menu" style="display: block;">
+          <div class="dropdown">
+            <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="21" fill="currentColor" class="bi bi-person-fill-lock" viewBox="0 0 16 16">
+                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
+              </svg>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="/community/<%= community.id %>/login">Login</a></li>
+              <li><a class="dropdown-item" href="/community/<%= community.id %>/communityApproval">Approval</a></li>
+            </ul>
+          </div>
+        </div>
+      <% } %>
+    </div>
 
     <!-- Navigation Icons -->
     <div class="nav-icons d-flex" id="nav-icons">
-        <a href="/community/<%=community.id%>/main">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-                <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-            </svg>
-        </a>
-       
-        <a href="/community/<%=community.id%>/link">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
-                <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
-                <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-            </svg>
-        </a>
-       
-        <a href="/community/<%=community.id%>/video">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-video" viewBox="0 0 16 16" id="video-icon">
-                <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm10.798 11c-.453-1.27-1.76-3-4.798-3-3.037 0-4.345 1.73-4.798 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1z"/>
-            </svg>
-        </a>
-        <a href="/community/<%=community.id%>/group">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
-                <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
-            </svg>
-        </a>
-        <a href="/community/<%=community.id%>/notification">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
-                <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
-                <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-            </svg>
-        </a>
-        <a href="/community/<%=community.id%>/company">
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
-                <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
-                <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
-            </svg>
-        </a>
+      <a href="/community/<%= community.id %>/main">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
+          <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+        </svg>
+      </a>
+      
+      <a href="/community/<%= community.id %>/link">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
+          <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+          <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
+        </svg>
+      </a>
+      
+      <a href="/community/<%= community.id %>/video">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-person-video" viewBox="0 0 16 16" id="video-icon">
+          <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+          <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm10.798 11c-.453-1.27-1.76-3-4.798-3-3.037 0-4.345 1.73-4.798 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1z"/>
+        </svg>
+      </a>
+      
+      <a href="/community/<%= community.id %>/group">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
+          <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
+        </svg>
+      </a>
+      <a href="/community/<%= community.id %>/notification">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
+            <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
+            <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+        </svg>
+      </a>
+
+      <a href="/community/<%= community.id %>/company">
+        <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
+          <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+          <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+        </svg>
+      </a>
     </div>
+  </header>
 
-</header>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const icons = document.querySelectorAll(".nav-icons svg");
-
-        icons.forEach(icon => {
-            icon.addEventListener("click", () => {
-                icons.forEach(i => i.classList.remove("active"));
-                icon.classList.add("active");
-            });
+  <!-- Bootstrap Bundle with Popper JS CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- Custom JavaScript for Navigation Icons and Chatbot -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navigation icons active state
+      const icons = document.querySelectorAll(".nav-icons svg");
+      icons.forEach(icon => {
+        icon.addEventListener("click", () => {
+          icons.forEach(i => i.classList.remove("active"));
+          icon.classList.add("active");
         });
+      });
+
+      // Chatbot functionality
+      const chatbotButton = document.getElementById('chatbotButton');
+      const chatbotContent = document.getElementById('chatbotContent');
+      
+      // Toggle dropdown when clicking the button
+      chatbotButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        chatbotContent.classList.toggle('show');
+        chatbotButton.setAttribute('aria-expanded', 
+          chatbotContent.classList.contains('show'));
+      });
+      
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!chatbotButton.contains(e.target) && !chatbotContent.contains(e.target)) {
+          chatbotContent.classList.remove('show');
+          chatbotButton.setAttribute('aria-expanded', 'false');
+        }
+      });
     });
-</script>
+  </script>
+</body>

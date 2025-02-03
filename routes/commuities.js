@@ -9,6 +9,7 @@ const { isAuthenticated } = require( '../middleware' );
 const Post = require( '../models/post' );
 const mongoose = require("mongoose");
 const uploadPost = require('../models/uploadPost');
+const CommunityData = require( '../models/communityData' );
 
 const upload = multer({
     storage: storage,
@@ -90,6 +91,11 @@ router.post(
         // Save the new community
         await newCommunity.save();
   
+        const data = new CommunityData({
+          community: newCommunity.title,
+          info: newCommunity.description
+        });
+        data.save();
         // Create and save a new CommunityUser instance
         const newUser = new CommunityUser({
           name: user.adminData.name,

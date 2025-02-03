@@ -18,6 +18,7 @@ const communitieRoute = require('./routes/commuities');
 
 // Import chat routes and socket initialization
 const { router: chatRoutes } = require("./routes/chat");
+const CommunityData = require( "./models/communityData" );
 
 const app = express();
 const MONGO_URL = process.env.ATLAS;
@@ -219,7 +220,50 @@ app.get("/community/:communityId/meeting", async (req, res) => {
     res.status(500).send("An error occurred while fetching the meeting page.");
   }
 });
+app.get("/community/bot", async(req,res)=>{
+  try{
+    res.render("bot.ejs");
+  }catch(err){
+    console.log(err);
+  }
+})
 
+app.get("/bot", async(req,res)=>{
+  try{
+    const community = req.query.community;
+    console.log(community);
+    if(!community){
+      return res.send(400).json({error:'community parameter is required'});
+    }
+    const doc = await CommunityData.findOne({community});
+    if(!doc){
+      return res.send(400).json({error: `No data found for ${community}`})
+    }
+    const botResponse = `Welcome to the ${community} community! Here is some information: ${doc.info}`;
+    
+    // const prompt = `Based solely on the following community information, provide a response:\n\nCommunity Information:\n${doc.info}\n\nResponse:`;
+    // const response = await axios.post(
+    //   'https://api.openai.com/v1/engines/text-davinci-003/completions',
+    //   {
+    //     prompt: prompt,
+    //     max_tokens: 150,
+    //     temperature: 0.7,
+    //     n: 1,
+    //     stop: ['\n']
+    //   },
+    //   {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+    //     }
+    //   }
+    // );
+    // const botResponse = response.data.choices[0].text.trim();
+    res.json({answer: botResponse});
+  }catch(err){
+    console.log(err);
+  }
+})
 
 
 // Use chat routes
