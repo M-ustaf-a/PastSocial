@@ -132,6 +132,23 @@ router.get("/community/:communityId/posts/new", async (req, res) => {
     }
 });
 
+router.get("/community/:communityId/posts/:postId", async (req, res) => {
+  const { communityId, postId } = req.params;
+  try {
+    const community = await Community.findById(communityId);
+    const post = await Post.findById(postId);
+
+    if (!post || !community) {
+      return res.status(404).send("Post or Community not found");
+    }
+
+    res.render("show.ejs", { post, community });
+  } catch (error) {
+    console.error("Error fetching post details:", error);
+    res.status(500).send("An error occurred");
+  }
+});
+
 // Create New Post(video) for a Specific Community
 router.post(
   "/community/:communityId/posts",
@@ -170,11 +187,9 @@ router.post(
       }
 
       await newPost.save();
-      req.flash("success", "Post created successfully!");
-      res.redirect(`/community/${communityId}/posts`);
+      res.redirect(`/community/${communityId}/video`);
     } catch (error) {
       console.error("Post creation error:", error);
-      req.flash("error", "Failed to create post");
       res.redirect(`/community/${communityId}/posts/new`);
     }
   }
@@ -377,9 +392,9 @@ router.get("/community/:communityId/video", async (req, res) => {
 
     console.log("User Found:", currUser);
 
-    res.render("community-posts.ejs", {
+    res.render("video.ejs", {
       community: currentCommunity,
-      posts: communityPosts,
+      videos: communityPosts,
       currUser,
       communityId
     });

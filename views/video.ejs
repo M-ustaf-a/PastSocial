@@ -13,6 +13,9 @@
             padding: 15px;
             gap: 15px;
         }
+        .header-title{
+            font-size: larger;
+        }
 
         .posts-container {
             max-width: 1200px;
@@ -78,36 +81,46 @@
         }
     </style>
 <body>
-        <!-- <div class="header-content">
-            <h1 class="header-title">Posts</h1>
+        <div class="header-content" style="border-bottom: 1px solid #f9d8a6;">
+            <h1 class="header-title" style="gap: 2px;">
+                <div class="flex" style="color: #A82400; border: 1px solid #f9d8a6; padding: 10px; border-radius: 20px;">
+                    <div style="font-size: large;"><b>JustPost</b></div>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-caret-right-square-fill" viewBox="0 0 16 16">
+                        <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm5.5 10a.5.5 0 0 0 .832.374l4.5-4a.5.5 0 0 0 0-.748l-4.5-4A.5.5 0 0 0 5.5 4z"/>
+                    </svg>
+                </div>
+            </h1>
             <div class="create-btn-container">
                 <div style="display: flex; gap: 25px;">
-                    <form action="/community/<%=community.id%>/chat" method="get">
+                    <!-- <form action="/community/<%=community.id%>/chat" method="get">
                         <button class="btn btn-light" style="border: none; border-radius: 50%; height: 35px; width: 35px; display: flex; justify-content: center; align-items: center;"><b>G</b></button>  
-                    </form>
+                    </form> -->
                     <form action="/community/<%= community._id %>/posts/new" method="get">
-                        <button class="btn btn-light create-btn" style="background-color: #A82400; color: white;border-radius: 25px;">Create</button>
+                        <button class="" style="background-color: #A82400; color: white; border-radius: 20px; border: 1px solid #A82400; padding: 1px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-patch-plus-fill" viewBox="0 0 16 16">
+                                <path d="M10.067.87a2.89 2.89 0 0 0-4.134 0l-.622.638-.89-.011a2.89 2.89 0 0 0-2.924 2.924l.01.89-.636.622a2.89 2.89 0 0 0 0 4.134l.637.622-.011.89a2.89 2.89 0 0 0 2.924 2.924l.89-.01.622.636a2.89 2.89 0 0 0 4.134 0l.622-.637.89.011a2.89 2.89 0 0 0 2.924-2.924l-.01-.89.636-.622a2.89 2.89 0 0 0 0-4.134l-.637-.622.011-.89a2.89 2.89 0 0 0-2.924-2.924l-.89.01zM8.5 6v1.5H10a.5.5 0 0 1 0 1H8.5V10a.5.5 0 0 1-1 0V8.5H6a.5.5 0 0 1 0-1h1.5V6a.5.5 0 0 1 1 0"/>
+                            </svg>
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
-        <hr class="m-0"> -->
 
     <div class="posts-container">
         <div class="row g-3">
-            <% for(post of posts) { %>
+            <% for(video of videos) { %>
                 <div class="col-12 col-sm-6 col-lg-4" style="padding-right: 0px; margin-bottom: 0px;">
                     <div class="rows">
                         <button type="button" class="btn btn-light post-title" 
                                 data-bs-container="body" 
                                 data-bs-toggle="popover" 
                                 data-bs-placement="top" 
-                                data-bs-content="<%=post.username%>" style="background-color: #fee4bd; border: none;">
-                            <b><%=post.title%></b>
+                                data-bs-content="" style="background-color: #fee4bd; border: none;">
+                            <b><%=video.title%></b>
                         </button>
-                        <% if (post.video && post.video.url) { %>
+                        <% if (video.video && video.video.url) { %>
                             <video controls>
-                                <source src="<%= post.video.url %>" type="video/mp4">
+                                <source src="<%= video.video.url %>" type="video/mp4">
                                 Your browser does not support the video tag.
                             </video>
                         <% } %>
@@ -115,9 +128,9 @@
                             <img src="/heart.svg" 
                                alt="Heart Icon" 
                                class="heart-icon" 
-                               data-post-id="<%= post.id %>" 
+                               data-post-id="<%= video.id %>" 
                                onclick="toggleHeart(this)">
-                            <form action="/community/<%=community.id%>/posts/<%=post.id%>" method="get">
+                            <form action="/community/<%=community.id%>/posts/<%=video.id%>" method="get">
                                 <button class="btn btn-sm btn-explore">Explore</button>
                             </form>
                         </div>
