@@ -1,4 +1,293 @@
-<form action="/community/<%= community._id %>/posts" method="POST" enctype="multipart/form-data">
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Community</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Space Grotesk", sans-serif;
+        background: linear-gradient(135deg, #ffebcd 0%, #fdd8a0 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+      header img {
+        width: 75%;
+      }
+      .form-container {
+        background: #fee4bd;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 500px;
+        padding: 40px;
+        position: relative;
+        overflow: hidden;
+      }
+      .form-container::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(to right, #a82400, #ff6b6b);
+      }
+      .form-step {
+        display: none;
+        animation: slideIn 0.5s forwards;
+      }
+      .form-step.active {
+        display: block;
+      }
+      @keyframes slideIn {
+        from {
+          opacity: 0;
+          transform: translateX(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      .input-group {
+        margin-bottom: 20px;
+      }
+      .input-label {
+        display: block;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #a82400;
+      }
+      .input-field {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid rgb(255, 231, 195);
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        background-color: blanchedalmond;
+      }
+      .input-field:focus {
+        outline: none;
+        border-color: #a82400;
+        box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
+      }
+      .input-field:hover {
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+      }
+      .navigation-buttons {
+        display: flex;
+        justify-content: space-between;
+      }
+      .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .btn-primary {
+        background: linear-gradient(to right, #a82400, #ff6b6b);
+        color: white;
+      }
+      .btn-secondary {
+        background: #e0e0e0;
+        color: #333;
+      }
+      .prev-step {
+        padding: 6px 20px;
+        border: 2px solid #a82400;
+        border-radius: 25px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: none;
+        color: #a82400;
+        font-weight: 500;
+        font-size: 14px;
+      }
+      .prev-step:hover {
+        background-color: #a82400;
+        color: blanchedalmond;
+      }
+      .file-input-wrapper {
+        position: relative;
+        overflow: hidden;
+      }
+      .file-input-wrapper input[type="file"] {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        cursor: pointer;
+      }
+      @media (max-width: 650px) {
+        body {
+          display: block;
+        }
+        header {
+          box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+          width: 100%;
+          height: 85px;
+        }
+        header img {
+          width: 10%;
+          margin-left: 20px;
+          margin-top: 20px;
+        }
+        .form-container {
+          position: relative;
+          margin-top: 200px;
+          max-width: 660px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <a href="/community/<%=community.id%>/main" class="brand">
+        <img src="/group.png" alt="Community login" />
+      </a>
+    </header>
+    <div class="form-container">
+      <form
+        id="communityForm"
+        action="/community/<%= community._id %>/video"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <div id="step1" class="form-step active">
+          <div class="input-group">
+            <label for="title" class="input-label">Title</label>
+            <input
+              type="text"
+              class="input-field"
+              id="title"
+              name="video[title]"
+              required
+              placeholder="Enter title"
+            />
+          </div>
+          <div class="navigation-buttons">
+            <button type="button" class="btn btn-primary next-step">
+              Next
+            </button>
+          </div>
+        </div>
+
+        <div id="step2" class="form-step">
+          <div class="input-group">
+            <label for="content" class="input-label">Content</label>
+            <textarea
+              class="input-field"
+              id="content"
+              name="video[content]"
+              rows="4"
+              required
+              placeholder="Write a content..."
+            ></textarea>
+          </div>
+          <div class="navigation-buttons">
+            <button type="button" class="prev-step">Back</button>
+            <button type="button" class="btn btn-primary next-step">
+              Next
+            </button>
+          </div>
+        </div>
+
+        <div id="step3" class="form-step">
+          <div class="input-group">
+            <label for="thumbnail" class="input-label">Thumbnail</label>
+            <div class="file-input-wrapper">
+              <input
+                type="file"
+                name="video[thumbnail]"
+                accept="image/*"
+                multiple
+                required
+              />
+              <button type="button" class="input-field thumbnail">
+                Thumbnail
+              </button>
+            </div>
+          </div>
+          <div class="navigation-buttons">
+            <button type="button" class="btn btn-secondary prev-step">
+              Back
+            </button>
+            <button type="button" class="btn btn-primary next-step">
+              Next
+            </button>
+          </div>
+        </div>
+
+        <div id="step4" class="form-step">
+          <div class="input-group">
+            <label for="video" class="input-label">Video</label>
+            <div class="file-input-wrapper">
+              <input
+                type="file"
+                name="video[video]"
+                accept="video/*"
+                required
+              />
+              <button type="button" class="input-field video">Video</button>
+            </div>
+          </div>
+          <div class="navigation-buttons">
+            <button type="button" class="btn btn-secondary prev-step">
+              Back
+            </button>
+            <button type="submit" class="btn btn-primary">Upload</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <script>
+      document.querySelectorAll(".next-step").forEach((button) => {
+        button.addEventListener("click", () => {
+          const currentStep = button.closest(".form-step");
+          const nextStep = currentStep.nextElementSibling;
+          if (nextStep) {
+            currentStep.classList.remove("active");
+            nextStep.classList.add("active");
+          }
+        });
+      });
+
+      document.querySelectorAll(".prev-step").forEach((button) => {
+        button.addEventListener("click", () => {
+          const currentStep = button.closest(".form-step");
+          const prevStep = currentStep.previousElementSibling;
+          if (prevStep) {
+            currentStep.classList.remove("active");
+            prevStep.classList.add("active");
+          }
+        });
+      });
+
+      document
+        .querySelector('.file-input-wrapper input[type="file"]')
+        .addEventListener("change", function (e) {
+          const fileName = e.target.value.split("\\").pop();
+          const button = this.nextElementSibling;
+          button.textContent = fileName || "Choose File";
+        });
+    </script>
+  </body>
+</html> -->
+
     <!DOCTYPE html>
     <html lang="en">
     <head>
