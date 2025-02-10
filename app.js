@@ -15,6 +15,7 @@ const approvalRoute = require("./routes/admin");
 const profileRoute = require("./routes/profile");
 const communityApproval = require("./routes/userCommunityApproval");
 const communitieRoute = require('./routes/commuities');
+const companyRoute = require("./routes/company");
 
 // Import chat routes and socket initialization
 const { router: chatRoutes } = require("./routes/chat");
@@ -198,14 +199,15 @@ app.get("/bot", async(req,res)=>{
     console.log(err);
   }
 })
-
+ 
 
 // Use chat routes
 app.use(chatRoutes);
 app.use("/", approvalRoute);
 app.use("/", profileRoute);
 app.use("/", communityApproval);
-app.use("/", communitieRoute)
+app.use("/", communitieRoute);
+app.use("/", companyRoute);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

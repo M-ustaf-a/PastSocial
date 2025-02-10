@@ -30,13 +30,20 @@ module.exports.isApproved = async(req,res, next)=>{
     }
     res.redirect(`/community/${id}/main`);
 }
-module.exports.isApproved = async(req, res, next)=>{
-    let communityUserId = req.session.communityUserId;
-    const isapproved = await CommunityUser.findById(communityUserId);
-    console.log(isapproved);
-    if(isapproved.status){
-        next();
+// module.exports.isApproved = async(req, res, next)=>{
+//     let communityUserId = req.session.communityUserId;
+//     const isapproved = await CommunityUser.findById(communityUserId);
+//     console.log(isapproved);
+//     if(isapproved.status){
+//         next();
+//     }
+// }
+
+module.exports.isCompanyEmployee = async(req,res,next)=>{
+    if(req.session.companyUser){
+        return next();
     }
+    res.redirect("/companylogin");
 }
 
 module.exports.checkCommunity =(communityId)=> async(req,res,next)=>{

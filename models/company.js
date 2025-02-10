@@ -6,17 +6,17 @@ const companySchema = new Schema({
         type: String,
         required: true,
     },
-    description: {
+    employeeId: {
         type: String,
         required: true,
     },
-    category: {
+    reason: {
         type: String,
         required: true,
     },
-    image: {
-        url: String,
-        filename: String,
+    password: {
+        type: String,
+        required: true
     },
 });
 

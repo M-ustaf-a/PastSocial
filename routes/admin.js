@@ -8,7 +8,7 @@ const upload = multer({storage});
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const Notification = require( "../models/notification" );
-const { saveRedirectUrl, isLoggedIn, isAuthenticated } = require( "../middleware" );
+const { saveRedirectUrl, isLoggedIn, isAuthenticated, isCompanyUser } = require( "../middleware" );
 const passport = require( "passport" );
 const Community = require( "../models/community" );
 require("dotenv").config();
@@ -66,21 +66,6 @@ router.get("/admin/logout", (req,res)=>{
     res.redirect("/admin/login")
   })
 })
-
-
-router.get("/admindashboard", async(req,res)=>{
-    const {id} = req.params;
-    const notifications = await Notification.find({
-        type: 'membership_request',
-        isRead: false,
-    }).sort({createdAt: -1}).limit(10);
-
-    const unreadCount = await Notification.countDocuments({
-        type: 'message_request',
-        isRead: false,
-    });
-    res.render("./admin/dashboard", {notifications, unreadCount, id});
-});
 
 router.get("/admin/profile", isAuthenticated, async (req, res) => {
   try {

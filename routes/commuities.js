@@ -11,7 +11,7 @@ const mongoose = require("mongoose");
 const uploadPost = require('../models/uploadPost');
 const CommunityData = require( '../models/communityData' );
 const ApprovalCommunity = require( '../models/approveCommunity' );
-const Company = require( '../models/company' );
+const Company = require( '../models/communityCompany' );
 
 const upload = multer({
     storage: storage,
