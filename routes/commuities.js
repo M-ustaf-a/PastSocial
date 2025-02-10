@@ -10,6 +10,8 @@ const Post = require( '../models/post' );
 const mongoose = require("mongoose");
 const uploadPost = require('../models/uploadPost');
 const CommunityData = require( '../models/communityData' );
+const ApprovalCommunity = require( '../models/approveCommunity' );
+const Company = require( '../models/company' );
 
 const upload = multer({
     storage: storage,
@@ -486,6 +488,9 @@ router.get("/community/:communityId/company", async (req, res) => {
   try {
     const { communityId } = req.params;
     const sessionUser = req.session?.communityUser;
+    const companies = await Company.find({});
+    console.log(companies);
+
 
     console.log("Session Data (req.session.communityUser):", sessionUser);
 
@@ -514,11 +519,20 @@ router.get("/community/:communityId/company", async (req, res) => {
     }
     console.log("User Found:", currUser);
 
-    res.render("company.ejs", { community, currUser, communityId });
+    res.render("company.ejs", { community, currUser, communityId, companies });
   } catch (error) {
     console.error("Error fetching company page:", error);
     res.status(500).send("An error occurred while fetching the company page.");
   }
 });
+
+//community company listing get route
+router.get("/community/:communityId/listingCompany", async(req,res)=>{
+  try{
+    res.render("companyProfile.ejs");
+  }catch(err){
+    console.log(err);
+  }
+})
 
 module.exports = router;
