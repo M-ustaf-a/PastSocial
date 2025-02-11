@@ -32,7 +32,7 @@
         <div class="bg-white shadow rounded-lg">
             <div class="divide-y divide-[#fdc97c]">
                 <%for(let notification of notifications){%>
-                    <div class="p-6 flex items-center justify-between bg-[#fee4bd] hover:bg-gray-50 transition-colors">
+                    <div class="p-6 flex items-center justify-between bg-[#fee4bd] hover:bg-[#ffebcd] transition-colors cursor-pointer">
                         <div class="flex-1">
                             <div class="flex items-center space-x-4">
                                 <div class="bg-white border-2 border-custom rounded-full">
@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <form action="/admindashboard/<%=notification._id%>/show" method="get" class="ml-4">
-                            <button type="submit" class="inline-flex items-center px-4 py-2 border-2 border-custom rounded-md shadow-sm text-sm font-medium text-white bg-custom hover:bg-white hover:text-custom transition-colors">
+                            <button type="submit" class="inline-flex items-center px-4 py-2 border-2 border-custom rounded-md shadow-sm text-sm font-medium text-white bg-custom hover:bg-[#fee4bd] hover:text-custom transition-colors">
                                 View Details
                                 <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />

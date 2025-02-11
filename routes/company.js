@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const Notification = require("../models/notification");
-const { isCompanyEmployee } = require( "../middleware" );
+const { isCompanyEmployee, isCompanyLogged } = require( "../middleware" );
 const Company = require( "../models/company" );
 const bcrypt = require("bcryptjs");
 
 
-router.get("/companyLogin", (req,res)=>{
+router.get("/companyLogin",isCompanyLogged, (req,res)=>{
     res.render("company/companyLogin.ejs");
 });
 
@@ -33,6 +33,16 @@ router.post("/companyLogin", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+router.post("/companyLogout", (req,res)=>{
+    req.session.destroy((err)=>{
+        if(err){
+            console.log(err);
+            res.redirect("/companyDashboard");
+        }
+        res.clearCookie("connect.sid");
+        res.redirect("/companyLogin");
+    })
+})
 
 router.get("/companyDashboard",isCompanyEmployee, async(req,res)=>{
     const {id} = req.params;

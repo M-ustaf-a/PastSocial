@@ -53,4 +53,10 @@ module.exports.checkCommunity =(communityId)=> async(req,res,next)=>{
    res.status(403).send("Access denied!");
 }
 
-
+module.exports.isCompanyLogged = async(req,res,next)=>{
+    if(req.session.companyEmployeeId){
+        return res.redirect("/companyDashboard");
+    }else{
+        return res.redirect("/companyLogin");
+    }
+}
