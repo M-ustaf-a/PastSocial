@@ -7,76 +7,124 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
     <style>
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Enhanced Base Animations */
+        @keyframes morphIn {
+            0% { clip-path: circle(0% at 50% 50%); opacity: 0; }
+            100% { clip-path: circle(100% at 50% 50%); opacity: 1; }
         }
 
-        @keyframes slideIn {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes waveEffect {
+            0% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-15px) rotate(-2deg); }
+            75% { transform: translateY(5px) rotate(2deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
 
-        .animate-fade-in {
-            animation: fadeIn 0.6s ease-out;
+        @keyframes floatWithRotate {
+            0% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0) rotate(0deg); }
         }
 
-        .animate-slide-in {
-            animation: slideIn 0.5s ease-out;
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(168, 36, 0, 0.2), 0 0 10px rgba(168, 36, 0, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(168, 36, 0, 0.4), 0 0 30px rgba(168, 36, 0, 0.2); }
+            100% { box-shadow: 0 0 5px rgba(168, 36, 0, 0.2), 0 0 10px rgba(168, 36, 0, 0.2); }
         }
 
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+            70% { transform: scale(0.9); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes jelloPop {
+            0% { transform: scale(1); }
+            30% { transform: scale(1.25); }
+            40% { transform: scale(0.95); }
+            50% { transform: scale(1.1); }
+            65% { transform: scale(0.98); }
+            100% { transform: scale(1); }
+        }
+
+        /* Background Animation */
         body {
-            background: linear-gradient(135deg, blanchedalmond, #fff5e6);
-            min-height: 100vh;
+            background: linear-gradient(
+                45deg,
+                blanchedalmond,
+                #fff5e6,
+                #ffe4c4,
+                #fff5e6
+            );
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
         }
 
-        .custom-red {
-            color: #A82400;
+        /* Enhanced Component Animations */
+        .morph-in {
+            animation: morphIn 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .custom-red-bg {
-            background-color: #A82400;
+        .wave-effect {
+            animation: waveEffect 8s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .custom-box {
-            background-color: rgba(254, 228, 189, 0.8);
-            backdrop-filter: blur(10px);
+        .float-rotate {
+            animation: floatWithRotate 6s infinite cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .bounce-in {
+            animation: bounceIn 0.8s cubic-bezier(0.36, 0, 0.66, 1);
         }
 
-        .input-focus:focus {
-            border-color: #A82400;
-            box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.2);
+        .jello-pop {
+            animation: jelloPop 0.8s cubic-bezier(0.36, 0, 0.66, 1);
         }
 
-        .floating-label {
-            top: -25px;
-            left: 0;
-            transition: all 0.3s ease;
+        /* Enhanced Interactive Elements */
+        .login-container {
+            background: rgba(254, 228, 189, 0.95);
+            backdrop-filter: blur(20px);
+            transform-origin: center;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .custom-input {
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            background: rgba(255, 255, 255, 0.9);
+        .login-container:hover {
+            transform: scale(1.02) translateY(-10px);
+            box-shadow: 0 30px 60px -15px rgba(168, 36, 0, 0.3);
         }
 
-        .custom-input:focus {
-            border-color: #A82400;
-            background: white;
+        .input-container {
+            background: rgba(255, 255, 255, 0.8);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
         }
 
-        .shine {
+        .input-container:focus-within {
+            transform: scale(1.02);
+            animation: glowPulse 2s infinite;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #A82400, #8a1d00);
             position: relative;
             overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .shine::after {
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px -5px rgba(168, 36, 0, 0.4);
+        }
+
+        .btn-primary::before {
             content: '';
             position: absolute;
             top: -50%;
@@ -85,49 +133,78 @@
             height: 200%;
             background: linear-gradient(
                 45deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.1) 50%,
-                transparent 100%
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
             );
             transform: rotate(45deg);
-            animation: shine 3s infinite;
+            transition: 0.8s;
         }
 
-        @keyframes shine {
-            0% { transform: translateX(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) rotate(45deg); }
+        .btn-primary:hover::before {
+            animation: gradientMove 1.5s infinite;
+        }
+
+        /* Interactive Icon Animations */
+        .icon-container {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .icon-container:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        /* Staggered Animation Delays */
+        .stagger-1 { animation-delay: 0.1s; }
+        .stagger-2 { animation-delay: 0.2s; }
+        .stagger-3 { animation-delay: 0.3s; }
+        .stagger-4 { animation-delay: 0.4s; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(168, 36, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(168, 36, 0, 0.3);
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(168, 36, 0, 0.5);
         }
     </style>
 </head>
-<body class="flex items-center justify-center p-4">
-    <div class="w-full max-w-md animate-fade-in">
-        <!-- Header Section -->
-        <div class="text-center mb-8">
-            <div class="mb-4 relative shine">
-                <i data-lucide="building-2" class="custom-red mx-auto w-20 h-20"></i>
+<body class="flex items-center justify-center p-6 min-h-screen">
+    <div class="w-full max-w-lg morph-in relative">
+        <!-- Main Container -->
+        <div class="login-container rounded-3xl shadow-2xl p-8 md:p-12 relative overflow-hidden">
+            <!-- Header Section -->
+            <div class="text-center mb-12">
+                <div class="mb-6 float-rotate">
+                    <i data-lucide="building-2" class="custom-red mx-auto w-16 h-16 md:w-20 md:h-20"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-bold custom-red mb-3 wave-effect">Welcome Back</h1>
+                <p class="text-gray-600 text-lg bounce-in stagger-1">Access your workspace</p>
             </div>
-            <h1 class="text-4xl font-bold custom-red mb-2">Welcome Back</h1>
-            <p class="text-gray-600">Access your company portal</p>
-            <div class="h-1 w-24 custom-red-bg mx-auto mt-4 rounded-full"></div>
-        </div>
 
-        <!-- Login Form -->
-        <div class="custom-box rounded-xl shadow-2xl p-8 animate-slide-in">
-            <form action="/companyLogin" method="post" class="space-y-6">
+            <!-- Login Form -->
+            <form action="/companyLogin" method="post" class="space-y-8">
                 <!-- Employee ID Field -->
-                <div class="relative">
-                    <div class="glass-effect p-3 rounded-lg mb-6">
-                        <label class="block text-sm font-medium custom-red mb-1 floating-label">
-                            <div class="flex items-center space-x-2">
-                                <i data-lucide="id-card" class="w-4 h-4"></i>
-                                <span>Employee ID</span>
-                            </div>
-                        </label>
+                <div class="bounce-in stagger-2">
+                    <div class="input-container rounded-xl p-3 flex items-center space-x-3">
+                        <div class="icon-container">
+                            <i data-lucide="id-card" class="w-5 h-5 custom-red opacity-70"></i>
+                        </div>
                         <input 
-                            id="employeeId" 
                             type="text" 
-                            name="employeeId" 
-                            class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none"
+                            class="w-full text-gray-700 text-lg bg-transparent focus:outline-none"
                             placeholder="Enter your employee ID"
                             required
                         >
@@ -135,69 +212,57 @@
                 </div>
 
                 <!-- Password Field -->
-                <div class="relative">
-                    <div class="glass-effect p-3 rounded-lg mb-4">
-                        <label class="block text-sm font-medium custom-red mb-1 floating-label">
-                            <div class="flex items-center space-x-2">
-                                <i data-lucide="lock" class="w-4 h-4"></i>
-                                <span>Password</span>
-                            </div>
-                        </label>
-                        <div class="relative">
-                            <input 
-                                id="password" 
-                                type="password" 
-                                name="password" 
-                                class="custom-input w-full px-4 py-3 rounded-lg focus:outline-none"
-                                placeholder="Enter your password"
-                                required
-                            >
-                            <button 
-                                type="button"
-                                onclick="togglePassword()"
-                                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none">
-                                <i data-lucide="eye" class="w-5 h-5"></i>
-                            </button>
+                <div class="bounce-in stagger-3">
+                    <div class="input-container rounded-xl p-3 flex items-center space-x-3">
+                        <div class="icon-container">
+                            <i data-lucide="lock" class="w-5 h-5 custom-red opacity-70"></i>
                         </div>
+                        <input 
+                            type="password" 
+                            class="w-full text-gray-700 text-lg bg-transparent focus:outline-none"
+                            placeholder="Enter your password"
+                            required
+                        >
+                        <button type="button" onclick="togglePassword()" class="icon-container">
+                            <i data-lucide="eye" class="w-5 h-5 text-gray-400"></i>
+                        </button>
                     </div>
                 </div>
 
                 <!-- Additional Options -->
-                <div class="flex items-center justify-between text-sm py-3">
-                    <label class="flex items-center space-x-2 cursor-pointer">
-                        <input type="checkbox" class="rounded text-red-600 focus:ring-red-500 w-4 h-4">
-                        <span class="text-gray-600 hover:text-gray-800 transition-colors">Remember me</span>
+                <div class="flex items-center justify-between py-2 bounce-in stagger-4">
+                    <label class="flex items-center space-x-3">
+                        <input type="checkbox" class="rounded border-gray-300 text-red-600 focus:ring-red-500 w-5 h-5">
+                        <span class="text-gray-600">Remember me</span>
                     </label>
-                    <a href="#" class="custom-red hover:underline transition-all duration-300">Forgot password?</a>
+                    <a href="#" class="custom-red hover:underline font-medium">Forgot password?</a>
                 </div>
 
                 <!-- Login Button -->
                 <button 
                     type="submit"
-                    class="w-full custom-red-bg text-white py-3 px-4 rounded-lg hover:bg-opacity-90 transition duration-300 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 shine"
+                    class="btn-primary w-full text-white py-4 rounded-xl flex items-center justify-center space-x-3 text-lg font-semibold jello-pop stagger-4"
                 >
-                    <div class="flex items-center justify-center space-x-2">
-                        <i data-lucide="log-in" class="w-5 h-5"></i>
-                        <span class="font-semibold">Login to Portal</span>
-                    </div>
+                    <i data-lucide="log-in" class="w-5 h-5"></i>
+                    <span>Sign In</span>
                 </button>
             </form>
 
             <!-- Footer -->
-            <div class="mt-8 text-center">
-                <p class="text-sm text-gray-600">
-                    Having trouble logging in? 
-                    <a href="#" class="custom-red hover:underline transition-all duration-300">Contact IT Support</a>
+            <div class="mt-10 text-center bounce-in">
+                <p class="text-gray-600">
+                    Need help? 
+                    <a href="#" class="custom-red hover:underline font-medium">Contact Support</a>
                 </p>
-                <div class="flex justify-center space-x-4 mt-4">
-                    <button class="p-2 rounded-full hover:bg-white/20 transition-all duration-300">
-                        <i data-lucide="help-circle" class="w-5 h-5 custom-red"></i>
+                <div class="flex justify-center space-x-6 mt-6">
+                    <button class="icon-container p-2 rounded-lg hover:bg-white/50">
+                        <i data-lucide="help-circle" class="w-6 h-6 custom-red"></i>
                     </button>
-                    <button class="p-2 rounded-full hover:bg-white/20 transition-all duration-300">
-                        <i data-lucide="settings" class="w-5 h-5 custom-red"></i>
+                    <button class="icon-container p-2 rounded-lg hover:bg-white/50">
+                        <i data-lucide="settings" class="w-6 h-6 custom-red"></i>
                     </button>
-                    <button class="p-2 rounded-full hover:bg-white/20 transition-all duration-300">
-                        <i data-lucide="info" class="w-5 h-5 custom-red"></i>
+                    <button class="icon-container p-2 rounded-lg hover:bg-white/50">
+                        <i data-lucide="info" class="w-6 h-6 custom-red"></i>
                     </button>
                 </div>
             </div>
@@ -205,12 +270,10 @@
     </div>
 
     <script>
-        // Initialize Lucide icons
         lucide.createIcons();
 
-        // Toggle password visibility with animation
         function togglePassword() {
-            const passwordInput = document.getElementById('password');
+            const passwordInput = document.querySelector('input[type="password"]');
             const eyeIcon = document.querySelector('button[onclick="togglePassword()"] i');
             
             if (passwordInput.type === 'password') {
@@ -221,15 +284,28 @@
                 eyeIcon.setAttribute('data-lucide', 'eye');
             }
             lucide.createIcons();
+            eyeIcon.closest('.icon-container').classList.add('jello-pop');
+            setTimeout(() => {
+                eyeIcon.closest('.icon-container').classList.remove('jello-pop');
+            }, 800);
         }
 
-        // Add input focus animations
-        document.querySelectorAll('.custom-input').forEach(input => {
-            input.addEventListener('focus', () => {
-                input.parentElement.classList.add('ring-2', 'ring-red-200');
+        // Add micro-interactions
+        document.querySelectorAll('.icon-container').forEach(icon => {
+            icon.addEventListener('mouseenter', () => {
+                icon.classList.add('jello-pop');
             });
-            input.addEventListener('blur', () => {
-                input.parentElement.classList.remove('ring-2', 'ring-red-200');
+            icon.addEventListener('mouseleave', () => {
+                setTimeout(() => {
+                    icon.classList.remove('jello-pop');
+                }, 800);
+            });
+        });
+
+        // Add input animations
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('focus', () => {
+                input.closest('.input-container').classList.add('jello-pop');
             });
         });
     </script>
