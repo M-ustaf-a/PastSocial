@@ -24,34 +24,32 @@
         }
     </style>
 </head>
-<body>
+<body class="flex items-center justify-center min-h-screen px-4">
     <div class="container mx-auto px-4 py-8 max-w-2xl">
-        <header class="mb-8">
+        <header class="mb-8 text-center">
             <h1 class="text-3xl font-bold custom-red mb-2">Membership Request</h1>
-            <div class="h-1 w-20 custom-red-bg"></div>
+            <div class="h-1 w-20 mx-auto custom-red-bg"></div>
         </header>
 
         <div class="rounded-lg shadow-md p-6 mb-6 custom-bg">
             <h2 class="text-xl font-semibold custom-red mb-4">Applicant Details</h2>
-            <div class="flex gap-44">
-                <div class="space-y-3">
+            <div class="flex flex-col md:flex-row items-center md:justify-between gap-4">
+                <div class="space-y-3 w-full">
                     <div class="flex items-center">
                         <span class="custom-red w-24">Name:</span>
-                        <span class="font-medium"><%=notification.content.name%></span>
+                        <span class="font-medium break-words"><%=notification.content.name%></span>
                     </div>
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <span class="custom-red w-24">Email:</span>
-                            <span class="font-medium"><%=notification.content.email%></span>
-                        </div>
+                    <div class="flex items-center">
+                        <span class="custom-red w-24">Email:</span>
+                        <span class="font-medium break-words"><%=notification.content.email%></span>
                     </div>
                     <div class="flex items-center">
                         <span class="custom-red w-24">Company:</span>
-                        <span class="font-medium"><%=notification.content.company%></span>
+                        <span class="font-medium break-words"><%=notification.content.company%></span>
                     </div>
                 </div>
-                <div class="">
-                    <img src="<%=notification.content.imageUrl%>" alt="Profile image" class="h-20 w-20 object-cover rounded-lg">
+                <div class="flex-shrink-0">
+                    <img src="<%=notification.content.imageUrl%>" alt="Profile image" class="h-20 w-20 object-cover rounded-lg border border-gray-300">
                 </div>
             </div>
         </div>
@@ -60,25 +58,17 @@
             <h2 class="text-xl font-semibold custom-red mb-4">Review Decision</h2>
             <input type="hidden" name="email" value="<%=notification.content.email%>">
             
-            <div class="mb-6 space-y-4">
-                <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-green-50 transition-colors">
-                    <input type="radio" 
-                           id="approve" 
-                           name="decision" 
-                           value="approved"
-                           class="form-radio h-5 w-5 text-green-600">
+            <div class="space-y-4">
+                <label class="flex flex-wrap items-center space-x-3 p-3 border rounded-md cursor-pointer hover:bg-green-50 transition">
+                    <input type="radio" id="approve" name="decision" value="approved" class="form-radio h-5 w-5 text-green-600">
                     <span class="text-gray-700 font-medium flex items-center">
                         <i data-lucide="check-circle" class="w-5 h-5 mr-2 text-green-600"></i>
                         Approve Membership
                     </span>
                 </label>
 
-                <label class="flex items-center space-x-3 cursor-pointer p-3 rounded-md hover:bg-red-50 transition-colors">
-                    <input type="radio" 
-                           id="reject" 
-                           name="decision" 
-                           value="rejected"
-                           class="form-radio h-5 w-5 text-red-600">
+                <label class="flex flex-wrap items-center space-x-3 p-3 border rounded-md cursor-pointer hover:bg-red-50 transition">
+                    <input type="radio" id="reject" name="decision" value="rejected" class="form-radio h-5 w-5 text-red-600">
                     <span class="text-gray-700 font-medium flex items-center">
                         <i data-lucide="x-circle" class="w-5 h-5 mr-2 text-red-600"></i>
                         Reject Membership
@@ -87,7 +77,7 @@
             </div>
 
             <button type="submit" 
-                    class="w-full custom-red-bg hover:bg-opacity-90 text-white font-semibold py-2 px-4 rounded-md transition duration-200 ease-in-out focus:outline-none focus:ring-2 custom-red-border focus:ring-opacity-50">
+                    class="w-full mt-6 custom-red-bg hover:bg-opacity-90 text-white font-semibold py-2 px-4 rounded-md transition duration-200 focus:outline-none focus:ring-2 custom-red-border focus:ring-opacity-50">
                 Submit Decision
             </button>
         </form>
