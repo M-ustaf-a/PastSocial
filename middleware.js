@@ -55,7 +55,7 @@ module.exports.checkCommunity =(communityId)=> async(req,res,next)=>{
 
 module.exports.isCompanyLogged = async(req,res,next)=>{
     if(req.session.companyEmployeeId){
-        return res.redirect("/companyDashboard");
+        next();
     }else{
         return res.redirect("/companyLogin");
     }
