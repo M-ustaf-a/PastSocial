@@ -5,6 +5,37 @@ const { isCompanyEmployee, isCompanyLogged } = require("../middleware");
 const Company = require("../models/company");
 const bcrypt = require("bcryptjs");
 
+// GET /companyEmployeeApproval
+router.get("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", (req, res) => {
+    res.render("./company/companyApproval");
+});
+
+// POST /companyEmployeeApproval
+router.post("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", async (req, res) => {
+    try {
+        const {password, ...otherDetails} = req.body.companyApproval;
+        console.log(password);
+        // Check if password exists
+        if (!password) {
+            return res.status(400).send("Password is required");
+        }
+
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        const companyEmployee = new Company({
+            ...otherDetails,
+            password: hashedPassword,
+        });
+
+        await companyEmployee.save();
+        console.log(companyEmployee);
+        res.send("Application submitted successfully");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error processing approval");
+    }
+});
+
 // GET /companyLogin
 router.get("/companyLogin", (req, res) => {
     if (req.session.companyEmployeeId) {
@@ -16,10 +47,10 @@ router.get("/companyLogin", (req, res) => {
 // POST /companyLogin
 router.post("/companyLogin", async (req, res) => {
     const { employeeId, password } = req.body;
-
+    console.log(employeeId);
     try {
         const companyEmployee = await Company.findOne({ employeeId });
-
+        console.log(companyEmployee);
         if (!companyEmployee) {
             return res.status(404).send("Employee not found");
         }
@@ -72,30 +103,5 @@ router.get("/companyDashboard", isCompanyEmployee, async (req, res) => {
         res.status(500).send("Error loading dashboard");
     }
 });
-
-// GET /companyEmployeeApproval
-// router.get("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", (req, res) => {
-//     res.render("./company/companyApproval");
-// });
-
-// POST /companyEmployeeApproval
-// router.post("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", async (req, res) => {
-//     try {
-//         const { password, ...otherDetails } = req.body;
-//         const hashedPassword = await bcrypt.hash(password, 10);
-
-//         const companyEmployee = new Company({
-//             ...otherDetails,
-//             password: hashedPassword,
-//         });
-
-//         await companyEmployee.save();
-//         console.log(companyEmployee);
-//         res.send("Application submitted successfully");
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send("Error processing approval");
-//     }
-// });
 
 module.exports = router;
