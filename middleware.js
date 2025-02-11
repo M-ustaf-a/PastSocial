@@ -40,7 +40,7 @@ module.exports.isApproved = async(req,res, next)=>{
 // }
 
 module.exports.isCompanyEmployee = async(req,res,next)=>{
-    if(req.session.companyUser){
+    if(req.session.companyEmployeeId){
         return next();
     }
     res.redirect("/companylogin");
