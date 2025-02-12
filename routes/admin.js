@@ -162,7 +162,7 @@ router.post(
         subject: "New Membership Request",
         html: sanitizedHTML,
       });
-      res.render("admin/memberRequest/success.ejs");
+      res.render("submit.ejs");
       // res.status(200).send("Membership request submitted successfully!");
     } catch (err) {
       console.error("Error processing request:", err);
