@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Application submission success page">
+    <title>Success - Application Submitted</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        :root {
+            --primary-color: #A82400;
+            --text-color: #A82400;
+            --background-color: blanchedalmond;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--background-color);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-color);
+        }
+
+        .success-container {
+            text-align: center;
+            padding: 2rem;
+            background-color: #fee4bd;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 500px;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 1.5rem;
+            position: relative;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(45deg);
+            width: 24px;
+            height: 45px;
+            border-bottom: 4px solid white;
+            border-right: 4px solid white;
+            animation: checkmark-appear 0.4s ease-in-out forwards;
+        }
+
+        @keyframes checkmark-appear {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) rotate(45deg) scale(0.5);
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) rotate(45deg) scale(1);
+            }
+        }
+
+        h1 {
+            color: var(--text-color);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .message {
+            color: var(--text-color);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .home-button {
+            display: inline-block;
+            padding: 0.8rem 1.5rem;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        .home-button:hover {
+            background-color: #8b1e00;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 480px) {
+            .success-container {
+                padding: 1.5rem;
+            }
+
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container animate__animated animate__fadeInUp">
+        <div class="success-icon animate__animated animate__bounceIn animate__delay-1s">
+            <div class="checkmark"></div>
+        </div>
+        <h1 class="animate__animated animate__fadeIn animate__delay-1s">Application Submitted Successfully!</h1>
+        <p class="message animate__animated animate__fadeIn animate__delay-1s">
+            Thank you for your submission. We have received your application and will process it shortly.
+            You will receive a confirmation email with further details.
+        </p>
+        <a href="#" class="home-button animate__animated animate__fadeIn animate__delay-1s">Return Home</a>
+    </div>
+</body>
+</html>

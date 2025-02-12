@@ -56,7 +56,7 @@ router.post(
       user.communityId = communityId;
       await user.save();
 
-      res.send("Application submit");
+      res.render("submit.ejs");
     } catch (err) {
       console.error("Something is wrong", err);
       res.status(500).send("An error occurred while processing the request.");

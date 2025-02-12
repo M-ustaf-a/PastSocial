@@ -253,7 +253,7 @@ router.post("/adminApprove", async (req, res) => {
                           <div style="margin: 30px 0;">
                               <h3 style="color: #A82400; margin-bottom: 20px; font-size: 18px;">Getting Started</h3>
                               <ol style="color: #666; padding-left: 20px;">
-                                  <li style="margin-bottom: 15px;">Visit our platform at <a href="#" style="color: #A82400; text-decoration: none;">login.community.com</a></li>
+                                  <li style="margin-bottom: 15px;">Visit our platform at <a href="https://pastsocial.onrender.com/admin/login" style="color: #A82400; text-decoration: none;">login.community.com</a></li>
                                   <li style="margin-bottom: 15px;">Enter your username and temporary password</li>
                                   <li style="margin-bottom: 15px;">Set up your new secure password</li>
                                   <li style="margin-bottom: 15px;">Complete your profile information</li>
