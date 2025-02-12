@@ -15,7 +15,7 @@ const approvalRoute = require("./routes/admin");
 const profileRoute = require("./routes/profile");
 const communityApproval = require("./routes/userCommunityApproval");
 const communitieRoute = require('./routes/commuities');
-const companyRoute = require("./routes/company");
+const companyRoute = require("./routes/companyPanel");
 
 // Import chat routes and socket initialization
 const { router: chatRoutes } = require("./routes/chat");
