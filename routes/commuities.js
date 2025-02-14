@@ -145,7 +145,7 @@ router.post(
                         newAdminPortal.name || newCommunity.title
                       },</p>
                       <p style="color: #666; margin: 10px 0 0 0;">
-                          Your membership has been approved! We're excited to have you join our community.
+                          Your admin login details
                       </p>
                   </div>
 
@@ -209,7 +209,7 @@ Temporary Password: ${password}
 IMPORTANT: Please change your password after your first login.
 
 Getting Started:
-1. Visit our platform at login.community.com
+1. Visit our platform at login.adminPortal
 2. Enter your username and temporary password
 3. Set up your new secure password
 4. Complete your profile information
