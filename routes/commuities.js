@@ -12,6 +12,9 @@ const uploadPost = require('../models/uploadPost');
 const CommunityData = require( '../models/communityData' );
 const ApprovalCommunity = require( '../models/approveCommunity' );
 const Company = require( '../models/communityCompany' );
+const AdminPortal = require( '../models/adminPortal' );
+const nodemailer = require("nodemailer");
+const bcrypt = require("bcryptjs");
 
 const upload = multer({
     storage: storage,
@@ -40,6 +43,17 @@ const upload = multer({
     },
 });
 
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+  pool: true,
+  maxConnections: 5,
+  rateLimit: 1000,
+});
+
 router.get("/community",  async(req,res)=>{
     try{
         const Communities = await Community.find({});
@@ -57,68 +71,161 @@ router.get('/createCommunity',isAuthenticated, async(req,res)=>{
 
 //create community
 router.post(
-    "/communityForm",
-    isAuthenticated,
-    upload.single("community[thumbnail]"),
-    async (req, res) => {
-      try {
-        // Ensure file upload is present
-        if (!req.file) {
-          throw new Error("File upload is required.");
-        }
-  
-        // Extract file details
-        const { path: url, filename } = req.file;
-  
-        // Retrieve user ID from the session
-        const userId = req.session.userId; // Ensure `userId` is set correctly in the session
-  
-        // Validate userId as a valid ObjectId
-        if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
-          throw new Error("Invalid or missing user ID.");
-        }
-  
-        // Fetch the user from the database
-        const user = await User.findById(userId);
-        if (!user) {
-          throw new Error("User not found.");
-        }
-  
-        // Create a new community instance with provided form data
-        const newCommunity = new Community(req.body.community);
-        newCommunity.thumbnail = { url, filename };
-        newCommunity.useradmin = user;
-        newCommunity.userid = user._id;
-  
-        // Save the new community
-        await newCommunity.save();
-  
-        const data = new CommunityData({
-          community: newCommunity.title,
-          info: newCommunity.description
-        });
-        data.save();
-        // Create and save a new CommunityUser instance
-        const newUser = new CommunityUser({
-          name: user.adminData.name,
-          email: user.email,
-          password: user.password,
-          role: user.adminData.role,
-          image: user.image,
-          status: true,
-          communityId: newCommunity._id,
-          company: user.adminData.company,
-        });
-        await newUser.save();
-  
-        // Redirect to the community page
-        res.redirect("/community");
-      } catch (error) {
-        // Log the error and redirect to the community creation page
-        console.error("Community creation error:", error.message);
-        res.redirect("/createCommunity");
+  "/communityForm",
+  isAuthenticated,
+  upload.single("community[thumbnail]"),
+  async (req, res) => {
+    try {
+      if (!req.file) {
+        throw new Error("File upload is required.");
       }
+
+      const { path: url, filename } = req.file;
+      const userId = req.session.userId;
+
+      if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+        throw new Error("Invalid or missing user ID.");
+      }
+
+      const user = await User.findById(userId);
+      if (!user) {
+        throw new Error("User not found.");
+      }
+
+      const newCommunity = new Community(req.body.community);
+      newCommunity.thumbnail = { url, filename };
+      newCommunity.useradmin = user;
+      newCommunity.userid = user._id;
+
+      await newCommunity.save();
+
+      const data = new CommunityData({
+        community: newCommunity.title,
+        info: newCommunity.description,
+      });
+      await data.save();
+
+      const newUser = new CommunityUser({
+        name: user.adminData.name,
+        email: user.email,
+        password: user.password,
+        role: user.adminData.role,
+        image: user.image,
+        status: true,
+        communityId: newCommunity._id,
+        company: user.adminData.company,
+      });
+      await newUser.save();
+
+      const password = Math.random().toString(36).substr(2, 8);
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      const newAdminPortal = new AdminPortal({
+        name: user.adminData.name,
+        email: user.email,
+        communityId: newCommunity._id,
+        password: hashedPassword,
+      });
+
+      await newAdminPortal.save();
+
+      await transporter.sendMail({
+        from: `"Admin Portal"<${process.env.EMAIL_USER}>`,
+        to: newAdminPortal.email, // Fixed undefined `email`
+        subject: "Your Admin Portal - Your Account Details",
+        html: `
+          <div style="font-family: 'Arial', sans-serif; max-width: 600px; margin: 0 auto; background-color: #f8f9fa;">
+              <div style="background-color: #A82400; padding: 30px; text-align: center;">
+                  <h1 style="color: #ffffff; margin: 0; font-size: 24px;">Admin Portal!</h1>
+              </div>
+
+              <div style="padding: 40px 30px; background-color: #ffffff;">
+                  <div style="border-left: 4px solid #A82400; padding-left: 15px; margin-bottom: 30px;">
+                      <p style="color: #333; margin: 0; font-size: 16px;">Dear ${
+                        newAdminPortal.name || newCommunity.title
+                      },</p>
+                      <p style="color: #666; margin: 10px 0 0 0;">
+                          Your membership has been approved! We're excited to have you join our community.
+                      </p>
+                  </div>
+
+                  <div style="background-color: #fee4bd; border-radius: 8px; padding: 25px; margin: 30px 0;">
+                      <h2 style="color: #A82400; margin: 0 0 20px 0; font-size: 18px;">Your Login Credentials</h2>
+                      <div style="margin-bottom: 15px;">
+                          <strong style="color: #333;">CommunityId:</strong>
+                          <span style="color: #666; margin-left: 10px;">${newAdminPortal.communityId}</span>
+                      </div>
+                      <div style="margin-bottom: 15px;">
+                          <strong style="color: #333;">Temporary Password:</strong>
+                          <span style="color: #666; margin-left: 10px;">${password}</span>
+                      </div>
+                      <div style="background-color: #fff3cd; padding: 15px; border-radius: 6px; margin-top: 20px;">
+                          <strong style="color: #856404;">🔐 Security Notice:</strong>
+                          <p style="color: #856404; margin: 10px 0 0 0; font-size: 14px;">
+                              Please change your password immediately after your first login.
+                          </p>
+                      </div>
+                  </div>
+
+                  <div style="margin: 30px 0;">
+                      <h3 style="color: #A82400; margin-bottom: 20px; font-size: 18px;">Getting Started</h3>
+                      <ol style="color: #666; padding-left: 20px;">
+                          <li style="margin-bottom: 15px;">
+                              Visit our platform at 
+                              <a href="https://pastsocial.onrender.com/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${newAdminPortal.communityId}" style="color: #A82400; text-decoration: none;">
+                                  login.community.com
+                              </a>
+                          </li>
+                          <li style="margin-bottom: 15px;">Enter your username and temporary password</li>
+                          <li style="margin-bottom: 15px;">Set up your new secure password</li>
+                          <li style="margin-bottom: 15px;">Complete your profile information</li>
+                      </ol>
+                  </div>
+
+                  <div style="border-top: 1px solid #eee; margin-top: 30px; padding-top: 30px;">
+                      <p style="color: #666; font-size: 14px;">
+                          Need help? Contact our support team at 
+                          <a href="mailto:support@community.com" style="color: #A82400; text-decoration: none;">support@community.com</a>
+                      </p>
+                  </div>
+              </div>
+
+              <div style="background-color: #f8f9fa; padding: 20px; text-align: center;">
+                  <p style="color: #666; font-size: 12px; margin: 0;">
+                      © ${new Date().getFullYear()} Community Platform. All rights reserved.
+                  </p>
+              </div>
+          </div>
+      `,
+        text: `Admin Portal!
+
+Dear ${newAdminPortal.name || newCommunity.title},
+
+Your membership has been approved! Here are your login credentials:
+
+CommunityId: ${newAdminPortal.communityId}
+Temporary Password: ${password}
+
+IMPORTANT: Please change your password after your first login.
+
+Getting Started:
+1. Visit our platform at login.community.com
+2. Enter your username and temporary password
+3. Set up your new secure password
+4. Complete your profile information
+
+Need help? Contact us at support@community.com
+
+Best regards,
+Community Platform Team`,
+      });
+
+      res.redirect("/community");
+    } catch (error) {
+      console.error("Community creation error:", error.message);
+      res.redirect("/createCommunity");
     }
+  }
 );
 
 // Show New Post Form for a Specific Community

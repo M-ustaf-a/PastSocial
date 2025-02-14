@@ -25,7 +25,7 @@ const userSchema = new Schema({
     userid: {
         type: String,
         required: true,
-    }
+    },
 });
 
 const Community = mongoose.model("Community", userSchema);

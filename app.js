@@ -16,6 +16,7 @@ const profileRoute = require("./routes/profile");
 const communityApproval = require("./routes/userCommunityApproval");
 const communitieRoute = require('./routes/commuities');
 const companyRoute = require("./routes/companyPanel");
+const adminPanelRoute = require("./routes/adminPanel");
 
 // Import chat routes and socket initialization
 const { router: chatRoutes } = require("./routes/chat");
@@ -208,6 +209,7 @@ app.use("/", profileRoute);
 app.use("/", communityApproval);
 app.use("/", communitieRoute);
 app.use("/", companyRoute);
+app.use("/", adminPanelRoute);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

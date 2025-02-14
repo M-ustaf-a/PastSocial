@@ -11,7 +11,8 @@ const adminPortalSchema = new Schema({
         required: true,
     },
     communityId: {
-        type: String,
+        type: Schema.Types.ObjectId,
+        ref: 'Community',
         required: true,
     },
     password: {
