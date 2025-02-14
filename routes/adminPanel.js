@@ -30,9 +30,9 @@ router.post("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId"
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid credentials." });
         }
-
+        req.session.adminPanelId = 
         // Successful login response
-        res.status(200).json({ message: "Login successful", admin });
+        res.redirect("/")
     } catch (error) {
         console.error("Login error:", error);
         res.status(500).json({ error: "Internal server error" });
