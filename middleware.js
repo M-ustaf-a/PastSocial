@@ -60,3 +60,11 @@ module.exports.isCompanyLogged = async(req,res,next)=>{
         return res.redirect("/companyLogin");
     }
 }
+
+module.exports.isAdminLogged = async(req,res,next)=>{
+    if(req.session.adminPanelId){
+        next();
+        res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
+    }
+    res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
+}

@@ -4,6 +4,7 @@ const Community = require("../models/community");
 const AdminPortal = require( "../models/adminPortal" );
 const bcrypt = require("bcryptjs");
 const ApprovalCommunity = require( "../models/approveCommunity" );
+const { isAdminLogged } = require( "../middleware" );
 
 router.get("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", (req,res)=>{
     const {communityId} = req.params;
@@ -13,9 +14,9 @@ router.get("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId",
 //Admin LogIn panel
 router.post("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async (req, res) => {
     try {
-        const { email, password } = req.body.loginPanel; // Assuming the request body is { email, password }
+        const { email, password } = req.body; // Assuming the request body is { email, password }
         const { communityId } = req.params; // Extracting communityId from the route parameter
-
+        console.log(email);
         if (!email || !password) {
             return res.status(400).json({ error: "Email and password are required." });
         }
@@ -33,6 +34,7 @@ router.post("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId"
             return res.status(401).json({ error: "Invalid credentials." });
         }
         req.session.adminPanelId = admin._id;
+        req.session.communityId = communityId;
         // Successful login response
         res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
     } catch (error) {
@@ -61,7 +63,7 @@ router.get("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", asyn
     const community = await Community.findById(communityId);
     const users = await ApprovalCommunity.find({communityId});
     console.log(users);
-    res.render("admin/adminPanel.ejs", {users, community});
+    res.render("admin/adminPanel.ejs", {users, community, communityId});
 });
 
 router.post("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async(req,res)=>{

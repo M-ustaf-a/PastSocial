@@ -3,24 +3,491 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta http-equiv="X-Content-Type-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline'">
+    <title>Admin Login Panel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js" integrity="sha384-[HASH]" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: blanchedalmond;
+            padding: 2rem;
+            perspective: 1500px;
+            overflow: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: #a82400;
+            border-radius: 50%;
+            opacity: 0.3;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.1),
+                0 20px 48px rgba(168, 36, 0, 0.1),
+                0 1px 4px rgba(168, 36, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            opacity: 0;
+            transform-style: preserve-3d;
+            transform: rotateX(-15deg) translateY(20px);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #a82400, transparent, #a82400);
+            border-radius: 1.5rem;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-container:hover::before {
+            opacity: 0.5;
+        }
+
+        h1 {
+            color: #a82400;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-size: 2rem;
+            opacity: 0;
+            transform: scale(0.9) translateY(-20px);
+            text-shadow: 0 2px 4px rgba(168, 36, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateX(-20px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-group::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, #a82400, #ff6b4a);
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .form-group:focus-within::after {
+            transform: translateX(0);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: #a82400;
+            font-weight: 500;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left;
+        }
+
+        .form-group:focus-within label {
+            transform: scale(1.1);
+            color: #ff6b4a;
+        }
+
+        input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #a82400;
+            box-shadow: 
+                0 0 0 3px rgba(168, 36, 0, 0.1),
+                0 4px 12px rgba(168, 36, 0, 0.1);
+            transform: translateY(-2px);
+            background: white;
+        }
+
+        input::placeholder {
+            color: #a0aec0;
+            transition: all 0.3s ease;
+        }
+
+        input:focus::placeholder {
+            opacity: 0;
+            transform: translateX(10px);
+        }
+
+        .error-message {
+            color: #e53e3e;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .error-message.visible {
+            display: block;
+        }
+
+        button {
+            width: 100%;
+            padding: 1rem;
+            background: #a82400;
+            color: white;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            opacity: 0;
+            transform: translateY(20px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(168, 36, 0, 0.2);
+        }
+
+        button:hover {
+            background: #8a1d00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(168, 36, 0, 0.3);
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(168, 36, 0, 0.1);
+            z-index: 2;
+            opacity: 0;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>AdminLoginPanel</h1>
-    <form action="/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/<%=communityId%>" method="post">
-        <div>
-            <label for="email">Email:</label>
-            <input id="email" type="email" name="loginPanel[email]" placeholder="Enter the email">
-        </div>
-        <div>
-            <label for="communityId">CommunityId:</label>
-            <input type="text" id="communityId" name="loginPanel[communityId]">
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="text" id="password" name="loginPanel[password]">
-        </div>
-        <button>Login</button>
-    </form>
+    <div class="particles"></div>
+    <div class="success-overlay"></div>
+    <div class="login-container">
+        <h1>Admin Login Panel</h1>
+        <form id="loginForm" method="post" action="/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/<%=communityId%>" autocomplete="off">
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                    id="email" 
+                    type="email" 
+                    name="email" 
+                    placeholder="Enter your email"
+                    required
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"
+                >
+                <div class="error-message" id="emailError">Please enter a valid email address</div>
+            </div>
+            <div class="form-group">
+                <label for="communityId">Community ID</label>
+                <input 
+                    type="text" 
+                    id="communityId" 
+                    name="communityId"
+                    placeholder="Enter community ID"
+                    required
+                    pattern="^[a-zA-Z0-9-]{3,}$"
+                >
+                <div class="error-message" id="communityIdError">Community ID must be at least 3 characters</div>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    name="password"
+                    placeholder="Enter your password"
+                    required
+                    minlength="8"
+                >
+                <div class="error-message" id="passwordError">Password must be at least 8 characters</div>
+            </div>
+            <button type="submit" id="submitButton">Login</button>
+        </form>
+    </div>
+
+    <script>
+        // Debounce function for performance
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.querySelector('.particles');
+            const particleCount = 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const size = Math.random() * 8 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * -20;
+                
+                gsap.to(particle, {
+                    y: -300,
+                    x: Math.random() * 200 - 100,
+                    rotation: Math.random() * 360,
+                    duration: duration,
+                    repeat: -1,
+                    delay: delay,
+                    ease: "none"
+                });
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Form validation
+        function validateForm() {
+            const email = document.getElementById('email');
+            const communityId = document.getElementById('communityId');
+            const password = document.getElementById('password');
+            const submitButton = document.getElementById('submitButton');
+            
+            const emailValid = email.checkValidity();
+            const communityIdValid = communityId.checkValidity();
+            const passwordValid = password.checkValidity();
+
+            document.getElementById('emailError').classList.toggle('visible', !emailValid);
+            document.getElementById('communityIdError').classList.toggle('visible', !communityIdValid);
+            document.getElementById('passwordError').classList.toggle('visible', !passwordValid);
+
+            submitButton.disabled = !(emailValid && communityIdValid && passwordValid);
+            
+            return emailValid && communityIdValid && passwordValid;
+        }
+
+        // Initialize animations and form handling
+        window.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+
+            const form = document.getElementById('loginForm');
+            const inputs = document.querySelectorAll('input');
+
+            // Initial animations
+            const tl = gsap.timeline({
+                defaults: { ease: "power3.out" }
+            });
+
+            tl.to('.login-container', {
+                opacity: 1,
+                rotateX: 0,
+                y: 0,
+                duration: 1.2,
+                ease: "power4.out"
+            })
+            .to('h1', {
+                opacity: 1,
+                scale: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            }, "-=0.6")
+            .to('.form-group', {
+                opacity: 1,
+                x: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: "back.out(1.7)"
+            }, "-=0.4")
+            .to('button', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: "back.out(1.7)"
+            }, "-=0.4");
+
+            // Input validation
+            const debouncedValidate = debounce(validateForm, 300);
+            inputs.forEach(input => {
+                input.addEventListener('input', debouncedValidate);
+                input.addEventListener('focus', () => {
+                    gsap.to(input, {
+                        scale: 1.02,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    });
+                });
+
+                input.addEventListener('blur', () => {
+                    gsap.to(input, {
+                        scale: 1,
+                        duration: 0.4,
+                        ease: "power2.out"
+                    });
+                    validateForm();
+                });
+            });
+
+            // Form submission
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!validateForm()) {
+                    gsap.to('.login-container', {
+                        x: 10,
+                        rotateZ: 2,
+                        duration: 0.1,
+                        yoyo: true,
+                        repeat: 5,
+                        ease: "rough({ template: none, strength: 1, points: 20, taper: 'none', randomize: true, clamp: false})"
+                    });
+                    return;
+                }
+
+                const submitButton = document.getElementById('submitButton');
+                submitButton.disabled = true;
+                submitButton.textContent = 'Logging in...';
+
+                try {
+                    const formData = new FormData(form);
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-Token': document.querySelector('meta[name="csrf-token"]')?.content
+                        },
+                        body: JSON.stringify(Object.fromEntries(formData)),
+                        credentials: 'same-origin'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Login failed');
+                    }
+
+                    // Success animation
+                    const tl = gsap.timeline();
+                    tl.to('.success-overlay', {
+                        opacity: 1,
+                        duration: 0.5
+                    })
+                    .to('.login-container', {
+                        scale: 0.8,
+                        opacity: 0,
+                        rotateX: 45,
+                        y: -100,
+                        duration: 0.8,
+                        ease: "power4.in"
+                    }, "-=0.3");
+
+                    // Redirect after animation
+                    setTimeout(() => {
+                        const communityId = document.getElementById("communityId")?.value.trim();
+                        if (communityId) {
+                            window.location.href = `/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${encodeURIComponent(communityId)}`;
+                        } else {
+                            console.error("Community ID is missing");
+                        }
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Login';
+                    
+                    gsap.to('.login-container', {
+                        x: 10,
+                        rotateZ: 2,
+                        duration: 0.1,
+                        yoyo: true,
+                        repeat: 5,
+                        ease: "rough({ template: none, strength: 1, points: 20, taper: 'none', randomize: true, clamp: false})"
+                    });
+
+                    // Show error message
+                    const errorDiv = document.createElement('div');
+                    errorDiv.className = 'error-message visible';
+                    errorDiv.textContent = 'Login failed. Please check your credentials.';
+                    form.insertBefore(errorDiv, submitButton);
+                    
+                    // Remove error message after 5 seconds
+                    setTimeout(() => {
+                        errorDiv.remove();
+                    }, 5000);
+                }
+            });
+        });
+
+        // Prevent form resubmission on page refresh
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+
+        // Clean up resources when page is unloaded
+        window.addEventListener('unload', () => {
+            const particles = document.querySelectorAll('.particle');
+            particles.forEach(particle => {
+                gsap.killTweensOf(particle);
+                particle.remove();
+            });
+        });
+    </script>
 </body>
-</html> 
+</html>
