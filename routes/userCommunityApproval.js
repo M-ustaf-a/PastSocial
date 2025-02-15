@@ -64,7 +64,7 @@ router.post(
   }
 );
 
-router.get("/community/:communityId/adminApproval", async (req, res) => {
+router.get("/community/:communityId/membershipApproval", async (req, res) => {
   try {
     const communityId = req.params.communityId;
     const community = await Community.findById(communityId);
@@ -74,6 +74,43 @@ router.get("/community/:communityId/adminApproval", async (req, res) => {
     console.log("Something is wrong:", err);
   }
 });
+
+router.get(
+  "/community/:communityId/membershipApproval/:userId/show",
+  async (req, res) => {
+    try {
+      const { userId, communityId } = req.params;
+
+      console.log(
+        `Fetching details for userId: ${userId} and communityId: ${communityId}`
+      );
+
+      // Fetch the user by ID
+      const user = await ApprovalCommunity.findById(userId);
+      console.log(user);
+      user.isRead = true;
+      await user.save();
+      console.log(user);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+      console.log("User details:", user);
+
+      // Fetch the community by ID
+      const community = await Community.findById(communityId);
+      if (!community) {
+        return res.status(404).send("Community not found");
+      }
+      console.log("Community details:", community);
+
+      // Render the view
+      res.render("approvalShow", { community, user, userId });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      res.status(500).send("Internal Server Error");
+    }
+  }
+);
 
 router.post(
   "/community/:communityId/adminApproval/:userId/show/adminApproved",
@@ -255,43 +292,6 @@ router.post(
     }catch(err){
       console.log(err);
     }   
-  }
-);
-
-router.get(
-  "/community/:communityId/adminApproval/:userId/show",
-  async (req, res) => {
-    try {
-      const { userId, communityId } = req.params;
-
-      console.log(
-        `Fetching details for userId: ${userId} and communityId: ${communityId}`
-      );
-
-      // Fetch the user by ID
-      const user = await ApprovalCommunity.findById(userId);
-      console.log(user);
-      user.isRead = true;
-      await user.save();
-      console.log(user);
-      if (!user) {
-        return res.status(404).send("User not found");
-      }
-      console.log("User details:", user);
-
-      // Fetch the community by ID
-      const community = await Community.findById(communityId);
-      if (!community) {
-        return res.status(404).send("Community not found");
-      }
-      console.log("Community details:", community);
-
-      // Render the view
-      res.render("approvalShow", { community, user, userId });
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      res.status(500).send("Internal Server Error");
-    }
   }
 ); 
 

@@ -3,9 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel</title>
+    <title>Membership Requests</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        custom: '#A82400',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: blanchedalmond;
+        }
+        .custom-color {
+            color: #A82400;
+        }
+    </style>
 </head>
-<body>
-    <h1>Admin Panel</h1>
+<body class="min-h-screen">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold custom-color">Membership Approval</h1>
+            <a href="/adminLogoutPanel/713af207-d906-4d49-85cb-dddbde483a59/<%=community.id%>" class="flex-shrink-0">
+                <img 
+                    src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg" 
+                    alt="Logout" 
+                    class="h-12 w-12 rounded-full object-cover"
+                >
+            </a>
+        </div>
+        
+        <div class="bg-white shadow rounded-lg">
+            <div class="divide-y divide-[#fdc97c]">
+                <%for(let user of users){%>
+                    <div class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-[#fee4bd] hover:bg-[#ffebcd] transition-colors cursor-pointer gap-4 sm:gap-0">
+                        <div class="flex-1">
+                            <div class="flex items-center space-x-4">
+                                <div class="bg-white border-2 border-custom rounded-full flex-shrink-0">
+                                    <img src="<%=user.image.url%>" alt="" class="h-12 w-12 rounded-full object-cover">
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-semibold custom-color"><%=user.name%></h2>
+                                    <p class="text-sm custom-color opacity-75"><%=user.role%></p>
+                                </div>
+                            </div>
+                        </div>
+                        <form action="/community/<%=community.id%>/membershipApproval/<%=user._id%>/show" method="get" class="w-full sm:w-auto">
+                            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border-2 border-custom rounded-md shadow-sm text-sm font-medium text-white bg-custom hover:bg-[#fee4bd] hover:text-custom transition-colors">
+                                View Details
+                                <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </form>
+                    </div>
+                <%}%>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
