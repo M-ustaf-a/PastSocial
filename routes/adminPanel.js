@@ -54,11 +54,11 @@ router.get("/adminLogoutPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId"
         }
         res.clearCookie("connect.sid");
         res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
-    })
-})
+    });
+});
 
 
-router.get("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async(req,res)=>{
+router.get("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId",isAdminLogged, async(req,res)=>{
     const {communityId} = req.params;
     const community = await Community.findById(communityId);
     const users = await ApprovalCommunity.find({communityId});

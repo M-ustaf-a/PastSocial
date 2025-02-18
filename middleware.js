@@ -1,6 +1,4 @@
 
-const CommunityUser = require( "./models/communityUser" );
-
 module.exports.saveRedirectUrl = (req,res,next)=>{
     if(req.session.redirectUrl){
         res.locals.redirectUrl = req.session.redirectUrl;
@@ -62,9 +60,9 @@ module.exports.isCompanyLogged = async(req,res,next)=>{
 }
 
 module.exports.isAdminLogged = async(req,res,next)=>{
+    let communityId = req.session.communityId;
     if(req.session.adminPanelId){
         next();
-        res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
     }
-    res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
+    res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
 }

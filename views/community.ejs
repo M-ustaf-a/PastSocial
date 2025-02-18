@@ -1,401 +1,785 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Community Hub</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Community Hub</title>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --primary-color: #A82400;
+      --secondary-color: #ec6742;
+      --accent-color: #60a5fa;
+      --bg-color: blanchedalmond;
+      --card-bg: #fee4bd;
+      --text-primary: #A82400;
+      --text-secondary: #cd5635;
+      --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+      --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+      --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      --radius-sm: 0.5rem;
+      --radius-md: 1rem;
+      --radius-lg: 1.5rem;
+      --transition-duration: 0.3s;
+      --transition-timing: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
     
-    <!-- External CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
+    /* Enhanced Background Animation */
+    .bg-objects {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+      overflow: hidden;
+    }
     
-    <style>
-        :root {
-            --primary-color: #A82400;
-            --secondary-color: #ec6742;
-            --accent-color: #60a5fa;
-            --bg-color: blanchedalmond;
-            --card-bg: #fee4bd;
-            --text-primary: #A82400;
-            --text-secondary: #cd5635;
-            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
-            --radius-sm: 0.5rem;
-            --radius-md: 1rem;
-            --radius-lg: 1.5rem;
-        }
+    .bg-object {
+      position: absolute;
+      opacity: 0;
+      filter: blur(1px);
+      animation: objectFloat 8s ease-in-out infinite;
+    }
 
-        /* Base Styles */
-        body {
-            background-color: var(--bg-color);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            color: var(--text-primary);
-        }
+    .bg-object.circle {
+      border-radius: 50%;
+      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    }
 
-        .container {
-            max-width: 1440px;
-            margin: 0 auto;
-            padding: 0 1rem;
-        }
+    .bg-object.square {
+      clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+      background: linear-gradient(135deg, var(--secondary-color), var(--accent-color));
+    }
 
-        /* Header Styles */
-        .header {
-            background-color: transparent;
-            box-shadow: var(--shadow-sm);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-        }
+    .bg-object.triangle {
+      clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+      background: linear-gradient(180deg, var(--primary-color), var(--accent-color));
+    }
 
-        .header-content {
-            padding: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .btn{
-            border: none;
-        }
-        svg{
-            color: #A82400;
-        }
-        svg:hover{
-            color: #be4524;
-            transform: scale(1.1);
-        }
-        
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 700;
-        }
+    @keyframes objectFloat {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(0);
+        opacity: 0;
+      }
+      20% {
+        transform: translate(20px, -30px) rotate(45deg) scale(1);
+        opacity: 0.6;
+      }
+      80% {
+        transform: translate(-20px, -60px) rotate(180deg) scale(0.8);
+        opacity: 0.4;
+      }
+      100% {
+        transform: translate(0, -100px) rotate(360deg) scale(0);
+        opacity: 0;
+      }
+    }
 
-        .brand:hover {
-            color: var(--secondary-color);
-        }
+    @keyframes wobble {
+      0%, 100% {
+        transform: translateX(0) rotate(0deg);
+      }
+      25% {
+        transform: translateX(-5px) rotate(-5deg);
+      }
+      75% {
+        transform: translateX(5px) rotate(5deg);
+      }
+    }
 
-        .brand img {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: var(--radius-sm);
-        }
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+      }
+    }
 
-        /* Card Styles */
-        .community-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem 0;
-        }
+    .bg-object.wobble {
+      animation: objectFloat 8s ease-in-out infinite, wobble 3s ease-in-out infinite;
+    }
 
-        .community-card {
-            background-color: var(--card-bg);
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-md);
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .community-card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .card-header {
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2f0e3;
-        }
-
-        .community-title {
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin: 0;
-        }
-
-        .thumbnail-container {
-            position: relative;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio */
-            overflow: hidden;
-        }
-
-        .thumbnail {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .community-card:hover .thumbnail {
-            transform: scale(1.05);
-        }
-
-        .card-footer {
-            padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background-color: var(--card-bg);
-        }
-
-        /* Profile Menu Styles */
-        .profile-menu {
-            position: relative;
-        }
-
-        .profile-button {
-            background: none;
-            border: none;
-            padding: 0;
-            cursor: pointer;
-        }
-
-        .profile-image {
-            width: 2.5rem;
-            height: 2.5rem;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-color);
-            transition: transform 0.2s ease;
-        }
-
-        .profile-image:hover {
-            transform: scale(1.1);
-        }
-
-        /* Dropdown Styles */
-        .custom-dropdown {
-            background-color: var(--card-bg);
-            border: none;
-            border-radius: var(--radius-sm);
-            box-shadow: var(--shadow-lg);
-            padding: 0.5rem;
-            min-width: 200px;
-        }
-
-        .dropdown-item {
-            color: var(--text-primary);
-            padding: 0.75rem 1rem;
-            border-radius: var(--radius-sm);
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            transition: all 0.2s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: blanchedalmond;
-            color: var(--primary-color);
-        }
-
-        .dropdown-item svg {
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        /* Stats Badge */
-        .stats-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 0.5rem 1rem;
-            background-color: rgb(250, 235, 212);
-            border-radius: var(--radius-sm);
-            color: var(--text-secondary);
-            font-size: 0.875rem;
-        }
-
-        .stats-badge svg {
-            width: 1.25rem;
-            height: 1.25rem;
-            color: var(--primary-color);
-        }
-
-        /* Admin Badge */
-        .admin-badge {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .admin-avatar {
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-            border: 2px solid var(--primary-color);
-        }
-        
-        .action-button{
-            padding: 6px 20px;
-            border: 2px solid #A82400;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: none;
-            color: #A82400;
-            font-weight: 500;
-            font-size: 14px;
-        }
-        .action-button:hover{
-            background-color: #A82400;
-            color: blanchedalmond;
-        }
-
-        /* Responsive Design */
-        @media screen and (max-width: 768px) {
-            .community-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .header-content {
-                padding: 0.75rem 1rem;
-            }
-
-            .card-header {
-                padding: 1rem;
-            }
-
-            .card-footer {
-                padding: 0.75rem 1rem;
-            }
-        }
-
-        @media screen and (max-width: 480px) {
-            .community-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .brand span {
-                display: none;
-            }
-        }
-    </style>
+    .bg-object.pulse {
+      animation: objectFloat 8s ease-in-out infinite, pulse 4s ease-in-out infinite;
+    }
+    
+    /* Enhanced Animations */
+    @keyframes fadeInUp {
+      from { 
+        opacity: 0;
+        transform: translateY(30px) scale(0.95) rotate(-2deg);
+      }
+      to { 
+        opacity: 1;
+        transform: translateY(0) scale(1) rotate(0deg);
+      }
+    }
+    
+    @keyframes scaleInBounce {
+      0% { 
+        transform: scale(0.3);
+        opacity: 0;
+      }
+      60% { 
+        transform: scale(1.1);
+      }
+      80% { 
+        transform: scale(0.95);
+      }
+      100% { 
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes slideInRightFade {
+      from { 
+        transform: translateX(50px) scale(0.95) rotate(5deg);
+        opacity: 0;
+      }
+      to { 
+        transform: translateX(0) scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes pulseGlowEnhanced {
+      0% { 
+        box-shadow: 0 0 0 0 rgba(168,36,0,0.4);
+        transform: scale(1) translateY(0);
+      }
+      50% { 
+        box-shadow: 0 0 20px 10px rgba(168,36,0,0.2);
+        transform: scale(1.05) translateY(-5px);
+      }
+      100% { 
+        box-shadow: 0 0 0 0 rgba(168,36,0,0);
+        transform: scale(1) translateY(0);
+      }
+    }
+    
+    @keyframes shimmer {
+      0% { 
+        background-position: -1000px 0;
+        opacity: 0.5;
+      }
+      50% { 
+        opacity: 0.8;
+      }
+      100% { 
+        background-position: 1000px 0;
+        opacity: 0.5;
+      }
+    }
+    
+    @keyframes wiggle {
+      0% { transform: rotate(0deg) scale(1); }
+      25% { transform: rotate(3deg) scale(1.05); }
+      50% { transform: rotate(-3deg) scale(1.1); }
+      75% { transform: rotate(2deg) scale(1.05); }
+      100% { transform: rotate(0deg) scale(1); }
+    }
+    
+    @keyframes bounce {
+      0% { transform: scale(1) translateY(0); }
+      40% { transform: scale(0.95) translateY(-10px); }
+      60% { transform: scale(1.05) translateY(5px); }
+      80% { transform: scale(0.98) translateY(-3px); }
+      100% { transform: scale(1) translateY(0); }
+    }
+    
+    @keyframes popIn {
+      0% { 
+        transform: scale(0.8) rotate(-5deg);
+        opacity: 0;
+      }
+      60% { 
+        transform: scale(1.1) rotate(3deg);
+        opacity: 1;
+      }
+      80% { 
+        transform: scale(0.95) rotate(-1deg);
+      }
+      100% { 
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes float {
+      0% { 
+        transform: translateY(0) rotate(0deg);
+      }
+      50% { 
+        transform: translateY(-6px) rotate(2deg);
+      }
+      100% { 
+        transform: translateY(0) rotate(0deg);
+      }
+    }
+    
+    /* Enhanced Ripple Effect */
+    .action-button {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .action-button .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: ripple-animation 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      background-color: rgba(255,255,255,0.8);
+      pointer-events: none;
+    }
+    
+    @keyframes ripple-animation {
+      0% {
+        transform: scale(0);
+        opacity: 0.8;
+      }
+      100% {
+        transform: scale(4);
+        opacity: 0;
+      }
+    }
+    
+    .pop-in { 
+      animation: popIn 0.5s var(--transition-timing) forwards; 
+    }
+    
+    body {
+      background-color: var(--bg-color);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      color: var(--text-primary);
+      opacity: 0;
+      animation: fadeInUp 0.8s var(--transition-timing) forwards;
+    }
+    
+    .container { 
+      max-width: 1440px; 
+      margin: 0 auto; 
+      padding: 0; 
+    }
+    
+    .header {
+      background-color: transparent;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      animation: slideInRightFade 0.6s var(--transition-timing) forwards;
+      animation-delay: 0.2s;
+    }
+    
+    .header-content {
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .btn { 
+      border: none; 
+      transition: transform var(--transition-duration) var(--transition-timing); 
+    }
+    
+    .btn:hover { 
+      transform: scale(1.05); 
+    }
+    
+    svg {
+      color: var(--primary-color);
+      transition: transform var(--transition-duration) var(--transition-timing), 
+                  color var(--transition-duration) var(--transition-timing);
+    }
+    
+    svg:hover { 
+      color: var(--secondary-color); 
+      transform: scale(1.1); 
+    }
+    
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: 700;
+      transition: transform var(--transition-duration) var(--transition-timing),
+                  color var(--transition-duration) var(--transition-timing);
+    }
+    
+    .brand:hover { 
+      color: var(--secondary-color); 
+      transform: scale(1.05); 
+    }
+    
+    .brand img {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-sm);
+      transition: transform var(--transition-duration) var(--transition-timing);
+    }
+    
+    .brand:hover img { 
+      transform: rotate(10deg); 
+    }
+    
+    .community-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 2rem;
+      padding: 2rem 0;
+    }
+    
+    .community-card {
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-md);
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeInUp 0.8s var(--transition-timing) forwards;
+      animation-delay: calc(var(--animation-order) * 0.15s);
+      transition: transform 0.4s var(--transition-timing),
+                  box-shadow 0.4s var(--transition-timing);
+    }
+    
+    .card-header {
+      padding: 1.5rem;
+      transition: background-color var(--transition-duration) var(--transition-timing);
+    }
+    
+    .community-card:hover .card-header { 
+      background-color: rgba(168,36,0,0.05); 
+    }
+    
+    .community-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: 0;
+      transition: color var(--transition-duration) var(--transition-timing);
+    }
+    
+    .community-title:hover { 
+      animation: wiggle 0.5s var(--transition-timing); 
+    }
+    
+    .thumbnail-container {
+      position: relative;
+      padding-top: 56.25%;
+      overflow: hidden;
+    }
+    
+    .thumbnail {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transition: opacity 0.8s var(--transition-timing),
+                  transform 0.8s var(--transition-timing);
+      background: linear-gradient(90deg, 
+                  var(--card-bg) 25%, 
+                  rgba(168,36,0,0.1) 50%, 
+                  var(--card-bg) 75%);
+      background-size: 1000px 100%;
+      animation: shimmer 2s infinite;
+    }
+    
+    .thumbnail.loaded { 
+      opacity: 1; 
+      background: none; 
+      animation: none; 
+    }
+    
+    .thumbnail.loaded:hover { 
+      transform: scale(1.08); 
+      filter: brightness(1.05); 
+    }
+    
+    .card-footer {
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: var(--card-bg);
+      transition: background-color var(--transition-duration) var(--transition-timing);
+    }
+    
+    .stats-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background-color: rgb(250,235,212);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+      transition: transform var(--transition-duration) var(--transition-timing),
+                  background-color var(--transition-duration) var(--transition-timing);
+    }
+    
+    .stats-badge:hover {
+      animation: pulseGlowEnhanced 1s var(--transition-timing) infinite;
+      background-color: rgb(245,225,195);
+      transform: scale(1.05);
+    }
+    
+    .stats-badge svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: var(--primary-color);
+      transition: transform var(--transition-duration) var(--transition-timing);
+    }
+    
+    .stats-badge:hover svg { 
+      transform: rotate(15deg); 
+    }
+    
+    .admin-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: transform var(--transition-duration) var(--transition-timing);
+    }
+    
+    .admin-badge:hover { 
+      transform: scale(1.1); 
+    }
+    
+    .admin-avatar {
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 2px solid var(--primary-color);
+      transition: all var(--transition-duration) var(--transition-timing);
+    }
+    
+    .admin-avatar:hover {
+      animation: pulseGlowEnhanced 2s var(--transition-timing) infinite,
+                float 3s ease-in-out infinite;
+    }
+    
+    .custom-dropdown {
+      background-color: var(--card-bg);
+      border: none;
+      border-radius: var(--radius-sm);
+      box-shadow: var(--shadow-lg);
+      padding: 0.5rem;
+      min-width: 200px;
+      animation: scaleInBounce 0.5s var(--transition-timing);
+      transform-origin: top right;
+    }
+    
+    .dropdown-item {
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      opacity: 0;
+      animation: fadeInUp 0.3s var(--transition-timing) forwards;
+      animation-delay: calc(var(--animation-order) * 0.1s);
+      transition: transform var(--transition-duration) var(--transition-timing),
+                  background-color var(--transition-duration) var(--transition-timing);
+    }
+    
+    .dropdown-item:hover {
+      background-color: blanchedalmond;
+      color: var(--primary-color);
+      transform: translateX(5px);
+    }
+    
+    .dropdown-item svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      transition: transform var(--transition-duration) var(--transition-timing);
+    }
+    
+    .action-button {
+      padding: 6px 20px;
+      border: 2px solid var(--primary-color);
+      border-radius: 25px;
+      cursor: pointer;
+      transition: transform var(--transition-duration) var(--transition-timing),
+                  background-color var(--transition-duration) var(--transition-timing),
+                  box-shadow var(--transition-duration) var(--transition-timing);
+      background: none;
+      color: var(--primary-color);
+      font-weight: 500;
+      font-size: 14px;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .action-button:hover {
+      background-color: var(--primary-color);
+      color: blanchedalmond;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(168,36,0,0.2);
+    }
+    
+    .action-button:active { 
+      animation: bounce 0.3s var(--transition-timing); 
+    }
+    
+    @media screen and (max-width: 768px) {
+      .community-grid {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 1rem;
+        padding: 1rem;
+      }
+      .header-content { 
+        padding: 0.75rem 1rem; 
+      }
+      .card-header, 
+      .card-footer { 
+        padding: 1rem; 
+      }
+    }
+    
+    @media screen and (max-width: 480px) {
+      .community-grid { 
+        grid-template-columns: 1fr; 
+      }
+      .brand span { 
+        display: none; 
+      }
+    }
+  </style>
 </head>
 <body>
-    <header class="header">
-        <div class="container">
-            <div class="header-content">
-                <a href="/community" class="brand">
-                    <img src="/group.png" alt="Community Hub" />
-                    
-                    <span>Community Hub</span>
-                </a>
-                <% if(user) { %>
-                    <div class="profile-menu">
-                        <div class="dropdown">
-                            <button class="profile-button" type="button" data-bs-toggle="dropdown">
-                                <img src="<%=user.image.url%>" alt="Profile" class="profile-image" />
-                            </button>
-                            <ul class="dropdown-menu custom-dropdown">
-                                <li>
-                                    <a class="dropdown-item" href="/community/<%=user.id%>">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-                                            <circle cx="12" cy="7" r="4"></circle>
-                                        </svg>
-                                        Profile
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/createCommunity">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <circle cx="12" cy="12" r="10"></circle>
-                                            <line x1="12" y1="8" x2="12" y2="16"></line>
-                                            <line x1="8" y1="12" x2="16" y2="12"></line>
-                                        </svg>
-                                        Create Community
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="/admin/logout">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                                            <polyline points="16 17 21 12 16 7"></polyline>
-                                            <line x1="21" y1="12" x2="9" y2="12"></line>
-                                        </svg>
-                                        Logout
-                                    </a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                <% } else { %>
-                    <div class="dropdown">
-                        <button class="btn" type="button" data-bs-toggle="dropdown">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-fill-lock" viewBox="0 0 16 16">
-                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
-                            </svg>
-                        </button>
-                        <div class="dropdown-menu custom-dropdown p-3">
-                            <h6 class="mb-3">Are you already a member?</h6>
-                            <div class="d-flex gap-2">
-                                <a href="/createCommunity" class="action-button">Yes</a>
-                                <a href="/admin/approval" class="action-button">No</a>
-                            </div>
-                        </div>
-                    </div>
-                <% } %>
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="/community" class="brand">
+          <img src="/group.png" alt="Community Hub" />
+          <span>Community Hub</span>
+        </a>
+        <% if(user) { %>
+          <div class="profile-menu">
+            <div class="dropdown">
+              <button class="profile-button" type="button" data-bs-toggle="dropdown">
+                <img src="<%=user.image.url%>" alt="Profile" class="profile-image" />
+              </button>
+              <ul class="dropdown-menu custom-dropdown">
+                <li>
+                  <a class="dropdown-item" href="/community/<%=user.id%>">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                      <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    Profile
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/createCommunity">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="16"></line>
+                      <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                    Create Community
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item" href="/admin/logout">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                      <polyline points="16 17 21 12 16 7"></polyline>
+                      <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Logout
+                  </a>
+                </li>
+              </ul>
             </div>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="community-grid">
-            <% for(community of Communities) { %>
-                <article class="community-card">
-                    <div class="card-header">
-                        <h2 class="community-title"><%=community.title%></h2>
-                    </div>
-                    
-                    <a href="/community/<%= community._id %>/main">
-                        <div class="thumbnail-container">
-                            <img src="<%=community.thumbnail.url%>" alt="<%=community.title%>" class="thumbnail" />
-                        </div>
-                    </a>
-
-                    <div class="card-footer">
-                        <div class="stats-badge">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                                <circle cx="9" cy="7" r="4"></circle>
-                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-                            </svg>
-                            <span><%=community.memberCount || 0%> members</span>
-                        </div>
-                        
-                        <div class="admin-badge" data-bs-toggle="tooltip" data-bs-placement="top" title="Community Admin">
-                            <a href="/community/<%=community.useradmin._id%>">
-                                <img src="<%=community.useradmin.image.url || 'default-avatar.jpg'%>" alt="Admin" class="admin-avatar" />
-                            </a>
-                        </div>
-                    </div>
-                </article>
-            <% } %>
-        </div>
-    </main>
-
-    <%- include("./includes/footer.ejs") %>
-
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script>
-        // Initialize Bootstrap tooltips
-        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-        const tooltipList = [...tooltipTriggerList].map(
-            tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl)
-        );
-    </script>
-</body>
-</html>
+          </div>
+        <% } else { %>
+          <div class="dropdown">
+            <button class="btn" type="button" data-bs-toggle="dropdown">
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-person-fill-lock" viewBox="0 0 16 16">
+                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
+              </svg>
+            </button>
+            <div class="dropdown-menu custom-dropdown p-3">
+              <h6 class="mb-3">Are you already a member?</h6>
+              <div class="d-flex gap-2">
+                <a href="/createCommunity" class="action-button">Yes</a>
+                <a href="/admin/approval" class="action-button">No</a>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </header>
+  
+  <main class="container">
+    <div class="community-grid">
+      <% for(let community of Communities) { %>
+        <article class="community-card">
+          <div class="card-header">
+            <h2 class="community-title"><%=community.title%></h2>
+          </div>
+          <a href="/community/<%= community._id %>/main">
+            <div class="thumbnail-container">
+              <img src="<%=community.thumbnail.url%>" alt="<%=community.title%>" class="thumbnail" />
+            </div>
+          </a>
+          <div class="card-footer">
+            <div class="stats-badge">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+              <span><%=community.memberCount || 0%> members</span>
+            </div>
+            <div class="admin-badge" data-bs-toggle="tooltip" data-bs-placement="top" title="Community Admin">
+              <a href="/community/<%=community.useradmin._id%>">
+                <img src="<%=community.useradmin.image.url || 'default-avatar.jpg'%>" alt="Admin" class="admin-avatar" />
+              </a>
+            </div>
+          </div>
+        </article>
+      <% } %>
+    </div>
+  </main>
+  
+  <%- include("./includes/footer.ejs") %>
+  
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set animation order for grid items
+      const cards = document.querySelectorAll('.community-card');
+      cards.forEach((card, index) => {
+        card.style.setProperty('--animation-order', index);
+      });
+      
+      // Handle thumbnail loading animations
+      const thumbnails = document.querySelectorAll('.thumbnail');
+      thumbnails.forEach(img => {
+        if (img.complete) {
+          img.classList.add('loaded');
+        } else {
+          img.addEventListener('load', () => img.classList.add('loaded'));
+        }
+        img.addEventListener('error', () => {
+          img.src = 'default-thumbnail.jpg';
+          img.classList.add('loaded');
+        });
+      });
+      
+      // Initialize Bootstrap tooltips
+      const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+      [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+      
+      // Enhanced 3D Tilt with Parallax
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          
+          const rotateX = ((y - centerY) / centerY) * 10;
+          const rotateY = ((x - centerX) / centerX) * -10;
+          
+          // Apply parallax to card elements
+          const thumbnail = card.querySelector('.thumbnail');
+          const title = card.querySelector('.community-title');
+          const footer = card.querySelector('.card-footer');
+          
+          card.style.transform = `
+            perspective(1000px) 
+            rotateX(${rotateX}deg) 
+            rotateY(${rotateY}deg) 
+            scale(1.03)
+          `;
+          
+          if (thumbnail) {
+            thumbnail.style.transform = `translateZ(50px) scale(1.1)`;
+          }
+          
+          if (title) {
+            title.style.transform = `translateZ(30px) scale(1.05)`;
+          }
+          
+          if (footer) {
+            footer.style.transform = `translateZ(20px) scale(1.02)`;
+          }
+        });
+        
+        card.addEventListener('mouseleave', () => {
+          const elements = card.querySelectorAll('.thumbnail, .community-title, .card-footer');
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+          elements.forEach(el => {
+            if (el) {
+              el.style.transform = 'translateZ(0) scale(1)';
+            }
+          });
+        });
+      });
+      
+      // Enhanced Background Objects
+      function createBackgroundObject() {
+        const container = document.querySelector('.bg-objects');
+        const obj = document.createElement('div');
+        obj.classList.add('bg-object');
+        
+        // Random properties
+        const size = Math.random() * 30 + 15;
+        const shapes = ['circle', 'square', 'triangle'];
+        const animations = ['wobble', 'pulse'];
+        
+        // Randomly select shape and animation
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+        const animation = animations[Math.floor(Math.random() * animations.length)];
+        
+        obj.classList.add(shape, animation);
+        
+        obj.style.width = `${size}px`;
+        obj.style.height = `${size}px`;
+        obj.style.top = Math.random() * 100 + '%';
+        obj.style.left = Math.random() * 100 + '%';
+        
+        // Add random delay to animation
+        obj.style.animationDelay = `${Math.random() * 2}s`;
+        
+        container.appendChild(obj);
+        
+        // Remove the object after animation completes
+        setTimeout(() => obj.remove(), 8000);
+      }
+      
+      // Create background objects at random intervals
+      setInterval(createBackgroundObject, 500);
+      
+      // Create initial set of objects
+      for (let i = 0; i < 10; i++) {
+        createBackgroundObject();
+      }
+      
+      // Ripple Effect for Action Buttons
+      const actionButtons =0;
+    })
