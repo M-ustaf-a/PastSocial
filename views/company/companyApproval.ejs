@@ -3,28 +3,338 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Company Employee Approval</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #A82400;
+            --primary-light: rgba(168, 36, 0, 0.1);
+            --primary-dark: #8e1e00;
+            --bg: blanchedalmond;
+            --white: #ffffff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg);
+            color: var(--primary);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            background-image: radial-gradient(circle at 10% 20%, rgba(253, 242, 220, 0.8) 0%, rgba(255, 235, 198, 0.4) 90%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 15px 35px rgba(168, 36, 0, 0.15);
+            overflow: hidden;
+            position: relative;
+            animation: container-appear 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--primary-light);
+            width: 100%;
+        }
+
+        .progress {
+            height: 100%;
+            width: 0;
+            background: var(--primary);
+            transition: width 0.3s ease;
+        }
+
+        .form-header {
+            padding: 2rem 2rem 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: "";
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-radius: 2px;
+        }
+
+        .form-content {
+            padding: 0 2rem 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .form-control {
+            width: 100%;
+            height: 60px;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            font-size: 1rem;
+            border: 2px solid rgba(168, 36, 0, 0.15);
+            border-radius: 10px;
+            color: var(--primary);
+            transition: all 0.3s ease;
+            background: rgba(255, 235, 205, 0.1);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-light);
+            background: var(--white);
+        }
+
+        .icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus + .icon {
+            opacity: 1;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--primary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+            background: var(--primary-light);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary);
+            color: var(--white);
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 12px rgba(168, 36, 0, 0.2);
+        }
+
+        .submit-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(168, 36, 0, 0.25);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .validation-icon {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .validation-icon.show {
+            opacity: 1;
+        }
+
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .success-overlay.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .success-icon {
+            color: var(--primary);
+            font-size: 4rem;
+            animation: scale-up 0.5s ease forwards;
+        }
+
+        @keyframes container-appear {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scale-up {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 1rem;
+            }
+            
+            .form-header {
+                padding: 1.5rem 1.5rem 1rem;
+            }
+            
+            .form-content {
+                padding: 0 1.5rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Company Employee Approval</h1>
-    <form action="/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f" method="post">
-        <div class="mt-3">
-            <label for="name">Name</label>
-            <input id="name" type="text" name="companyApproval[name]" required>
-        </div><br>
-        <div class="mt-3">
-           <label for="employeeId">EmployeeId</label>
-           <input type="text" name="companyApproval[employeeId]" id="employeeId" required>
-        </div><br>
-        <div>
-            <label for="reason">Reason</label>
-            <input type="text" name="companyApproval[reason]" id="reason" required>
-        </div><br>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" name="companyApproval[password]" required>
-        </div><br>
-        <button>submit</button>
-    </form>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="form-header">
+            <h1>Company Employee Approval</h1>
+        </div>
+
+        <div class="form-content">
+            <form id="approvalForm" action="/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f" method="post">
+                <div class="form-group">
+                    <input type="text" class="form-control" id="name" name="companyApproval[name]" required placeholder="Name">
+                    <i class="icon fas fa-user"></i>
+                    <i class="fas fa-check validation-icon"></i>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="employeeId" name="companyApproval[employeeId]" required placeholder="Employee ID">
+                    <i class="icon fas fa-id-card"></i>
+                    <i class="fas fa-check validation-icon"></i>
+                </div>
+
+                <div class="form-group">
+                    <input type="text" class="form-control" id="reason" name="companyApproval[reason]" required placeholder="Reason">
+                    <i class="icon fas fa-clipboard-list"></i>
+                    <i class="fas fa-check validation-icon"></i>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="companyApproval[password]" required placeholder="Password">
+                    <i class="icon fas fa-lock"></i>
+                    <button type="button" class="password-toggle" id="passwordToggle">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    <span>Submit</span>
+                </button>
+            </form>
+        </div>
+
+        <div class="success-overlay" id="successOverlay">
+            <i class="fas fa-check-circle success-icon"></i>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('approvalForm');
+            const inputs = document.querySelectorAll('.form-control');
+            const progress = document.getElementById('progress');
+            const submitBtn = document.getElementById('submitBtn');
+            const passwordToggle = document.getElementById('passwordToggle');
+            const passwordField = document.getElementById('password');
+            const successOverlay = document.getElementById('successOverlay');
+
+            function updateProgress() {
+                const filledInputs = Array.from(inputs).filter(input => input.value.length > 0).length;
+                const percentage = (filledInputs / inputs.length) * 100;
+                progress.style.width = `${percentage}%`;
+            }
+
+            function validateField(input) {
+                const validation = input.nextElementSibling.nextElementSibling;
+                validation.classList.toggle('show', input.value.length >= 3);
+            }
+
+            inputs.forEach(input => {
+                input.addEventListener('input', () => {
+                    updateProgress();
+                    validateField(input);
+                });
+            });
+
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordField.type === 'password' ? 'text' : 'password';
+                passwordField.type = type;
+                this.innerHTML = `<i class="fas fa-${type === 'password' ? 'eye' : 'eye-slash'}"></i>`;
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i><span>Processing...</span>';
+
+                setTimeout(() => {
+                    successOverlay.classList.add('show');
+                    setTimeout(() => {
+                        form.submit();
+                    }, 1500);
+                }, 1500);
+            });
+        });
+    </script>
 </body>
 </html>

@@ -9,6 +9,7 @@ const companySchema = new Schema({
     employeeId: {
         type: String,
         required: true,
+        unique: true,
     },
     reason: {
         type: String,
