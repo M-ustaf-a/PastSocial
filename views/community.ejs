@@ -43,7 +43,8 @@
       position: absolute;
       opacity: 0;
       filter: blur(1px);
-      animation: objectFloat 8s ease-in-out infinite;
+      animation: objectFloat 12s ease-in-out infinite;
+      transform-origin: center center;
     }
 
     .bg-object.circle {
@@ -68,85 +69,91 @@
       }
       20% {
         transform: translate(20px, -30px) rotate(45deg) scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: translate(-10px, -100px) rotate(180deg) scale(1.2);
         opacity: 0.6;
       }
       80% {
-        transform: translate(-20px, -60px) rotate(180deg) scale(0.8);
+        transform: translate(-20px, -160px) rotate(360deg) scale(0.8);
         opacity: 0.4;
       }
       100% {
-        transform: translate(0, -100px) rotate(360deg) scale(0);
+        transform: translate(0, -200px) rotate(720deg) scale(0);
         opacity: 0;
       }
     }
 
     @keyframes wobble {
       0%, 100% {
-        transform: translateX(0) rotate(0deg);
+        transform: translateX(0) rotate(0deg) skew(0deg);
       }
       25% {
-        transform: translateX(-5px) rotate(-5deg);
+        transform: translateX(-8px) rotate(-8deg) skew(-5deg);
       }
       75% {
-        transform: translateX(5px) rotate(5deg);
+        transform: translateX(8px) rotate(8deg) skew(5deg);
       }
     }
 
     @keyframes pulse {
       0%, 100% {
-        transform: scale(1);
+        transform: scale(1) rotate(0deg);
         opacity: 0.5;
+        filter: blur(1px);
       }
       50% {
-        transform: scale(1.2);
+        transform: scale(1.5) rotate(180deg);
         opacity: 0.8;
+        filter: blur(2px);
       }
     }
 
     .bg-object.wobble {
-      animation: objectFloat 8s ease-in-out infinite, wobble 3s ease-in-out infinite;
+      animation: objectFloat 12s ease-in-out infinite, wobble 4s ease-in-out infinite;
     }
 
     .bg-object.pulse {
-      animation: objectFloat 8s ease-in-out infinite, pulse 4s ease-in-out infinite;
+      animation: objectFloat 12s ease-in-out infinite, pulse 6s ease-in-out infinite;
     }
     
-    /* Enhanced Animations */
+    /* Enhanced Card Animations */
     @keyframes fadeInUp {
       from { 
         opacity: 0;
-        transform: translateY(30px) scale(0.95) rotate(-2deg);
+        transform: perspective(1000px) translateY(50px) rotateX(-10deg) scale(0.95);
       }
       to { 
         opacity: 1;
-        transform: translateY(0) scale(1) rotate(0deg);
+        transform: perspective(1000px) translateY(0) rotateX(0) scale(1);
       }
     }
     
     @keyframes scaleInBounce {
       0% { 
-        transform: scale(0.3);
+        transform: scale(0.3) rotate(-10deg);
         opacity: 0;
       }
-      60% { 
-        transform: scale(1.1);
+      50% { 
+        transform: scale(1.1) rotate(5deg);
       }
-      80% { 
-        transform: scale(0.95);
+      70% { 
+        transform: scale(0.95) rotate(-3deg);
       }
       100% { 
-        transform: scale(1);
+        transform: scale(1) rotate(0);
         opacity: 1;
       }
     }
     
     @keyframes slideInRightFade {
       from { 
-        transform: translateX(50px) scale(0.95) rotate(5deg);
+        transform: perspective(1000px) translateX(100px) rotateY(-30deg);
         opacity: 0;
       }
       to { 
-        transform: translateX(0) scale(1) rotate(0deg);
+        transform: perspective(1000px) translateX(0) rotateY(0);
         opacity: 1;
       }
     }
@@ -154,75 +161,81 @@
     @keyframes pulseGlowEnhanced {
       0% { 
         box-shadow: 0 0 0 0 rgba(168,36,0,0.4);
-        transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0) rotate(0);
       }
       50% { 
-        box-shadow: 0 0 20px 10px rgba(168,36,0,0.2);
-        transform: scale(1.05) translateY(-5px);
+        box-shadow: 0 0 30px 15px rgba(168,36,0,0.2);
+        transform: scale(1.1) translateY(-8px) rotate(3deg);
       }
       100% { 
         box-shadow: 0 0 0 0 rgba(168,36,0,0);
-        transform: scale(1) translateY(0);
+        transform: scale(1) translateY(0) rotate(0);
       }
     }
     
     @keyframes shimmer {
       0% { 
-        background-position: -1000px 0;
+        background-position: -200% 0;
         opacity: 0.5;
+        transform: scale(1);
       }
       50% { 
         opacity: 0.8;
+        transform: scale(1.02);
       }
       100% { 
-        background-position: 1000px 0;
+        background-position: 200% 0;
         opacity: 0.5;
+        transform: scale(1);
       }
     }
     
     @keyframes wiggle {
-      0% { transform: rotate(0deg) scale(1); }
-      25% { transform: rotate(3deg) scale(1.05); }
-      50% { transform: rotate(-3deg) scale(1.1); }
-      75% { transform: rotate(2deg) scale(1.05); }
-      100% { transform: rotate(0deg) scale(1); }
+      0% { transform: rotate(0deg) scale(1) skew(0deg); }
+      25% { transform: rotate(5deg) scale(1.05) skew(2deg); }
+      50% { transform: rotate(-5deg) scale(1.1) skew(-2deg); }
+      75% { transform: rotate(3deg) scale(1.05) skew(1deg); }
+      100% { transform: rotate(0deg) scale(1) skew(0deg); }
     }
     
     @keyframes bounce {
-      0% { transform: scale(1) translateY(0); }
-      40% { transform: scale(0.95) translateY(-10px); }
-      60% { transform: scale(1.05) translateY(5px); }
-      80% { transform: scale(0.98) translateY(-3px); }
-      100% { transform: scale(1) translateY(0); }
+      0% { transform: scale(1) translateY(0) rotate(0); }
+      40% { transform: scale(0.95) translateY(-15px) rotate(-2deg); }
+      60% { transform: scale(1.05) translateY(8px) rotate(2deg); }
+      80% { transform: scale(0.98) translateY(-5px) rotate(-1deg); }
+      100% { transform: scale(1) translateY(0) rotate(0); }
     }
     
     @keyframes popIn {
       0% { 
-        transform: scale(0.8) rotate(-5deg);
+        transform: scale(0.8) rotate(-8deg) translateY(20px);
         opacity: 0;
       }
       60% { 
-        transform: scale(1.1) rotate(3deg);
+        transform: scale(1.1) rotate(5deg) translateY(-5px);
         opacity: 1;
       }
       80% { 
-        transform: scale(0.95) rotate(-1deg);
+        transform: scale(0.95) rotate(-2deg) translateY(2px);
       }
       100% { 
-        transform: scale(1) rotate(0deg);
+        transform: scale(1) rotate(0) translateY(0);
         opacity: 1;
       }
     }
     
     @keyframes float {
       0% { 
-        transform: translateY(0) rotate(0deg);
+        transform: translateY(0) rotate(0) scale(1);
+        filter: brightness(1);
       }
       50% { 
-        transform: translateY(-6px) rotate(2deg);
+        transform: translateY(-10px) rotate(3deg) scale(1.05);
+        filter: brightness(1.1);
       }
       100% { 
-        transform: translateY(0) rotate(0deg);
+        transform: translateY(0) rotate(0) scale(1);
+        filter: brightness(1);
       }
     }
     
@@ -236,7 +249,7 @@
       position: absolute;
       border-radius: 50%;
       transform: scale(0);
-      animation: ripple-animation 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+      animation: ripple-animation 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
       background-color: rgba(255,255,255,0.8);
       pointer-events: none;
     }
@@ -247,13 +260,13 @@
         opacity: 0.8;
       }
       100% {
-        transform: scale(4);
+        transform: scale(6);
         opacity: 0;
       }
     }
     
     .pop-in { 
-      animation: popIn 0.5s var(--transition-timing) forwards; 
+      animation: popIn 0.8s var(--transition-timing) forwards; 
     }
     
     body {
@@ -261,7 +274,8 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       color: var(--text-primary);
       opacity: 0;
-      animation: fadeInUp 0.8s var(--transition-timing) forwards;
+      animation: fadeInUp 1.2s var(--transition-timing) forwards;
+      perspective: 1000px;
     }
     
     .container { 
@@ -271,7 +285,7 @@
     }
     
     .header {
-      background-color: transparent;
+      background-color: rgba(255, 235, 205, 0.8);
       box-shadow: var(--shadow-sm);
       position: sticky;
       top: 0;
@@ -279,8 +293,30 @@
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       opacity: 0;
-      animation: slideInRightFade 0.6s var(--transition-timing) forwards;
-      animation-delay: 0.2s;
+      animation: slideInRightFade 0.8s var(--transition-timing) forwards;
+      animation-delay: 0.3s;
+    }
+
+    .profile-button {
+      background-color: transparent;
+      border: none;
+      transition: transform 0.3s var(--transition-timing);
+    }
+
+    .profile-button:hover {
+      transform: scale(1.1) rotate(5deg);
+    }
+
+    .profile-image {
+      height: 30px;
+      width: 30px;
+      border-radius: 23px;
+      transition: all 0.3s var(--transition-timing);
+    }
+
+    .profile-image:hover {
+      transform: scale(1.2);
+      box-shadow: 0 0 15px rgba(168,36,0,0.3);
     }
     
     .header-content {
@@ -292,22 +328,22 @@
     
     .btn { 
       border: none; 
-      transition: transform var(--transition-duration) var(--transition-timing); 
+      transition: all var(--transition-duration) var(--transition-timing); 
     }
     
     .btn:hover { 
-      transform: scale(1.05); 
+      transform: scale(1.1) rotate(5deg); 
     }
     
     svg {
       color: var(--primary-color);
-      transition: transform var(--transition-duration) var(--transition-timing), 
-                  color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
     }
     
     svg:hover { 
       color: var(--secondary-color); 
-      transform: scale(1.1); 
+      transform: scale(1.2) rotate(10deg); 
+      filter: drop-shadow(0 0 5px rgba(168,36,0,0.3));
     }
     
     .brand {
@@ -317,24 +353,24 @@
       text-decoration: none;
       color: var(--primary-color);
       font-weight: 700;
-      transition: transform var(--transition-duration) var(--transition-timing),
-                  color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
     }
     
     .brand:hover { 
       color: var(--secondary-color); 
-      transform: scale(1.05); 
+      transform: scale(1.05) translateX(5px); 
     }
     
     .brand img {
       width: 2.5rem;
       height: 2.5rem;
       border-radius: var(--radius-sm);
-      transition: transform var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
     }
     
     .brand:hover img { 
-      transform: rotate(10deg); 
+      transform: rotate(15deg) scale(1.1); 
+      box-shadow: 0 0 15px rgba(168,36,0,0.2);
     }
     
     .community-grid {
@@ -347,21 +383,24 @@
     .community-card {
       background-color: var(--card-bg);
       box-shadow: var(--shadow-md);
+      border-radius: var(--radius-md);
       overflow: hidden;
       opacity: 0;
       animation: fadeInUp 0.8s var(--transition-timing) forwards;
       animation-delay: calc(var(--animation-order) * 0.15s);
-      transition: transform 0.4s var(--transition-timing),
-                  box-shadow 0.4s var(--transition-timing);
+      transition: all 0.4s var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .card-header {
       padding: 1.5rem;
-      transition: background-color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .community-card:hover .card-header { 
       background-color: rgba(168,36,0,0.05); 
+      transform: translateZ(30px);
     }
     
     .community-title {
@@ -369,17 +408,20 @@
       font-weight: 600;
       color: var(--text-primary);
       margin: 0;
-      transition: color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .community-title:hover { 
-      animation: wiggle 0.5s var(--transition-timing); 
+      animation: wiggle 0.8s var(--transition-timing); 
+      color: var(--secondary-color);
     }
     
     .thumbnail-container {
       position: relative;
       padding-top: 56.25%;
       overflow: hidden;
+      transform-style: preserve-3d;
     }
     
     .thumbnail {
@@ -387,17 +429,16 @@
       top: 0;
       left: 0;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: 100%;object-fit: cover;
       opacity: 0;
-      transition: opacity 0.8s var(--transition-timing),
-                  transform 0.8s var(--transition-timing);
+      transition: all 0.8s var(--transition-timing);
       background: linear-gradient(90deg, 
                   var(--card-bg) 25%, 
                   rgba(168,36,0,0.1) 50%, 
                   var(--card-bg) 75%);
-      background-size: 1000px 100%;
-      animation: shimmer 2s infinite;
+      background-size: 200% 100%;
+      animation: shimmer 3s infinite;
+      transform-style: preserve-3d;
     }
     
     .thumbnail.loaded { 
@@ -407,8 +448,8 @@
     }
     
     .thumbnail.loaded:hover { 
-      transform: scale(1.08); 
-      filter: brightness(1.05); 
+      transform: translateZ(50px) scale(1.1); 
+      filter: brightness(1.1) contrast(1.1);
     }
     
     .card-footer {
@@ -417,7 +458,8 @@
       justify-content: space-between;
       align-items: center;
       background-color: var(--card-bg);
-      transition: background-color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .stats-badge {
@@ -429,36 +471,38 @@
       border-radius: var(--radius-sm);
       color: var(--text-secondary);
       font-size: 0.875rem;
-      transition: transform var(--transition-duration) var(--transition-timing),
-                  background-color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .stats-badge:hover {
-      animation: pulseGlowEnhanced 1s var(--transition-timing) infinite;
+      animation: pulseGlowEnhanced 1.5s var(--transition-timing) infinite;
       background-color: rgb(245,225,195);
-      transform: scale(1.05);
+      transform: translateZ(20px) scale(1.1);
     }
     
     .stats-badge svg {
       width: 1.25rem;
       height: 1.25rem;
       color: var(--primary-color);
-      transition: transform var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
     }
     
     .stats-badge:hover svg { 
-      transform: rotate(15deg); 
+      transform: rotate(20deg) scale(1.2); 
+      filter: drop-shadow(0 0 5px rgba(168,36,0,0.3));
     }
     
     .admin-badge {
       display: flex;
       align-items: center;
       gap: 0.5rem;
-      transition: transform var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .admin-badge:hover { 
-      transform: scale(1.1); 
+      transform: translateZ(30px) scale(1.15); 
     }
     
     .admin-avatar {
@@ -467,11 +511,13 @@
       border-radius: 50%;
       border: 2px solid var(--primary-color);
       transition: all var(--transition-duration) var(--transition-timing);
+      transform-style: preserve-3d;
     }
     
     .admin-avatar:hover {
       animation: pulseGlowEnhanced 2s var(--transition-timing) infinite,
                 float 3s ease-in-out infinite;
+      border-color: var(--secondary-color);
     }
     
     .custom-dropdown {
@@ -493,49 +539,52 @@
       align-items: center;
       gap: 0.75rem;
       opacity: 0;
-      animation: fadeInUp 0.3s var(--transition-timing) forwards;
+      animation: fadeInUp 0.5s var(--transition-timing) forwards;
       animation-delay: calc(var(--animation-order) * 0.1s);
-      transition: transform var(--transition-duration) var(--transition-timing),
-                  background-color var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
     }
     
     .dropdown-item:hover {
-      background-color: blanchedalmond;
+      background-color: rgba(168,36,0,0.1);
       color: var(--primary-color);
-      transform: translateX(5px);
+      transform: translateX(8px) scale(1.02);
     }
     
     .dropdown-item svg {
       width: 1.25rem;
       height: 1.25rem;
-      transition: transform var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
+    }
+    
+    .dropdown-item:hover svg {
+      transform: scale(1.2) rotate(10deg);
+      filter: drop-shadow(0 0 3px rgba(168,36,0,0.3));
     }
     
     .action-button {
-      padding: 6px 20px;
+      padding: 8px 24px;
       border: 2px solid var(--primary-color);
       border-radius: 25px;
       cursor: pointer;
-      transition: transform var(--transition-duration) var(--transition-timing),
-                  background-color var(--transition-duration) var(--transition-timing),
-                  box-shadow var(--transition-duration) var(--transition-timing);
+      transition: all var(--transition-duration) var(--transition-timing);
       background: none;
       color: var(--primary-color);
       font-weight: 500;
       font-size: 14px;
       position: relative;
       overflow: hidden;
+      transform-style: preserve-3d;
     }
     
     .action-button:hover {
       background-color: var(--primary-color);
-      color: blanchedalmond;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(168,36,0,0.2);
+      color: var(--bg-color);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 5px 15px rgba(168,36,0,0.3);
     }
     
     .action-button:active { 
-      animation: bounce 0.3s var(--transition-timing); 
+      animation: bounce 0.5s var(--transition-timing); 
     }
     
     @media screen and (max-width: 768px) {
@@ -564,6 +613,7 @@
   </style>
 </head>
 <body>
+  <div class="bg-objects"></div>
   <header class="header">
     <div class="container">
       <div class="header-content">
@@ -669,74 +719,104 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
-      // Set animation order for grid items
+      // Enhanced animation timing function
+      const easeOutBack = 'cubic-bezier(0.34, 1.56, 0.64, 1)';
+      
+      // Set animation order for grid items with custom delay
       const cards = document.querySelectorAll('.community-card');
       cards.forEach((card, index) => {
         card.style.setProperty('--animation-order', index);
+        card.style.animationDelay = `${index * 0.1}s`;
       });
       
-      // Handle thumbnail loading animations
+      // Enhanced thumbnail loading animations
       const thumbnails = document.querySelectorAll('.thumbnail');
       thumbnails.forEach(img => {
-        if (img.complete) {
+        const loadWithEffect = () => {
           img.classList.add('loaded');
+          img.style.animation = 'scaleInBounce 0.6s ' + easeOutBack;
+        };
+        
+        if (img.complete) {
+          loadWithEffect();
         } else {
-          img.addEventListener('load', () => img.classList.add('loaded'));
+          img.addEventListener('load', loadWithEffect);
         }
+        
         img.addEventListener('error', () => {
           img.src = 'default-thumbnail.jpg';
-          img.classList.add('loaded');
+          loadWithEffect();
         });
       });
       
-      // Initialize Bootstrap tooltips
+      // Initialize Bootstrap tooltips with custom animation
       const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
-      [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el));
+      [...tooltipTriggerList].map(el => new bootstrap.Tooltip(el, {
+        animation: true,
+        template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner pop-in"></div></div>'
+      }));
       
-      // Enhanced 3D Tilt with Parallax
+      // Enhanced 3D Tilt with Parallax and Lighting
       cards.forEach(card => {
+        let transitionTimeout;
+        
         card.addEventListener('mousemove', (e) => {
+          clearTimeout(transitionTimeout);
+          card.style.transition = 'none';
+          
           const rect = card.getBoundingClientRect();
           const x = e.clientX - rect.left;
           const y = e.clientY - rect.top;
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
           
-          const rotateX = ((y - centerY) / centerY) * 10;
-          const rotateY = ((x - centerX) / centerX) * -10;
+          const rotateX = ((y - centerY) / centerY) * 8;
+          const rotateY = ((x - centerX) / centerX) * -8;
           
-          // Apply parallax to card elements
-          const thumbnail = card.querySelector('.thumbnail');
-          const title = card.querySelector('.community-title');
-          const footer = card.querySelector('.card-footer');
+          // Calculate lighting effect
+          const brightness = 1 + (((x - centerX) / centerX) * 0.1);
           
+          // Apply transforms with lighting
           card.style.transform = `
             perspective(1000px) 
             rotateX(${rotateX}deg) 
             rotateY(${rotateY}deg) 
-            scale(1.03)
+            scale(1.05)
           `;
+          card.style.filter = `brightness(${brightness})`;
           
-          if (thumbnail) {
-            thumbnail.style.transform = `translateZ(50px) scale(1.1)`;
-          }
+          // Parallax for child elements
+          const elements = {
+            thumbnail: { z: 50, scale: 1.1 },
+            title: { z: 30, scale: 1.05 },
+            footer: { z: 20, scale: 1.02 }
+          };
           
-          if (title) {
-            title.style.transform = `translateZ(30px) scale(1.05)`;
-          }
-          
-          if (footer) {
-            footer.style.transform = `translateZ(20px) scale(1.02)`;
-          }
+          Object.entries(elements).forEach(([className, { z, scale }]) => {
+            const element = card.querySelector(`.${className}`);
+            if (element) {
+              const xOffset = ((x - centerX) / centerX) * 10;
+              const yOffset = ((y - centerY) / centerY) * 10;
+              element.style.transform = `
+                translateZ(${z}px) 
+                translateX(${xOffset}px) 
+                translateY(${yOffset}px) 
+                scale(${scale})
+              `;
+            }
+          });
         });
         
         card.addEventListener('mouseleave', () => {
-          const elements = card.querySelectorAll('.thumbnail, .community-title, .card-footer');
+          // Smooth transition back to original state
+          card.style.transition = 'all 0.5s ' + easeOutBack;
           card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)';
+          card.style.filter = 'brightness(1)';
+          
+          const elements = card.querySelectorAll('.thumbnail, .community-title, .card-footer');
           elements.forEach(el => {
-            if (el) {
-              el.style.transform = 'translateZ(0) scale(1)';
-            }
+            el.style.transform = 'translateZ(0) scale(1)';
+            el.style.transition = 'all 0.5s ' + easeOutBack;
           });
         });
       });
@@ -747,39 +827,73 @@
         const obj = document.createElement('div');
         obj.classList.add('bg-object');
         
-        // Random properties
-        const size = Math.random() * 30 + 15;
+        // Enhanced random properties
+        const size = Math.random() * 40 + 20;
         const shapes = ['circle', 'square', 'triangle'];
         const animations = ['wobble', 'pulse'];
         
-        // Randomly select shape and animation
         const shape = shapes[Math.floor(Math.random() * shapes.length)];
         const animation = animations[Math.floor(Math.random() * animations.length)];
         
         obj.classList.add(shape, animation);
         
+        // Random positioning and timing
         obj.style.width = `${size}px`;
         obj.style.height = `${size}px`;
-        obj.style.top = Math.random() * 100 + '%';
-        obj.style.left = Math.random() * 100 + '%';
-        
-        // Add random delay to animation
+        obj.style.top = `${Math.random() * 100}%`;
+        obj.style.left = `${Math.random() * 100}%`;
         obj.style.animationDelay = `${Math.random() * 2}s`;
+        obj.style.animationDuration = `${8 + Math.random() * 4}s`;
+        
+        // Random rotation
+        obj.style.transform = `rotate(${Math.random() * 360}deg)`;
         
         container.appendChild(obj);
         
-        // Remove the object after animation completes
-        setTimeout(() => obj.remove(), 8000);
+        setTimeout(() => {
+          obj.style.transition = 'opacity 0.5s';
+          obj.style.opacity = '0';
+          setTimeout(() => obj.remove(), 500);
+        }, 12000);
       }
       
-      // Create background objects at random intervals
-      setInterval(createBackgroundObject, 500);
+      // Create background objects at variable intervals
+      setInterval(createBackgroundObject, 800);
       
-      // Create initial set of objects
-      for (let i = 0; i < 10; i++) {
-        createBackgroundObject();
+      // Initial background objects
+      for (let i = 0; i < 12; i++) {
+        setTimeout(createBackgroundObject, i * 200);
       }
       
-      // Ripple Effect for Action Buttons
-      const actionButtons =0;
-    })
+      // Enhanced Ripple Effect
+      const actionButtons = document.querySelectorAll('.action-button');
+      
+      actionButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          const ripple = document.createElement('span');
+          ripple.classList.add('ripple');
+          
+          const rect = button.getBoundingClientRect();
+          const size = Math.max(rect.width, rect.height) * 3;
+          
+          ripple.style.width = ripple.style.height = `${size}px`;
+          ripple.style.left = `${e.clientX - rect.left - size/2}px`;
+          ripple.style.top = `${e.clientY - rect.top - size/2}px`;
+          
+          // Remove existing ripples
+          const existingRipples = this.getElementsByClassName('ripple');
+          Array.from(existingRipples).forEach(r => r.remove());
+          
+          this.appendChild(ripple);
+          
+          // Enhanced ripple cleanup
+          setTimeout(() => {
+            ripple.style.opacity = '0';
+            setTimeout(() => ripple.remove(), 300);
+          }, 900);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

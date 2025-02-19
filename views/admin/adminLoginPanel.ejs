@@ -277,7 +277,7 @@
     <div class="success-overlay"></div>
     <div class="login-container">
         <h1>Admin Login Panel</h1>
-        <form id="loginForm" method="post" action="/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/<%=communityId%>" autocomplete="off">
+        <form id="loginForm" action="/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/<%=communityId%>" method="post" autocomplete="off">
             <div class="form-group">
                 <label for="email">Email</label>
                 <input 
@@ -632,3 +632,29 @@
     </script>
 </body>
 </html>
+
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin panel login</title>
+</head>
+<body>
+    <form action="/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/<%=communityId%>" method="post">
+        <div>
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email">
+        </div>
+        <div>
+            <label for="communityId">communityId</label>
+            <input type="text" name="communityId" id="communityId">
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" name="password" id="password">
+        </div>
+        <button>login</button>
+    </form>
+</body>
+</html> -->

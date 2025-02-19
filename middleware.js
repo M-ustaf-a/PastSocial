@@ -61,8 +61,9 @@ module.exports.isCompanyLogged = async(req,res,next)=>{
 
 module.exports.isAdminLogged = async(req,res,next)=>{
     let communityId = req.session.communityId;
-    if(req.session.adminPanelId){
+    if(req.session.adminId){
         next();
+    }else{
+         res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
     }
-    res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
 }

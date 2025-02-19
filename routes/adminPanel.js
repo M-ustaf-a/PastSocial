@@ -1,75 +1,134 @@
 const express = require("express");
 const router = express.Router();
 const Community = require("../models/community");
-const AdminPortal = require( "../models/adminPortal" );
+const AdminPortal = require("../models/adminPortal");
 const bcrypt = require("bcryptjs");
-const ApprovalCommunity = require( "../models/approveCommunity" );
-const { isAdminLogged } = require( "../middleware" );
+const ApprovalCommunity = require("../models/approveCommunity");
+const { isAdminLogged } = require("../middleware");
 
-router.get("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", (req,res)=>{
-    const {communityId} = req.params;
-    res.render("admin/adminLoginPanel", {communityId});
-});
-
-//Admin LogIn panel
-router.post("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async (req, res) => {
+// Get route Admin login panel
+router.get("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", (req, res) => {
     try {
-        const { email, password } = req.body; // Assuming the request body is { email, password }
-        const { communityId } = req.params; // Extracting communityId from the route parameter
-        console.log(email);
-        if (!email || !password) {
-            return res.status(400).json({ error: "Email and password are required." });
-        }
-
-        // Find the admin by email and communityId
-        const admin = await AdminPortal.findOne({ email, communityId });
-        if (!admin) {
-            return res.status(404).json({ error: "Admin not found." });
-        }
-        console.log(admin);
-
-        // Compare passwords using bcrypt
-        const isMatch = await bcrypt.compare(password, admin.password);
-        if (!isMatch) {
-            return res.status(401).json({ error: "Invalid credentials." });
-        }
-        req.session.adminPanelId = admin._id;
-        req.session.communityId = communityId;
-        // Successful login response
-        res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
+        const  {communityId}  = req.params;
+        console.log(communityId);
+        res.render("admin/adminLoginPanel", { communityId });
     } catch (error) {
-        console.error("Login error:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Error in admin login page:", error);
+        res.status(500).send("Internal Server Error");
     }
 });
 
-
-//Admin logout panel
-router.get("/adminLogoutPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async(req,res)=>{
-    const {communityId} = req.params;
-    req.session.destroy((err)=>{
-        if(err){
-            console.error("Error during logout",err);
-            res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
+// Post route Admin LogIn panel
+router.post("/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const  { communityId }  = req.params;
+        console.log(communityId);
+        // Validate inputs
+        if (!email || !password || !communityId) {
+            return res.status(400).send("All fields are required");
         }
-        res.clearCookie("connect.sid");
-        res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`)
-    });
+
+        // Find admin and verify community exists
+        const [community, admin] = await Promise.all([
+            Community.findById(communityId),
+            AdminPortal.findOne({ email, communityId })
+        ]);
+        console.log(community,admin);
+
+        if (!community) {
+            return res.status(404).send("Community not found");
+        }
+
+        if (!admin) {
+            return res.status(401).send("Invalid credentials");
+        }
+
+        // Verify password
+        const isMatch = await bcrypt.compare(password, admin.password);
+        if (!isMatch) {
+            return res.status(401).send("Invalid credentials");
+        }
+
+        console.log(isMatch);
+        // Set session
+        req.session.adminId = admin._id;
+        req.session.communityId = communityId;
+
+        res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
+    } catch (error) {
+        console.error("Error in admin login:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
+// Get route Admin panel
+router.get("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId",isAdminLogged, async (req, res) => {
+    try {
+        const { communityId } = req.params;
 
-router.get("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId",isAdminLogged, async(req,res)=>{
-    const {communityId} = req.params;
-    const community = await Community.findById(communityId);
-    const users = await ApprovalCommunity.find({communityId});
-    console.log(users);
-    res.render("admin/adminPanel.ejs", {users, community, communityId});
+        // Verify admin has access to this community
+        if (req.session.communityId !== communityId) {
+            return res.status(403).send("Unauthorized access");
+        }
+
+        const [community, users] = await Promise.all([
+            Community.findById(communityId),
+            ApprovalCommunity.find({ communityId })
+        ]);
+
+        if (!community) {
+            return res.status(404).send("Community not found");
+        }
+
+        res.render("admin/adminPanel", { users, community, communityId });
+    } catch (error) {
+        console.error("Error in admin panel:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
-router.post("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", async(req,res)=>{
-    const {email, password, communityId} = req.body.adminPortal;
-    const community = await Community.find(email,communityId);
-    console.log(community);
+// Post route Admin panel
+// router.post("/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", isAdminLogged, async (req, res) => {
+//     try {
+//         const { email, password } = req.body.adminPortal;
+//         const { communityId } = req.params;
+
+//         // Verify admin has access to this community
+//         if (req.session.communityId !== communityId) {
+//             return res.status(403).send("Unauthorized access");
+//         }
+
+//         const community = await Community.findOne({ email, _id: communityId });
+//         if (!community) {
+//             return res.status(404).send("Community not found");
+//         }
+
+//         // Add your admin panel post logic here
+//         res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
+//     } catch (error) {
+//         console.error("Error in admin panel post:", error);
+//         res.status(500).send("Internal Server Error");
+//     }
+// });
+
+// Admin logout panel
+router.get("/adminLogoutPanel/713af207-d906-4d49-85cb-dddbde483a59/:communityId", isAdminLogged, async (req, res) => {
+    try {
+        const { communityId } = req.params;
+        console.log(communityId);
+        req.session.destroy((err) => {
+            if (err) {
+                console.error("Error during logout:", err);
+                return res.redirect(`/adminPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
+            }
+            res.clearCookie("connect.sid");
+            res.redirect(`/adminLoginPanel/713af207-d906-4d49-85cb-dddbde483a59/${communityId}`);
+        });
+    } catch (error) {
+        console.error("Error in logout:", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 module.exports = router;
