@@ -3,9 +3,226 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Application submit</title>
+    <title>Application Submit</title>
+    <style>
+        :root {
+            --primary: #A82400;
+            --primary-light: #F8E8E4;
+            --success: #28a745;
+        }
+        
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, var(--primary-light) 0%, #fff6ed 100%);
+            transition: background 0.5s ease;
+        }
+        
+        .success-container {
+            text-align: center;
+            padding: 3rem;
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 15px 35px rgba(168, 36, 0, 0.1);
+            width: 85%;
+            max-width: 500px;
+            transform: translateY(30px);
+            opacity: 0;
+            animation: slideIn 0.7s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+        }
+        
+        .checkmark-circle {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            background-color: white;
+            position: relative;
+            box-shadow: 0 5px 20px rgba(168, 36, 0, 0.15);
+            overflow: hidden;
+        }
+        
+        .checkmark-circle:before {
+            content: '';
+            position: absolute;
+            width: 0%;
+            height: 100%;
+            background-color: var(--primary);
+            border-radius: 50%;
+            animation: fillCircle 0.8s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+            animation-delay: 0.3s;
+        }
+        
+        .checkmark {
+            position: relative;
+            z-index: 10;
+            transform-origin: 50% 50%;
+        }
+        
+        .checkmark-path {
+            fill: none;
+            stroke: #FFFFFF;
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 80;
+            stroke-dashoffset: 80;
+            animation: drawCheck 0.8s ease-in-out forwards;
+            animation-delay: 1s;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 1.5rem 0 0.75rem;
+            font-size: 2rem;
+            font-weight: 600;
+            opacity: 0;
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 1.2s;
+        }
+        
+        p {
+            color: #666;
+            opacity: 0;
+            margin: 0.75rem 0 1.5rem;
+            line-height: 1.6;
+            animation: fadeIn 0.8s ease-out forwards;
+            animation-delay: 1.4s;
+        }
+        
+        .button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 32px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: buttonAppear 0.5s ease forwards;
+            animation-delay: 1.8s;
+            box-shadow: 0 4px 12px rgba(168, 36, 0, 0.2);
+        }
+        
+        .button:hover {
+            background-color: #8a1e00;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(168, 36, 0, 0.3);
+        }
+        
+        @keyframes fillCircle {
+            to {
+                width: 100%;
+            }
+        }
+        
+        @keyframes drawCheck {
+            from {
+                stroke-dashoffset: 80;
+            }
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        
+        @keyframes slideIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes buttonAppear {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            opacity: 0;
+        }
+        
+        @keyframes confettiDrop {
+            0% {
+                transform: translateY(-50px) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Application submit successfully</h1>
+    <div class="success-container">
+        <div class="checkmark-circle">
+            <svg class="checkmark" viewBox="0 0 52 52">
+                <path class="checkmark-path" d="M14 27L23 36L38 16" />
+            </svg>
+        </div>
+        <h1>Successfully!</h1>
+        <p>Thank you for part of the company.</p>
+        <button class="button" onclick="window.location.href='/companyLogin'">Return to Dashboard</button>
+    </div>
+
+    <script>
+        function createConfetti() {
+            const colors = ['#A82400', '#F8E8E4', '#F2C94C', '#6FCF97', '#BB6BD9'];
+            const containerRect = document.querySelector('.success-container').getBoundingClientRect();
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    
+                    const leftPos = containerRect.left + (Math.random() * containerRect.width);
+                    confetti.style.left = `${leftPos}px`;
+                    confetti.style.top = `${containerRect.top - 20}px`;
+                    
+                    const size = 5 + Math.random() * 10;
+                    confetti.style.width = `${size}px`;
+                    confetti.style.height = `${size}px`;
+                    
+                    const colorIndex = Math.floor(Math.random() * colors.length);
+                    confetti.style.backgroundColor = colors[colorIndex];
+                    
+                    if (Math.random() > 0.5) {
+                        confetti.style.borderRadius = '50%';
+                    }
+                    
+                    document.body.appendChild(confetti);
+                    
+                    confetti.style.animation = `confettiDrop ${2 + Math.random() * 3}s forwards`;
+                    
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }, i * 100);
+            }
+        }
+        
+        setTimeout(createConfetti, 1300);
+    </script>
 </body>
 </html>

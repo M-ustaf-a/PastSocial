@@ -5,36 +5,36 @@ const { isCompanyEmployee, isCompanyLogged } = require("../middleware");
 const Company = require("../models/company");
 const bcrypt = require("bcryptjs");
 
-// // GET /companyEmployeeApproval
-router.get("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", (req, res) => {
-    res.render("./company/companyApproval");
-});
+// GET /companyEmployeeApproval
+// router.get("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", (req, res) => {
+//     res.render("./company/companyApproval");
+// });
 
 // POST /companyEmployeeApproval
-router.post("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", async (req, res) => {
-    try {
-        const {password, ...otherDetails} = req.body.companyApproval;
-        console.log(password);
-        // Check if password exists
-        if (!password) {
-            return res.status(400).send("Password is required");
-        }
+// router.post("/companyEmployeeApproval/3fcdbc7c-a72c-474a-bbba-4b7d373f550f", async (req, res) => {
+//     try {
+//         const {password, ...otherDetails} = req.body.companyApproval;
+//         console.log(password);
+//         // Check if password exists
+//         if (!password) {
+//             return res.status(400).send("Password is required");
+//         }
 
-        const hashedPassword = await bcrypt.hash(password, 10);
+//         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const companyEmployee = new Company({
-            ...otherDetails,
-            password: hashedPassword,
-        });
+//         const companyEmployee = new Company({
+//             ...otherDetails,
+//             password: hashedPassword,
+//         });
 
-        await companyEmployee.save();
-        console.log(companyEmployee);
-        res.render("./company/companyApplicationSubmit");
-    } catch (err) {
-        console.error(err);
-        res.status(500).send("Error processing approval");
-    }
-});
+//         await companyEmployee.save();
+//         console.log(companyEmployee);
+//         res.render("./company/companyApplicationSubmit");
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).send("Error processing approval");
+//     }
+// });
 
 // GET /companyLogin
 router.get("/companyLogin", (req, res) => {
