@@ -31,7 +31,12 @@ const userSchema = new Schema(
     adminData: {
       type: Object,
       default: {},
+    },
+    linkup: {
+      type: Object,
+      default: {},
     }
+
   },
   { timestamps: true } // Automatically add createdAt and updatedAt fields
 );

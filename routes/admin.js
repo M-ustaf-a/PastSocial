@@ -102,74 +102,149 @@ router.get("/admin/approval", (req, res) => {
   res.render("admin/approvalForm");
 });
 
-router.post(
-  "/admin/approval",
-  upload.single("approval[image]"),
-  async (req, res) => {
+router.post("/admin/approval", upload.single("approval[image]"), async (req, res) => {
+  try {
+    // Check if request body and approval data exist
+    if (!req.body || !req.body.approval) {
+      return res.status(400).json({ error: "Invalid request format. Missing approval data." });
+    }
+
+    // Extract approval data from request body
+    const { name, email, bio, role, company, reason } = req.body.approval;
+    
+    // Validate required fields
+    if (!name || !email || !bio || !role || !req.file) {
+      return res.status(400).json({ error: "All required fields must be provided, including an image." });
+    }
+    
+    // Get uploaded file information - ensure filename and path are defined
+    if (!req.file.path || !req.file.filename) {
+      return res.status(400).json({ error: "File upload failed. Missing file information." });
+    }
+    
+    const { path: url, filename } = req.file;
+    
+    // Create and save new approval request
+    const newRequest = new Approvaladmin({
+      name,
+      email,
+      bio,
+      role,
+      company: company || "", // Handle optional field
+      reason: reason || "", // Handle optional field
+      image: { url, filename },
+      approved: false,
+      submittedAt: new Date(),
+    });
+    
+    // Validate model before saving
+    const validationError = newRequest.validateSync();
+    if (validationError) {
+      return res.status(400).json({ error: "Validation failed", details: validationError.message });
+    }
+    
+    const savedRequest = await newRequest.save();
+    
+    // Create notification with proper error handling
     try {
-      const { name, email, bio, role, company, reason } = req.body.approval;
-
-      if (!name || !email || !bio || !role || !req.file) {
-        return res
-          .status(400)
-          .send("All required fields must be provided, including an image.");
-      }
-
-      const { path: url, filename } = req.file;
-
-      const newRequest = new Approvaladmin({
-        name,
-        email,
-        bio,
-        role,
-        company,
-        reason,
-        image: { url, filename },
-      });
-      await newRequest.save();
-
-      const notification = new Notification({
+      await Notification.create({
         type: "membership_request",
         content: {
-          requestId: newRequest._id,
+          requestId: savedRequest._id,
           name,
           email,
           bio,
           role,
-          company,
+          company: company || "",
           imageUrl: url,
+          approved: false,
         },
+        createdAt: new Date(),
+        read: false,
       });
-
-      await notification.save();
-
-      const sanitizedHTML = `
-            <p>A new membership request has been submitted:</p>
-            <ul>
-                <li>Name: ${name}</li>
-                <li>Email: ${email} </li>
-                <li>Bio: ${bio}</li>
-                <li>Role: ${role}</li>
-                <li>Company: ${company}</li>
-                <li>Reason: ${reason} </li>
-            </ul>
-            <p><a href="${url}">View Attached Image</a></p>
-        `;
-
-      await transporter.sendMail({
-        from: `Admin Dashboard <${process.env.EMAIL_USER}>`,
-        to: process.env.ADMIN_EMAIL,
-        subject: "New Membership Request",
-        html: sanitizedHTML,
-      });
-      res.render("submit.ejs");
-      // res.status(200).send("Membership request submitted successfully!");
-    } catch (err) {
-      console.error("Error processing request:", err);
-      res.status(500).send("An error occurred while processing the request.");
+    } catch (notificationErr) {
+      console.error("Failed to create notification:", notificationErr);
+      // Continue execution - notification failure shouldn't stop the process
     }
+    
+    // Sanitize and validate email template variables
+    const sanitizedName = name.replace(/[<>]/g, '');
+    const adminUrl = process.env.ADMIN_URL || '';
+    
+    // Email HTML template (simplified for brevity)
+    const emailHtml = `<!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <title>New Membership Request</title>
+        </head>
+        <body>
+          <h1>New Membership Request</h1>
+          <p>Name: ${sanitizedName}</p>
+          <p>Email: ${email}</p>
+          <p>Role: ${role}</p>
+          <p>Company: ${company || "Not specified"}</p>
+          <a href="${adminUrl}/admin/requests/${savedRequest._id}">Review Request</a>
+        </body>
+      </html>`;
+    
+    // Send email if configured
+    if (process.env.EMAIL_USER && process.env.ADMIN_EMAIL) {
+      try {
+        await transporter.sendMail({
+          from: `Admin Dashboard <${process.env.EMAIL_USER}>`,
+          to: process.env.ADMIN_EMAIL,
+          subject: "✨ New Membership Request - Action Required",
+          html: emailHtml,
+          attachments: [
+            {
+              filename: filename,
+              path: url,
+              cid: 'applicant-image'
+            }
+          ]
+        });
+      } catch (emailErr) {
+        console.error("Failed to send email notification:", emailErr);
+      }
+    }
+    
+    // Return response based on request type
+    if (req.xhr || req.headers.accept?.includes('application/json')) {
+      return res.status(201).json({
+        success: true,
+        message: "Your membership request has been submitted successfully.",
+        requestId: savedRequest._id
+      });
+    }
+    
+    return res.render("submit.ejs", {
+      status: "success",
+      message: "Your membership request has been submitted successfully."
+    });
+    
+  } catch (err) {
+    console.error("Error processing membership request:", err);
+    
+    // Check if response has already been sent
+    if (res.headersSent) {
+      return console.error("Error occurred after response was sent:", err);
+    }
+    
+    // Handle different response formats
+    if (req.xhr || req.headers.accept?.includes('application/json')) {
+      return res.status(500).json({ 
+        error: "An error occurred while processing the request.",
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+    
+    return res.status(500).render("submit.ejs", {
+      status: "error",
+      message: "An error occurred while processing your request. Please try again."
+    });
   }
-);
+});
 
 router.post("/adminApprove", async (req, res) => {
   const { email, decision } = req.body;
