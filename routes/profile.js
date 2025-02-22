@@ -72,6 +72,88 @@ router.get("/community/:communityId/:userId/showProfile", async(req,res)=>{
     isStatus = true
   }
   res.render("communityUserProfile.ejs", {community,user,isStatus})
-})
+});
+
+//Linkup
+router.post("/api/users/link/:userId", async (req, res) => {
+  try {
+      const { userId } = req.params;
+      
+      // Validate if userId exists
+      if (!userId) {
+          return res.status(400).json({ error: "User ID is required" });
+      }
+
+      // Get both users
+      const currUser = await User.findById(req.session.userId);
+      const userToFollow = await User.findById(userId);
+
+      // Validate if both users exist
+      if (!currUser || !userToFollow) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      // Check if already following
+      if (currUser.linkup && currUser.linkup.includes(userId)) {
+          return res.status(400).json({ error: "Already following this user" });
+      }
+
+      // Initialize linkup arrays if they don't exist
+      if (!currUser.linkup) currUser.linkup = [];
+      if (!userToFollow.linkup) userToFollow.linkup = [];
+
+      // Add users to each other's linkup arrays
+      currUser.linkup.push(userId);
+      userToFollow.linkup.push(req.session.userId);
+
+      // Save both users
+      await Promise.all([
+          currUser.save(),
+          userToFollow.save()
+      ]);
+
+      res.status(200).json({ message: "Successfully linked" });
+
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Server error while linking users" });
+  }
+});
+
+router.delete("/api/users/unlink/:userId", async (req, res) => {
+  try {
+      const { userId } = req.body;
+
+      // Validate if userId exists
+      if (!userId) {
+          return res.status(400).json({ error: "User ID is required" });
+      }
+
+      // Get both users
+      const currUser = await User.findById(req.session.userId);
+      const userToUnfollow = await User.findById(userId);
+
+      // Validate if both users exist
+      if (!currUser || !userToUnfollow) {
+          return res.status(404).json({ error: "User not found" });
+      }
+
+      // Remove users from each other's linkup arrays
+      currUser.linkup = currUser.linkup.filter(id => id.toString() !== userId);
+      userToUnfollow.linkup = userToUnfollow.linkup.filter(id => id.toString() !== req.session.userId);
+
+      // Save both users
+      await Promise.all([
+          currUser.save(),
+          userToUnfollow.save()
+      ]);
+
+      res.status(200).json({ message: "Successfully unlinked" });
+
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ error: "Server error while unlinking users" });
+  }
+});
 
 module.exports = router;

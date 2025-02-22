@@ -32,11 +32,10 @@ const userSchema = new Schema(
       type: Object,
       default: {},
     },
-    linkup: {
-      type: Object,
-      default: {},
-    }
-
+    linkup: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }]
   },
   { timestamps: true } // Automatically add createdAt and updatedAt fields
 );

@@ -234,7 +234,7 @@
             line-height: 1.6;
         }
 
-        .community-thumbnail img{
+        .community-thumbnail img {
             width: 250px;
             height: 200px;
         }
@@ -255,11 +255,12 @@
             border-radius: 10px;
             margin: 20px 0;
         }
-        @media (max-width: 650px){
-            .description{
+
+        @media (max-width: 650px) {
+            .description {
                 display: none;
             }
-            .community-thumbnail img{
+            .community-thumbnail img {
                 width: 520px;
             }
         }
@@ -268,40 +269,34 @@
             .profile-container {
                 padding: 0 15px;
             }
-
             .action-buttons {
                 flex-wrap: wrap;
                 gap: 10px;
             }
-
             .content-tabs {
                 gap: 20px;
             }
-
             .profile-cover {
                 height: 200px;
             }
-
             .profile-avatar {
                 width: 120px;
                 height: 120px;
                 top: -60px;
             }
-
             .profile-name {
                 font-size: 24px;
             }
-
             .stats-bar {
                 padding: 15px;
             }
-
             .stat-number {
                 font-size: 20px;
             }
         }
-        @media(max-width: 450px){
-            .community-thumbnail img{
+
+        @media(max-width: 450px) {
+            .community-thumbnail img {
                 width: 100%;
                 object-fit: cover;
             }
@@ -339,11 +334,10 @@
             
             <div class="action-buttons">
                 <%if(!isStatus){%>
-                    <!-- <button class="action-button">Follow</button> -->
-                    <button class="action-button">Link</button>
+                    <button class="action-button link-button">Link</button>
                     <button class="action-button">Message</button>
                 <%}else{%>
-                    <button class="action-button">Linkup</button>
+                    <button class="action-button link-button">LinkUp</button>
                 <%}%>
             </div>
         </div>
@@ -383,7 +377,7 @@
                 <%if(isStatus){%>
                     <button onclick="showCommunity(this, 'bookmarks')" aria-label="Show Bookmarks">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-bookmark" viewBox="0 0 16 16">
-                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
+                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A<path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1z"/>
                         </svg>
                     </button>
                 <%}%>
@@ -393,6 +387,7 @@
         <div class="loading-spinner">
             Loading...
         </div>
+
         <%for(let community of communities){%>
             <%if(community.userid === userId){%>
                 <div class="community-content" id="communityData">
@@ -428,6 +423,50 @@
             `;
         }
 
+        // Handle link/linkup button functionality
+        async function handleLinkButton(button) {
+            const userId = window.location.pathname.split('/').pop(); // Get userId from URL
+            
+            try {
+                if (button.textContent === 'Link') {
+                    // Make API call to save the link
+                    const response = await fetch(`/api/users/link/${userId}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId }),
+                        credentials: 'include'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Failed to save link');
+                    }
+
+                    // Update button text
+                    button.textContent = 'Linkup';
+                } else if (button.textContent === 'Linkup') {
+                    // Make API call to remove the link
+                    const response = await fetch(`/api/users/unlink/${userId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId }),
+                        credentials: 'include'
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to remove link');
+                    }
+
+                    // Update button text
+                    button.textContent = 'Link';
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
         // Store the last request parameters for retry functionality
         let lastRequest = null;
 
@@ -453,11 +492,10 @@
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',
-                        // Add any authentication headers if needed
                     },
-                    credentials: 'include' // Include cookies if using session authentication
+                    credentials: 'include'
                 });
-                console.log(response);
+                
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 } 
@@ -502,10 +540,13 @@
             }
 
             // Create and append items based on type
-            const createItem = (item) => {
+            data.forEach((item, index) => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'community-item';
-                
+                itemElement.style.opacity = '0';
+                itemElement.style.transform = 'translateY(20px)';
+                itemElement.style.transition = 'all 0.3s ease';
+
                 switch(type) {
                     case 'community':
                         itemElement.innerHTML = `
@@ -524,7 +565,6 @@
                                         <p class="description" style="margin-top: 10px; overflow-y: scroll;overflow-x: hidden;scrollbar-width: none; height:200px">${item.description}</p>
                                     </div>
                                 </a>
-                                
                             </div>
                             <div class="community-footer" style="margin-top: 15px; font-size: 0.9em; color: #A82400; opacity: 0.7;">
                                 <span>${formatDate(item.date)}</span>
@@ -544,74 +584,9 @@
                         `;
                         break;
 
-                    case 'activities':
-                        itemElement.innerHTML = `
-                            <div class="activity-header">
-                                <h3>${item.activityName || 'Activity'}</h3>
-                                <p>${item.description || ''}</p>
-                                <p class="activity-time" style="font-size: 0.9em; color: #A82400; opacity: 0.7;">
-                                    ${formatDate(item.timestamp)}
-                                </p>
-                            </div>
-                            <div class="activity-details" style="margin-top: 15px; font-size: 0.95em;">
-                                ${item.location ? `
-                                    <p style="margin-bottom: 5px;">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: -2px;">
-                                            <path d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10zm0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6z"/>
-                                        </svg>
-                                        ${item.location}
-                                    </p>
-                                ` : ''}
-                                ${item.participants ? `
-                                    <p>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: -2px;">
-                                            <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1h8zm-7.978-1A.261.261 0 0 1 7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002a.274.274 0 0 1-.014.002H7.022zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4zm3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM6.936 9.28a5.88 5.88 0 0 0-1.23-.247A7.35 7.35 0 0 0 5 9c-4 0-5 3-5 4 0 .667.333 1 1 1h4.216A2.238 2.238 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816zM4.92 10A5.493 5.493 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275zM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0zm3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4z"/>
-                                        </svg>
-                                        ${item.participants} participants
-                                    </p>
-                                ` : ''}
-                            </div>
-                        `;
-                        break;
-
-                    case 'bookmarks':
-                        itemElement.innerHTML = `
-                            <div class="bookmark-header">
-                                <h3>${item.bookmarkTitle || 'Bookmark'}</h3>
-                                <p>${item.description || ''}</p>
-                                <div class="bookmark-meta" style="margin-top: 15px; font-size: 0.9em; color: #A82400; opacity: 0.7;">
-                                    <span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" style="vertical-align: -2px;">
-                                            <path d="M5 4a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm-.5 2.5A.5.5 0 0 1 5 6h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5zM5 8a.5.5 0 0 0 0 1h6a.5.5 0 0 0 0-1H5zm0 2a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1H5z"/>
-                                            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm10-1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1z"/>
-                                        </svg>
-                                        Saved ${formatDate(item.dateAdded)}
-                                    </span>
-                                    <span style="margin-left: 15px;">From: ${item.source || 'Unknown source'}</span>
-                                </div>
-                            </div>
-                            ${item.url ? `
-                                <a href="${item.url}" 
-                                   class="action-button" 
-                                   style="display: inline-block; margin-top: 15px; text-decoration: none;"
-                                   target="_blank"
-                                   rel="noopener noreferrer">
-                                    View Source
-                                </a>
-                            ` : ''}
-                        `;
-                        break;
+                    // Add other cases as needed
                 }
 
-                return itemElement;
-            };
-
-            // Append items with animation delay
-            data.forEach((item, index) => {
-                const itemElement = createItem(item);
-                itemElement.style.opacity = '0';
-                itemElement.style.transform = 'translateY(20px)';
-                itemElement.style.transition = 'all 0.3s ease';
                 container.appendChild(itemElement);
 
                 // Trigger animation
@@ -622,8 +597,15 @@
             });
         }
 
-        // Initialize the first tab
+        // Initialize event listeners
         document.addEventListener('DOMContentLoaded', () => {
+            // Initialize link/linkup buttons
+            const linkButtons = document.querySelectorAll('.link-button');
+            linkButtons.forEach(button => {
+                button.addEventListener('click', () => handleLinkButton(button));
+            });
+
+            // Initialize first tab
             const firstTab = document.querySelector('.tab button');
             if (firstTab) {
                 showCommunity(firstTab, 'community');
