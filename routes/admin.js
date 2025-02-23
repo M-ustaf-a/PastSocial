@@ -80,7 +80,7 @@ router.get("/admin/profile", isAuthenticated, async (req, res) => {
     if (!user) {
       return res.status(404).send("User not found");
     }
-
+    
     const communities = await Community.find({ owner: id }); // Filter communities by owner
 
     // Render profile with user and their communities
