@@ -10,7 +10,7 @@ module.exports.isLoggedIn = async(req,res,next)=>{
     if(!req.isAuthenticated()){
         req.session.redirectUrl = req.orginalUrl;
         req.flash("error", "You must be login");
-        return res.redirect("/adminlogin");
+        return res.redirect("/userlogin");
     }
     next();
 };
@@ -18,7 +18,7 @@ module.exports.isAuthenticated = (req,res,next)=>{
     if(req.session.userId){
       return next();
     }
-    res.redirect("/adminlogin");
+    res.redirect("/userlogin");
 };
 
 module.exports.isApproved = async(req,res, next)=>{
