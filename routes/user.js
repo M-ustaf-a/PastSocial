@@ -42,22 +42,24 @@ router.get("/userlogin", (req, res) => {
 });
 
 router.post("/userlogin", async (req, res) => {
-  const { email, password } = req.body;
+  const {useremail, userpassword} = req.body;
+  
   try {
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ useremail });
+    console.log(user);
     if (!user) {
-      return res.render("userlogin", { error: "Invalid email or password" });
+      return res.render("user/login", { error: "Invalid email or password" });
     }
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(userpassword, user.password);
     console.log(isMatch);
     if (!isMatch) {
-      return res.render("userlogin", { error: "Invalid email or password" });
+      return res.render("user/login", { error: "Invalid email or password" });
     }
     req.session.userId = user._id; //store user Id in session
-    res.redirect("/community");
+    res.redirect("/community", {user});
   } catch (err) {
     console.error("Error during login:", err);
-    res.render("/userlogin", {
+    res.render("/user/login", {
       error: "An error occurred. Please try again later.",
     });
   }
