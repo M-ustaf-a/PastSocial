@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Membership Request Review</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            DEFAULT: '#A82400',
+                            secondary: '#fee4bd',
+                            light: '#ffebcd',
+                            dark: '#8a1d00'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Helvetica Neue', 'Arial', 'sans-serif']
+                    },
+                    boxShadow: {
+                        card: '0 2px 4px rgba(0, 0, 0, 0.08)'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+    <style>
+        body {
+            background-color: #f9f9f9;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .btn-brand {
+            background-color: #A82400;
+            border-color: #A82400;
+            color: white;
+            transition: all 0.15s ease;
+        }
+        
+        .btn-brand:hover {
+            background-color: #8a1d00;
+        }
+        
+        .radio-container input[type="radio"]:checked + label {
+            border-color: #A82400;
+            background-color: #fef3e7;
+        }
+        
+        .radio-container input[type="radio"]:checked + label.approve {
+            border-color: #047857;
+            background-color: #ecfdf5;
+        }
+        
+        .radio-container input[type="radio"]:checked + label.reject {
+            border-color: #dc2626;
+            background-color: #fef2f2;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 py-8">
+        <!-- Header with breadcrumb -->
+        <div class="mb-6">
+            <div class="flex items-center text-sm text-gray-500 mb-4">
+                <a href="/companydashboard" class="hover:text-brand">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    Dashboard
+                </a>
+                <span class="mx-2">/</span>
+                <span class="text-gray-700 font-medium">Membership Request Review</span>
+            </div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                <h1 class="text-2xl font-semibold text-gray-800">Membership Application Review</h1>
+                <div class="mt-2 md:mt-0">
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-secondary text-brand">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Pending Review
+                    </span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main content -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Applicant details card -->
+            <div class="md:col-span-2 bg-white rounded-md shadow-card overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h2 class="text-lg font-medium text-gray-700">Applicant Information</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flex flex-col md:flex-row">
+                        <div class="flex-shrink-0 mb-4 md:mb-0 md:mr-6">
+                            <div class="relative">
+                                <img src="<%=notification.content.imageUrl%>" alt="Profile image" class="h-24 w-24 object-cover rounded-md border border-gray-200">
+                                <span class="absolute bottom-0 right-0 h-5 w-5 bg-brand rounded-full border-2 border-white"></span>
+                            </div>
+                        </div>
+                        <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Full Name</p>
+                                <p class="mt-1 text-base font-medium text-gray-900"><%=notification.content.name%></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Email Address</p>
+                                <p class="mt-1 text-base font-medium text-gray-900 break-words"><%=notification.content.email%></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Company</p>
+                                <p class="mt-1 text-base font-medium text-gray-900"><%=notification.content.company%></p>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Role</p>
+                                <p class="mt-1 text-base font-medium text-gray-900"><%=notification.content.role%></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Application timeline -->
+            <div class="bg-white rounded-md shadow-card overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                    <h2 class="text-lg font-medium text-gray-700">Application Timeline</h2>
+                </div>
+                <div class="p-6">
+                    <div class="flow-root">
+                        <ul class="-mb-8">
+                            <li>
+                                <div class="relative pb-8">
+                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-brand-secondary flex items-center justify-center ring-8 ring-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">Application Submitted</p>
+                                                <p class="mt-1 text-xs text-gray-500">Today at 09:32 AM</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="relative pb-8">
+                                    <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-brand-secondary flex items-center justify-center ring-8 ring-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-brand" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-900">Under Review</p>
+                                                <p class="mt-1 text-xs text-gray-500">Today at 09:32 AM</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="relative">
+                                    <div class="relative flex space-x-3">
+                                        <div>
+                                            <span class="h-8 w-8 rounded-full bg-gray-200 flex items-center justify-center ring-8 ring-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            </span>
+                                        </div>
+                                        <div class="min-w-0 flex-1">
+                                            <div>
+                                                <p class="text-sm font-medium text-gray-500">Decision Pending</p>
+                                                <p class="mt-1 text-xs text-gray-500">Awaiting your review</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Decision form -->
+        <div class="mt-6 bg-white rounded-md shadow-card overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
+                <h2 class="text-lg font-medium text-gray-700">Review Decision</h2>
+                <p class="mt-1 text-sm text-gray-500">Please review the application and make your decision.</p>
+            </div>
+            <div class="p-6">
+                <form action="/companyapprove" method="post">
+                    <input type="hidden" name="email" value="<%=notification.content.email%>">
+                    
+                    <div class="space-y-4 radio-container">
+                        <div class="relative">
+                            <input type="radio" id="approve" name="decision" value="approved" class="sr-only">
+                            <label for="approve" class="approve flex p-4 border-2 border-gray-200 rounded-md cursor-pointer hover:border-green-500 hover:bg-green-50 transition-all">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i data-lucide="check-circle" class="h-6 w-6 text-green-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-base font-medium text-gray-900">Approve Membership</h3>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Grant access to the applicant and send welcome email
+                                        </p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                        
+                        <div class="relative">
+                            <input type="radio" id="reject" name="decision" value="rejected" class="sr-only">
+                            <label for="reject" class="reject flex p-4 border-2 border-gray-200 rounded-md cursor-pointer hover:border-red-500 hover:bg-red-50 transition-all">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10 bg-red-100 rounded-full flex items-center justify-center">
+                                        <i data-lucide="x-circle" class="h-6 w-6 text-red-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <h3 class="text-base font-medium text-gray-900">Reject Membership</h3>
+                                        <p class="text-sm text-gray-500 mt-1">
+                                            Deny access to the applicant and send rejection notification
+                                        </p>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 space-y-4">
+                        <div>
+                            <label for="notes" class="block text-sm font-medium text-gray-700">Additional Notes (Optional)</label>
+                            <textarea id="notes" name="notes" rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-brand focus:border-brand sm:text-sm"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex items-center justify-end space-x-3">
+                        <a href="/admindashboard" class="py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
+                            Cancel
+                        </a>
+                        <button type="submit" class="btn-brand py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand">
+                            Submit Decision
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-8 text-center">
+            <p class="text-xs text-gray-500">© 2025 Company Name. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+</html>

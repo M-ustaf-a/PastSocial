@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const adminApprovalSchema = new Schema({
+const userApprovalSchema = new Schema({
     name: {
        type: String,
        required: true,
@@ -50,5 +50,5 @@ const adminApprovalSchema = new Schema({
     }
 });
 
-const Approvaladmin = mongoose.model("Approvaladmin", adminApprovalSchema);
-module.exports = Approvaladmin; 
+const UserApproval = mongoose.model("UserApproval", userApprovalSchema);
+module.exports = UserApproval; 

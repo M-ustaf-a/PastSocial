@@ -1,0 +1,420 @@
+<%- layout('/layouts/boilerplate.ejs') %>
+
+<style>
+  :root {
+    --primary-color: #A82400;
+    --primary-light: rgba(168, 36, 0, 0.1);
+    --primary-dark: #8a1d00;
+    --text-color: #333;
+    --text-light: #666;
+    --border-color: #ddd;
+    --bg-light: #f8f9fa;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+  }
+
+  .form-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .form-header {
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+
+  .form-title {
+    color: var(--text-color);
+    font-size: 1.75rem;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+
+  .form-subtitle {
+    color: var(--text-light);
+    font-size: 1rem;
+    font-weight: normal;
+  }
+
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+
+  .form-required {
+    color: var(--primary-color);
+    margin-left: 0.25rem;
+  }
+
+  .form-input,
+  .form-textarea,
+  .form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  .form-textarea {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus,
+  .form-select:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-light);
+  }
+
+  .form-hint {
+    display: block;
+    margin-top: 0.5rem;
+    color: var(--text-light);
+    font-size: 0.875rem;
+  }
+
+  .form-section {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .form-section-title {
+    font-size: 1.25rem;
+    margin-bottom: 1.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .file-upload {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    border: 2px dashed var(--border-color);
+    border-radius: 4px;
+    background-color: var(--bg-light);
+    transition: border-color 0.2s;
+    cursor: pointer;
+  }
+
+  .file-upload:hover {
+    border-color: var(--primary-color);
+  }
+
+  .file-upload-icon {
+    color: var(--primary-color);
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .file-upload-text {
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+  }
+
+  .file-upload-hint {
+    color: var(--text-light);
+    font-size: 0.875rem;
+    text-align: center;
+  }
+
+  .file-upload input[type="file"] {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+
+  .checkbox-group {
+    margin-top: 0.5rem;
+  }
+
+  .checkbox-item {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+  }
+
+  .checkbox-input {
+    margin-top: 0.25rem;
+    margin-right: 0.75rem;
+  }
+
+  .checkbox-label {
+    font-size: 0.95rem;
+    color: var(--text-color);
+  }
+
+  .form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .btn-secondary {
+    background-color: white;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+  }
+
+  .btn-secondary:hover {
+    background-color: var(--bg-light);
+  }
+
+  .btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--primary-dark);
+  }
+
+  @media (max-width: 768px) {
+    .grid-2 {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+    
+    .form-container {
+      padding: 1.5rem;
+    }
+    
+    .form-actions {
+      flex-direction: column-reverse;
+      gap: 1rem;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+  }
+</style>
+
+<div class="form-container">
+  <div class="form-header">
+    <h1 class="form-title">Company Registration</h1>
+    <p class="form-subtitle">Complete the form below to register your company</p>
+  </div>
+  
+  <form action="/community/<%= community.id %>/listingCompany" method="post" enctype="multipart/form-data">
+    <!-- Company Basic Information -->
+    <div class="form-section">
+      <h2 class="form-section-title">Basic Information</h2>
+      
+      <div class="form-group">
+        <label for="companyName" class="form-label">Company Name<span class="form-required">*</span></label>
+        <input type="text" id="companyName" name="CompanyListing[name]" class="form-input" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="companyDescription" class="form-label">Company Description<span class="form-required">*</span></label>
+        <textarea id="companyDescription" name="CompanyListing[description]" class="form-textarea" required></textarea>
+        <span class="form-hint">Provide a clear and concise description of your company, including your main products or services</span>
+      </div>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="foundedYear" class="form-label">Year Founded</label>
+          <input type="number" id="foundedYear" name="CompanyListing[foundedYear]" class="form-input" min="1800" max="2025" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="industry" class="form-label">Industry<span class="form-required">*</span></label>
+          <select id="industry" name="CompanyListing[industry]" class="form-select" required>
+            <option value="">Select an industry</option>
+            <option value="technology">Technology</option>
+            <option value="healthcare">Healthcare</option>
+            <option value="finance">Finance</option>
+            <option value="education">Education</option>
+            <option value="retail">Retail</option>
+            <option value="manufacturing">Manufacturing</option>
+            <option value="energy">Energy</option>
+            <option value="agriculture">Agriculture</option>
+            <option value="entertainment">Entertainment</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="companySize" class="form-label">Company Size</label>
+          <select id="companySize" name="CompanyListing[size]" class="form-select" required>
+            <option value="">Select company size</option>
+            <option value="1-10">1-10 employees</option>
+            <option value="11-50">11-50 employees</option>
+            <option value="51-200">51-200 employees</option>
+            <option value="201-500">201-500 employees</option>
+            <option value="501-1000">501-1000 employees</option>
+            <option value="1001+">1001+ employees</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="companyWebsite" class="form-label">Company Website</label>
+          <input type="url" id="companyWebsite" name="CompanyListing[website]" class="form-input" placeholder="https://example.com" required>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contact Information -->
+    <div class="form-section">
+      <h2 class="form-section-title">Contact Information</h2>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="contactName" class="form-label">Contact Person<span class="form-required">*</span></label>
+          <input type="text" id="contactName" name="CompanyListing[contactName]" class="form-input" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="contactPosition" class="form-label">Position</label>
+          <input type="text" id="contactPosition" name="CompanyListing[contactPosition]" class="form-input">
+        </div>
+      </div>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="contactEmail" class="form-label">Email Address<span class="form-required">*</span></label>
+          <input type="email" id="contactEmail" name="CompanyListing[contactEmail]" class="form-input" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="contactPhone" class="form-label">Phone Number</label>
+          <input type="tel" id="contactPhone" name="CompanyListing[contactPhone]" class="form-input">
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label for="companyAddress" class="form-label">Company Address<span class="form-required">*</span></label>
+        <input type="text" id="companyAddress" name="CompanyListing[address]" class="form-input" required>
+      </div>
+      
+      <div class="grid-2">
+        <div class="form-group">
+          <label for="companyCity" class="form-label">City<span class="form-required">*</span></label>
+          <input type="text" id="companyCity" name="CompanyListing[city]" class="form-input" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="companyCountry" class="form-label">Country<span class="form-required">*</span></label>
+          <input type="text" id="companyCountry" name="CompanyListing[country]" class="form-input" required>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Verification Documents -->
+    <div class="form-section">
+      <h2 class="form-section-title">Company Verification</h2>
+      
+      <div class="form-group">
+        <label for="registrationNumber" class="form-label">Business Registration Number<span class="form-required">*</span></label>
+        <input type="text" id="registrationNumber" name="CompanyListing[registrationNumber]" class="form-input" required>
+        <span class="form-hint">Enter your official business registration number or tax ID</span>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Company Logo<span class="form-required">*</span></label>
+        <div class="file-upload">
+          <div class="file-upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+              <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
+            </svg>
+          </div>
+          <div class="file-upload-text">Click to upload logo</div>
+          <div class="file-upload-hint">Supported formats: PNG, JPG (Max size: 5MB)</div>
+          <input type="file" name="CompanyListing[logo]" accept="image/*" required>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Verification Documents</label>
+        <div class="file-upload">
+          <div class="file-upload-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5h-2z"/>
+              <path d="M8.5 6.5a.5.5 0 0 0-1 0v3.793L6.354 9.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L8.5 10.293V6.5z"/>
+            </svg>
+          </div>
+          <div class="file-upload-text">Upload business registration documents</div>
+          <div class="file-upload-hint">Supported formats: PDF, JPG, PNG (Max size: 10MB)</div>
+          <input type="file" name="CompanyListing[verification]" accept=".pdf,.jpg,.jpeg,.png">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Terms and Conditions -->
+    <div class="form-section">
+      <h2 class="form-section-title">Terms and Conditions</h2>
+      
+      <div class="form-group">
+        <div class="checkbox-group">
+          <div class="checkbox-item">
+            <input type="checkbox" id="termsConditions" name="CompanyListing[termsAgreed]" class="checkbox-input" required>
+            <label for="termsConditions" class="checkbox-label">
+              I agree to the <a href="#" style="color: var(--primary-color);">Terms and Conditions</a> and confirm that the information provided is accurate and complete.
+            </label>
+          </div>
+          
+          <div class="checkbox-item">
+            <input type="checkbox" id="dataConsent" name="CompanyListing[dataConsent]" class="checkbox-input" required>
+            <label for="dataConsent" class="checkbox-label">
+              I consent to the storage and processing of my company data according to the <a href="#" style="color: var(--primary-color);">Privacy Policy</a>.
+            </label>
+          </div>
+          
+          <div class="checkbox-item">
+            <input type="checkbox" id="marketingConsent" name="CompanyListing[marketingConsent]" class="checkbox-input">
+            <label for="marketingConsent" class="checkbox-label">
+              I would like to receive updates, newsletters, and promotional materials related to community events.
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Form Actions -->
+    <div class="form-actions">
+      <button type="button" class="btn btn-secondary">Cancel</button>
+      <button type="submit" class="btn btn-primary">Register Company</button>
+    </div>
+  </form>
+</div>

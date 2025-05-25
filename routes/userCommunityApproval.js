@@ -304,6 +304,7 @@ router.get("/community/:communityId/login", async(req,res)=>{
 router.post("/community/:communityId/login", async (req, res) => {
   try {
     const { email, password } = req.body;
+    console.log(email, password);
     const { communityId } = req.params;
 
     console.log("Login Request:", { email, communityId });

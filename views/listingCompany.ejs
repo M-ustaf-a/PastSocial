@@ -1,0 +1,426 @@
+<%- layout('/layouts/boilerplate.ejs') %>
+
+<style>
+  :root {
+    --primary-color: #A82400;
+    --primary-light: #f9ece9;
+    --text-color: #333;
+    --bg-light: #f8f9fa;
+    --border-color: #e0e0e0;
+  }
+
+  .showcase-wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 2rem 1rem 4rem;
+    background-color: #fafafa;
+  }
+
+  .diagonal-header {
+    position: relative;
+    padding: 3rem 2rem 6rem;
+    margin-bottom: -3rem;
+    overflow: hidden;
+  }
+
+  .diagonal-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    z-index: -2;
+  }
+
+  .diagonal-header::after {
+    content: '';
+    position: absolute;
+    bottom: -5rem;
+    left: -5%;
+    right: -5%;
+    height: 10rem;
+    background-color: var(--primary-color);
+    transform: rotate(-3deg);
+    z-index: -1;
+  }
+
+  .header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 1400px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .title-group {
+    margin-bottom: 2rem;
+  }
+
+  .header-subtitle {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin: 0 0 0.5rem 0;
+  }
+
+  .header-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--text-color);
+    margin: 0;
+  }
+
+  .header-decoration {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .deco-square {
+    width: 30px;
+    height: 8px;
+    background-color: var(--primary-color);
+    border-radius: 4px;
+  }
+
+  .deco-square:nth-child(2) {
+    opacity: 0.7;
+  }
+
+  .deco-square:nth-child(3) {
+    opacity: 0.4;
+  }
+
+  .add-button-container {
+    margin-top: 1rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .add-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    box-shadow: 0 15px 30px rgba(168, 36, 0, 0.2);
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    transition: all 0.3s;
+  }
+
+  .add-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 40px rgba(168, 36, 0, 0.3);
+  }
+
+  .add-button svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .company-cards {
+    padding-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    position: relative;
+    z-index: 5;
+  }
+
+  .company-card {
+    background-color: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    position: relative;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .company-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: var(--primary-color);
+    transition: height 0.3s;
+  }
+
+  .company-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .company-card:hover::before {
+    height: 12px;
+  }
+
+  .card-thumbnail {
+    position: relative;
+    height: 0;
+    padding-bottom: 65%;
+    overflow: hidden;
+  }
+
+  .card-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.5s ease;
+  }
+
+  .company-card:hover .card-image {
+    transform: scale(1.1);
+  }
+
+  .status-badge {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-body {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-description {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--text-color);
+    font-size: 1rem;
+  }
+
+  .card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .card-action {
+    color: var(--primary-color);
+    background: none;
+    border: none;
+    padding: 0.5rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: opacity 0.2s;
+  }
+
+  .card-action:hover {
+    opacity: 0.8;
+  }
+
+  /* Empty state */
+  .empty-state {
+    background-color: white;
+    border-radius: 16px;
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .empty-state::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 8px;
+    background-color: var(--primary-color);
+  }
+
+  .empty-state::after {
+    content: '';
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    top: -150px;
+    right: -150px;
+    z-index: 0;
+  }
+
+  .empty-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .empty-title {
+    font-size: 1.75rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-weight: 600;
+  }
+
+  .empty-message {
+    color: #666;
+    max-width: 500px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .pattern-dots {
+    position: absolute;
+    bottom: -50px;
+    left: -50px;
+    width: 200px;
+    height: 200px;
+    opacity: 0.1;
+    z-index: 0;
+  }
+
+  .dot {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--primary-color);
+  }
+
+  /* Generate dots pattern */
+  @for $i from 1 through 50 {
+    .dot:nth-child(#{$i}) {
+      top: #{random(180)}px;
+      left: #{random(180)}px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .header-container {
+      flex-direction: column;
+    }
+    
+    .add-button-container {
+      margin-bottom: 2rem;
+    }
+    
+    .company-cards {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+  }
+
+  @media (max-width: 768px) {
+    .diagonal-header {
+      padding: 2rem 1rem 5rem;
+    }
+    
+    .header-title {
+      font-size: 2rem;
+    }
+    
+    .add-button {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .company-cards {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>
+
+<div class="showcase-wrapper">
+  <div class="diagonal-header">
+    <div class="header-container">
+      <div class="title-group">
+        <p class="header-subtitle">Browse Our</p>
+        <h1 class="header-title">Featured Companies</h1>
+        <div class="header-decoration">
+          <div class="deco-square"></div>
+          <div class="deco-square"></div>
+          <div class="deco-square"></div>
+        </div>
+      </div>
+      
+      <div class="add-button-container">
+        <form action="/community/<%= community.id %>/listingCompany" method="get">
+          <button class="add-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add New Company
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+  
+  <% if(companies && companies.length > 0) { %>
+    <div class="company-cards">
+      <% for(let company of companies) { %>
+        <div class="company-card">
+          <div class="card-thumbnail">
+            <img src="<%= company.image.url %>" alt="<%= company.name || 'Company' %> image" class="card-image">
+            <div class="status-badge">Featured</div>
+          </div>
+          
+          <div class="card-body">
+            <p class="card-description"><%= company.description %></p>
+            
+            <div class="card-footer">
+              <button class="card-action">View Details →</button>
+            </div>
+          </div>
+        </div>
+      <% } %>
+    </div>
+  <% } else { %>
+    <div class="empty-state">
+      <div class="pattern-dots">
+        <% for(let i=0; i<50; i++) { %>
+          <div class="dot"></div>
+        <% } %>
+      </div>
+      
+      <div class="empty-content">
+        <h2 class="empty-title">No Companies Added Yet</h2>
+        <p class="empty-message">Start building your showcase by adding your first featured company. Highlight your partners and collaborators to enhance your community.</p>
+        
+        <form action="/community/<%= community.id %>/listingCompany" method="get">
+          <button class="add-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Add New Company
+          </button>
+        </form>
+      </div>
+    </div>
+  <% } %>
+</div>

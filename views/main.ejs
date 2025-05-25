@@ -1,230 +1,423 @@
 <%- layout('/layouts/boilerplate.ejs') %>
+
 <style>
+    :root {
+        --primary-color: #A82400;
+        --primary-hover: #8A1F00;
+        --bg-color: #FFF8F0;
+        --card-bg: #FFFFFF;
+        --card-border: #A82400;
+        --text-primary: #A82400;
+        --text-secondary: #4A5568;
+        --text-accent: #A82400;
+        --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+        --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
+        --border-radius-lg: 16px;
+        --border-radius-md: 12px;
+        --border-radius-sm: 8px;
+    }
+
     body {
-        background: blanchedalmond;
+        background-color: var(--bg-color);
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: var(--text-primary);
+        line-height: 1.5;
+        padding-top: 120px;
     }
     
-    .content-card {
-        width: 100%;
+    .container {
         max-width: 800px;
-        margin: 1rem auto;
-        border-radius: 20px;
-        border: 1px solid #f9d8a6;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        position: relative;
+        margin: 0 auto;
+        padding: 1.5rem 1rem;
     }
 
-    .content {
-        width: 400px;
-        height: 120px;
-        padding: 10px;
-        overflow-y: scroll;
-        overflow-x: hidden;
-        scrollbar-width: none;
+    .content-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--card-border);
+        box-shadow: var(--shadow-md);
+        overflow: hidden;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    .title {
-        padding: 5px;
-        color: #ea8c00;
+    .content-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
     }
 
-    .content-details {
-        padding: 10px;
+    .post-header {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .profile-link {
+        text-decoration: none;
+        color: inherit;
     }
 
     .profile-img {
-        width: 65px;
-        height: 60px;
+        width: 48px;
+        height: 48px;
         border-radius: 50%;
-        margin-bottom: 1rem;
-    }
-
-    .post-form {
-        width: 100%;
-        max-width: 700px;
-        margin: 0 auto;
-        padding: 1rem;
-    }
-
-    .form-card {
-        background-color: #fee4bd;
-        padding: 20px;
-        border-radius: 25px;
-        border: 1px solid #f9d8a6;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    }
-
-    .post-image {
-        width: 208px;
-        height: 208px;
-        overflow: hidden;
-    }
-
-    .post-image img {
-        width: 100%;
-        height: 100%;
         object-fit: cover;
-        border-radius: 20px;
+        border: 2px solid var(--card-border);
     }
 
-    .interaction-buttons {
-        display: flex;
-        width: 100%;
-        margin-top: 1rem;
-    }
-
-    .title-input {
-        padding: 5px;
-        margin-bottom: 5px;
-        border-radius: 10px;
-        padding-left: 20px;
-        background-color: #ffebcd;
-    }
-
-    .content-input {
-        background-color: #ffebcd;
-        border-radius: 0.75rem;
+    .user-info {
+        margin-left: 0.75rem;
     }
 
     .username {
+        font-weight: 600;
+        color: var(--text-accent);
+        margin: 0;
+    }
+
+    .post-time {
+        font-size: 0.75rem;
+        color: var(--text-secondary);
+        margin: 0;
+    }
+
+    .post-body {
+        padding: 1rem;
+    }
+
+    .post-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--text-primary);
+    }
+
+    .post-content {
+        font-size: 1rem;
+        color: #7e1b00;
+        line-height: 1.6;
+        max-height: 150px;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+    }
+
+    .post-image-container {
+        width: 100%;
+        max-height: 350px;
+        overflow: hidden;
+        border-radius: var(--border-radius-md);
+        margin: 1rem 0;
+    }
+
+    .post-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.3s ease;
+    }
+
+    .post-image:hover {
+        transform: scale(1.02);
+    }
+
+    .interaction-bar {
+        display: flex;
+        padding: 0.75rem 1rem;
+        border-top: 1px solid rgba(0,0,0,0.05);
+        background-color: rgba(249, 250, 251, 0.5);
+    }
+
+    .interaction-button {
+        display: flex;
+        align-items: center;
+        background: none;
+        border: none;
+        padding: 0.5rem 1rem;
+        margin-right: 1rem;
+        border-radius: var(--border-radius-sm);
+        color: var(--text-secondary);
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .interaction-button:hover {
+        background-color: rgba(0,0,0,0.03);
+        color: var(--primary-color);
+    }
+
+    .interaction-button svg {
+        margin-right: 0.5rem;
+    }
+
+    /* Post Creation Form */
+    .post-form {
+        margin-bottom: 2rem;
+    }
+
+    .form-card {
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius-lg);
+        border: 1px solid var(--card-border);
+        box-shadow: var(--shadow-md);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .form-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .form-title {
+        font-weight: 600;
+        margin-left: 1rem;
+        color: var(--text-primary);
+    }
+
+    .input-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: var(--border-radius-sm);
+        border: 1px solid var(--card-border);
+        background-color: rgba(249, 250, 251, 0.8);
+        font-size: 1rem;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
+    }
+
+    .form-textarea {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .form-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+    }
+
+    .file-input-wrapper {
+        position: relative;
+    }
+
+    .file-input {
+        opacity: 0;
+        width: 0.1px;
+        height: 0.1px;
+        position: absolute;
+    }
+
+    .file-input-label {
+        display: flex;
+        align-items: center;
+        padding: 0.5rem 1rem;
+        background-color: rgba(0,0,0,0.05);
+        border-radius: var(--border-radius-sm);
+        cursor: pointer;
+        font-weight: 500;
+        color: var(--text-primary);
+        transition: all 0.2s ease;
+    }
+
+    .file-input-label:hover {
+        background-color: rgba(0,0,0,0.08);
+    }
+
+    .file-input-label svg {
+        margin-right: 0.5rem;
         color: #A82400;
     }
 
-    @media (max-width: 767px) {
-        .content {
-            width: 100%;
-            height: 90px;
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 9999px;
+        border: none;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--primary-hover);
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 640px) {
+        .container {
+            padding: 1rem 0.5rem;
         }
 
-        .post-image {
-            width: 100%;
-            height: 210px;
-            margin-top: 1rem;
-            text-align: center;
-        }
-
-        .post-image img {
-            aspect-ratio: 1/1;
-        }
-
-        .interaction-buttons {
+        .form-footer {
             flex-direction: column;
-            align-items: center;
+            align-items: stretch;
         }
 
-        .interaction-buttons button {
-            margin: 0.5rem 0;
-        }
-    }
-
-    @media (min-width: 768px) {
-        .content-card {
-            display: flex;
+        .file-input-wrapper {
+            margin-bottom: 1rem;
         }
 
-        .content-details {
-            flex: 1;
-            padding: 5px;
+        .btn {
+            width: 100%;
         }
 
-        .post-image {
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
+        .interaction-bar {
+            justify-content: space-around;
+            padding: 0.5rem;
         }
 
-        .post-image img {
-            height: 200px;
+        .interaction-button {
+            margin-right: 0;
+            padding: 0.5rem;
         }
 
-        .interaction-buttons {
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
+        .interaction-button span {
+            display: none;
+        }
+
+        .interaction-button svg {
+            margin-right: 0;
         }
     }
-
 </style>
 
-<div class="container mx-auto px-1">
+<div class="container">
     <% if(currUser && currUser.communityId === communityId) { %>
         <form action="/community/<%= community.id %>/main" method="post" enctype="multipart/form-data" class="post-form">
-            <section class="form-card">
-                <div class="flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-4">
-                    <a href="/community/<%=community.id%>/<%=currUser.id%>/showProfile" class="self-center">
-                        <img src="<%= currUser.image.url %>" class="profile-img" alt="Profile Image">
+            <div class="form-card">
+                <div class="form-header">
+                    <a href="/community/<%=community.id%>/<%=currUser.id%>/showProfile" class="profile-link">
+                        <img src="<%= currUser.image.url %>" class="profile-img" alt="<%= currUser.name %>'s profile">
                     </a>
-                    <div class="flex-grow w-full">
-                        <input type="text" name="upload[title]" placeholder="Future of humanity" class="w-full title-input" required>
-                        <textarea name="upload[content]" placeholder="What's your insight today?" class="w-full h-24 p-4 content-input focus:ring-2 focus:ring-[#ffe6bf] transition" required></textarea>
-                        <div class="flex flex-col md:flex-row justify-between items-center mt-2 space-y-2 md:space-y-0">
-                            <div class="flex space-x-4 w-full justify-start">
-                                <input type="file" name="upload[image]" class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-[#A82400] file:text-white hover:file:bg-[#8A1F00]" required>
-                            </div>
-                            <button class="px-6 py-2 bg-[#A82400] text-white rounded-full w-full md:w-auto text-center">Publish</button>
-                        </div>
+                    <h3 class="form-title">Create a new post</h3>
+                </div>
+                
+                <div class="input-group">
+                    <input 
+                        type="text" 
+                        name="upload[title]" 
+                        placeholder="Add a title to your post" 
+                        class="form-input" 
+                        required
+                    >
+                </div>
+                
+                <div class="input-group">
+                    <textarea 
+                        name="upload[content]" 
+                        placeholder="What's on your mind today?" 
+                        class="form-input form-textarea" 
+                        required
+                    ></textarea>
+                </div>
+                
+                <div class="form-footer">
+                    <div class="file-input-wrapper">
+                        <input type="file" name="upload[image]" id="file-upload" class="file-input" required>
+                        <label for="file-upload" class="file-input-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"/>
+                            </svg>
+                            Add Image
+                        </label>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Publish Post</button>
+                </div>
+            </div>
+        </form>
+    <% } %>
+    
+    <main>
+        <% for(let uploadPost of newUploadPost) { %>
+            <article class="content-card mb-6">
+                <div class="post-header">
+                    <a href="/community/<%= community.id %>/<%= uploadPost.user.id %>/showProfile" class="profile-link">
+                        <img src="<%= uploadPost.user.image.url %>" class="profile-img" alt="<%= uploadPost.user.name %>'s profile">
+                    </a>
+                    <div class="user-info">
+                        <h3 class="username"><%= uploadPost.user.name %></h3>
+                        <p class="post-time">
+                            <!-- Add time formatting if available -->
+                            <%= new Date().toLocaleDateString() %>
+                        </p>
                     </div>
                 </div>
-            </section>
-        </form>
-      
-    <% } %> 
-    
-    <main class="space-y-5 mt-8">
-        <% for(let uploadPost of newUploadPost) { %>
-            <article class="content-card post-content">
-                <div class="content-details">
-                    <div class="flex">
-                        <div class="flex p-2">
-                            <a href="">
-                                <img src="<%= uploadPost.user.image.url %>" class="w-12 h-12 rounded-full mr-4 border-2 border-indigo-200" alt="User Profile">
-                            </a>
-                            <span>
-                                <h3 class="font-bold text-lg username"><%= uploadPost.user.name %></h3>
-                                <p class="text-sm text-gray-500"></p>
-                            </span>
-                        </div>
-                    </div>
+                
+                <div class="post-body">
+                    <h2 class="post-title"><%= uploadPost.title %></h2>
+                    <div class="post-content"><%= uploadPost.content %></div>
                     
                     <% if(uploadPost.image && uploadPost.image.url) { %>
-                        <div class="post-image">
-                            <a href="<%= uploadPost.image.url %>">
-                                <img src="<%= uploadPost.image.url %>" alt="Post media">
+                        <div class="post-image-container">
+                            <a href="<%= uploadPost.image.url %>" target="_blank">
+                                <img src="<%= uploadPost.image.url %>" alt="Post image" class="post-image">
                             </a>
                         </div>
                     <% } %>
+                </div>
+                
+                <div class="interaction-bar">
+                    <button class="interaction-button like-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                        </svg>
+                        <span>Like</span>
+                    </button>
                     
-                    <div class="mb-1 mt-1">
-                        <h2 class="title text-xl font-bold mb-1 text-gray-900"><%= uploadPost.title %></h2>
-                        <p class="content text-gray-600"><%= uploadPost.content %></p>
-                    </div>
+                    <button class="interaction-button comment-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                        <span>Comment</span>
+                    </button>
                     
-                    <div class="interaction-buttons">
-                        <div class="flex space-x-4 text-gray-600 ml-3">
-                            <button class="flex items-center">
-                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                                </svg>
-                                <span>Likes</span>
-                            </button>
-                            <button class="flex items-center">
-                                <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                                </svg>
-                                <span>Comments</span>
-                            </button>
-                            <button class="flex items-center">
-                                <svg class="w-5 h-5 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                    <path d="M0 8a8 8 0 1 0 16 0A8 8 0 0 0 0 8m5.904 2.803a.5.5 0 1 1-.707-.707L9.293 6H6.525a.5.5 0 1 1 0-1H10.5a.5.5 0 0 1 .5.5v3.975a.5.5 0 0 1-1 0V6.707z"/>
-                                </svg>
-                                <span>Share</span>
-                            </button>
-                        </div>
-                    </div>
+                    <button class="interaction-button share-button">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                        </svg>
+                        <span>Share</span>
+                    </button>
                 </div>
             </article>
         <% } %>
     </main>
 </div>
+
+<script>
+    // Client-side JavaScript can be added here for enhanced interactivity
+    document.addEventListener('DOMContentLoaded', function() {
+        // File input preview functionality
+        const fileInput = document.getElementById('file-upload');
+        if (fileInput) {
+            fileInput.addEventListener('change', function() {
+                const fileName = this.files[0]?.name;
+                if (fileName) {
+                    // You could add code here to show the selected filename
+                    const label = this.nextElementSibling;
+                    label.textContent = fileName.length > 20 ? 
+                        fileName.substring(0, 17) + '...' : fileName;
+                }
+            });
+        }
+        
+        // Add event listeners for interaction buttons if needed
+    });
+</script>

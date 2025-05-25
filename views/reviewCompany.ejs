@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Company Registration Confirmation</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: blanchedalmond;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .success-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto;
+            background-color: #A82400;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .success-icon i {
+            color: white;
+            font-size: 40px;
+        }
+        h1 {
+            color: #A82400;
+            margin-bottom: 5px;
+        }
+        .subtitle {
+            color: #555;
+            font-size: 18px;
+            margin-top: 0;
+        }
+        .details-section {
+            background-color: #fff8ee;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border: 1px solid #f2e6d9;
+        }
+        .company-details {
+            margin-bottom: 20px;
+        }
+        .detail-row {
+            display: flex;
+            padding: 8px 0;
+            border-bottom: 1px solid #f2e6d9;
+        }
+        .detail-label {
+            flex: 1;
+            font-weight: 600;
+            color: #A82400;
+        }
+        .detail-value {
+            flex: 2;
+            color: #555;
+        }
+        .status-section {
+            margin: 30px 0;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 8px 15px;
+            background-color: #A82400;
+            color: white;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        .timeline {
+            margin: 30px 0;
+        }
+        .timeline-item {
+            display: flex;
+            margin-bottom: 15px;
+            position: relative;
+        }
+        .timeline-item:last-child {
+            margin-bottom: 0;
+        }
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            background-color: #d9d0c3;
+            border-radius: 50%;
+            margin-right: 15px;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .timeline-dot.active {
+            background-color: #A82400;
+        }
+        .timeline-dot.pending {
+            background-color: #d48f7d;
+        }
+        .timeline-content {
+            flex-grow: 1;
+        }
+        .timeline-content h4 {
+            margin: 0 0 5px 0;
+            color: #A82400;
+        }
+        .timeline-content p {
+            margin: 0;
+            color: #777;
+        }
+        .next-steps {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #fff8ee;
+            border-radius: 5px;
+            border: 1px solid #f2e6d9;
+        }
+        .next-steps h3 {
+            margin-top: 0;
+            color: #A82400;
+        }
+        .steps-list {
+            padding-left: 20px;
+        }
+        .steps-list li {
+            margin-bottom: 10px;
+        }
+        .footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+        }
+        .action-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #A82400;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 10px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+        .action-button:hover {
+            background-color: #7e1c00;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="success-header">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h1>Application Submitted Successfully!</h1>
+            <p class="subtitle">Your company registration application has been received.</p>
+        </div>
+
+        <div class="details-section">
+            <div class="company-details">
+                <h3>Company Information</h3>
+                <div class="detail-row">
+                    <div class="detail-label">Company Name:</div>
+                    <div class="detail-value"><%=companyData.name%></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Registration ID:</div>
+                    <div class="detail-value"><%=companyData.registrationNumber%></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Business Type:</div>
+                    <div class="detail-value"><%=companyData.industry%></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Submitted On:</div>
+                    <div class="detail-value"><%=companyData.time%></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Contact Email:</div>
+                    <div class="detail-value"><%=companyData.contactEmail%></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-section">
+            <h3>Current Status</h3>
+            <div class="status-badge">
+                <i class="fas fa-clock"></i> Pending Verification
+            </div>
+            <p>
+                Our team is currently reviewing your application and the submitted documents.
+                This process typically takes 2-3 business days.
+            </p>
+        </div>
+
+        <div class="timeline">
+            <h3>Registration Progress</h3>
+            <div class="timeline-item">
+                <div class="timeline-dot active"></div>
+                <div class="timeline-content">
+                    <h4>Application Submitted</h4>
+                    <p><%=companyData.time%></p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot pending"></div>
+                <div class="timeline-content">
+                    <h4>Document Verification</h4>
+                    <p>In Progress</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h4>Registration Approved</h4>
+                    <p>Pending</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="timeline-content">
+                    <h4>Certificate Issuance</h4>
+                    <p>Pending</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="next-steps">
+            <h3>Next Steps</h3>
+            <ul class="steps-list">
+                <li>We will verify all the documents you've submitted</li>
+                <li>You will receive email updates about your application status</li>
+                <li>If additional information is needed, our team will contact you</li>
+                <li>Once approved, you'll receive your official registration certificate</li>
+            </ul>
+            <p>You can check your application status anytime by logging into your account.</p>
+            <a href="/community/<%=community._id%>/company" class="action-button">Go to Dashboard</a>
+        </div>
+
+        <div class="footer">
+            <p>Thank you for choosing our service for your company registration needs.</p>
+            <p>&copy; <%= new Date().getFullYear() %> Business Registration Portal. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -15,33 +15,50 @@ const Company = require( '../models/communityCompany' );
 const AdminPortal = require( '../models/adminPortal' );
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
+const CompanyListing = require( '../models/companyListing' );
 
 const upload = multer({
-    storage: storage,
-    fileFilter: (req, file, cb) => {
-      if (
-        file.fieldname === "post[image]" ||
-        file.fieldname === "community[thumbnail]" ||
-        file.fieldname === "upload[image]"
-      ) {
-        // Allow image files
-        if (file.mimetype.startsWith("image/")) {
-          cb(null, true);
-        } else {
-          cb(new Error("Only image files are allowed!"), false);
-        }
-      } else if (file.fieldname === "post[video]") {
-        // Allow video files
-        if (file.mimetype.startsWith("video/")) {
-          cb(null, true);
-        } else {
-          cb(new Error("Only video files are allowed!"), false);
-        }
-      } else {
-        cb(new Error("Invalid file type"), false);
+  storage,
+  fileFilter: (req, file, cb) => {
+    const imagesAllowed = [
+      "post[image]",
+      "community[thumbnail]",
+      "upload[image]",
+      "CompanyListing[logo]"
+    ];
+    const videosAllowed = [ "post[video]" ];
+    const verificationAllowed = [ "CompanyListing[verification]" ];
+
+    if (imagesAllowed.includes(file.fieldname)) {
+      // only image mimetypes
+      if (file.mimetype.startsWith("image/")) {
+        return cb(null, true);
       }
-    },
+      return cb(new Error("Only image files are allowed for logos and images"), false);
+    }
+    if (videosAllowed.includes(file.fieldname)) {
+      // only video mimetypes
+      if (file.mimetype.startsWith("video/")) {
+        return cb(null, true);
+      }
+      return cb(new Error("Only video files are allowed for videos"), false);
+    }
+    if (verificationAllowed.includes(file.fieldname)) {
+      // allow PDF or images for verification docs
+      if (
+        file.mimetype === "application/pdf" ||
+        file.mimetype.startsWith("image/")
+      ) {
+        return cb(null, true);
+      }
+      return cb(new Error("Only PDF or image files are allowed for verification documents"), false);
+    }
+
+    // if it's some other field (no file expected), just skip it
+    cb(null, false);
+  }
 });
+
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -243,6 +260,7 @@ router.get("/community/:communityId/posts/new", async (req, res) => {
 
 router.get("/community/:communityId/posts/:postId", async (req, res) => {
   const { communityId, postId } = req.params;
+  console.log(postId);
   try {
     const community = await Community.findById(communityId);
     const post = await Post.findById(postId);
@@ -626,7 +644,7 @@ router.get("/community/:communityId/company", async (req, res) => {
     }
     console.log("User Found:", currUser);
 
-    res.render("company.ejs", { community, currUser, communityId, companies });
+    res.render("listingCompany.ejs", { community, currUser, communityId, companies });
   } catch (error) {
     console.error("Error fetching company page:", error);
     res.status(500).send("An error occurred while fetching the company page.");
@@ -636,10 +654,94 @@ router.get("/community/:communityId/company", async (req, res) => {
 //community company listing get route
 router.get("/community/:communityId/listingCompany", async(req,res)=>{
   try{
-    res.render("companyProfile.ejs");
+    const {communityId} = req.params;
+    const sessionUser = req.session?.communityUser;
+    const community = await Community.findById(communityId);
+    if (!sessionUser) {
+      console.log("User not logged in, redirecting to login");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+    if (sessionUser.communityId.toString() !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+    const currUser = await CommunityUser.findById(sessionUser.id);
+    if(!currUser){
+      res.status(404).send("User is not found");
+    }
+    res.render("listingCompanyForm.ejs", {community, currUser, communityId});
   }catch(err){
     console.log(err);
   }
-})
+});
+
+//community company listing post route
+router.post(
+  "/community/:communityId/listingCompany",
+  upload.fields([
+    { name: "CompanyListing[logo]", maxCount: 1 },
+    { name: "CompanyListing[verification]", maxCount: 1 }
+  ]),
+  async (req, res) => {
+    try {
+      const { communityId } = req.params;
+      const community = await Community.findById(communityId);
+
+      // 1️⃣ If your form ever posted a nested object directly, use it:
+      let companyData = req.body.CompanyListing || {};
+      
+   
+      // 2️⃣ Otherwise, reconstruct from the flat keys
+      if (!req.body.CompanyListing) {
+        companyData = {};
+        for (let key in req.body) {
+          const m = key.match(/^CompanyListing\[(.+)\]$/);
+          if (m) {
+            companyData[m[1]] = req.body[key];
+          }
+        }
+      }
+
+      // 3️⃣ Convert checkbox strings ("on"/undefined) to real booleans
+      companyData.termsAgreed   = !!req.body["CompanyListing[termsAgreed]"];
+      companyData.dataConsent   = !!req.body["CompanyListing[dataConsent]"];
+      // marketingConsent is optional
+      companyData.marketingConsent = !!req.body["CompanyListing[marketingConsent]"];
+
+      // 4️⃣ Convert foundedYear to Number
+      if (companyData.foundedYear) {
+        companyData.foundedYear = Number(companyData.foundedYear);
+      }
+
+      // 5️⃣ Attach file info if present
+      if (req.files["CompanyListing[logo]"]) {
+        const file = req.files["CompanyListing[logo]"][0];
+        companyData.logo = { url: file.path, filename: file.filename };
+      }
+      if (req.files["CompanyListing[verification]"]) {
+        const file = req.files["CompanyListing[verification]"][0];
+        companyData.verification = { url: file.path, filename: file.filename };
+      }
+
+      // 6️⃣ Build & save the Mongoose document
+      const newCompany = new CompanyListing({
+        ...companyData,
+        communityId
+      });
+      companyData.time = new Date();
+      const savedCompany = await newCompany.save();
+      console.log(companyData);
+      res.render("reviewCompany.ejs", {companyData, community});
+
+    } catch (error) {
+      console.error("Error saving company:", error);
+      // If it's a Mongoose validation error, send details back
+      if (error.name === 'ValidationError') {
+        return res.status(400).json({ errors: error.errors });
+      }
+      res.status(500).json({ error: "An error occurred while saving the company" });
+    }
+  }
+);
 
 module.exports = router;

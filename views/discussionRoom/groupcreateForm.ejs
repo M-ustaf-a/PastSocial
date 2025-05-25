@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Group</title>
+    <style>
+        :root {
+            --primary: #A82400;
+            --background: #ffffff;
+            --surface: #f5f5f5;
+            --border: #e0e0e0;
+            --text: #d34f2b;
+            --text-light: #A82400;
+            --accent: #A82400;
+            --error: #d32f2f;
+            --focus: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+        
+        .container {
+            max-width: 540px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            margin-bottom: 3rem;
+        }
+        
+        .title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 0.75rem 0;
+            font-size: 1rem;
+            border: none;
+            border-bottom: 1px solid var(--border);
+            background-color: transparent;
+            transition: border-color 0.2s ease;
+        }
+        
+        input[type="text"]:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .file-drop-area {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            width: 100%;
+            height: 140px;
+            padding: 1.5rem;
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+            background-color: var(--surface);
+            transition: background-color 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .file-drop-area:hover {
+            background-color: rgba(0, 0, 0, 0.02);
+        }
+        
+        .file-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .file-msg {
+            font-size: 0.875rem;
+            color: var(--text-light);
+            margin-top: 0.5rem;
+            text-align: center;
+        }
+        
+        .icon {
+            width: 32px;
+            height: 32px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .file-name {
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text);
+            display: none;
+            padding: 0.5rem 0.75rem;
+            background-color: var(--surface);
+            border-radius: 4px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.875rem 1.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        
+        .btn:hover {
+            background-color: #333;
+        }
+        
+        .btn:active {
+            transform: translateY(1px);
+        }
+        
+        .helper-text {
+            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-light);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .title {
+                font-size: 1.5rem;
+            }
+            
+            .subtitle {
+                font-size: 0.875rem;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+        
+        /* Focus styles for accessibility */
+        input:focus, textarea:focus, button:focus, .file-drop-area:focus-within {
+            box-shadow: 0 0 0 2px var(--focus);
+        }
+        
+        /* Animation for feedback */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        
+        .success {
+            animation: pulse 0.3s ease-in-out;
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1 class="title">Create a new group</h1>
+            <p class="subtitle">Fill in the details to set up your project space</p>
+        </header>
+        
+        <form action="/community/<%=community._id%>/group" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="projectName" class="form-label">Project name</label>
+                <input type="text" id="projectName" name="groupForm[projectName]" placeholder="Enter project name" required>
+                <div class="helper-text">Choose a name that clearly identifies your project</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="description" class="form-label">Project description</label>
+                <textarea id="description" name="groupForm[projectDescription]" placeholder="Describe what this project is about..." required></textarea>
+                <div class="helper-text">Provide a brief overview of the project goals and scope</div>
+            </div>
+            
+            <div class="form-group">
+                <label for="image" class="form-label">Project image</label>
+                <div class="file-drop-area" id="drop-area">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M4 16L8.586 11.414C8.96106 11.0391 9.46967 10.8284 10 10.8284C10.5303 10.8284 11.0389 11.0391 11.414 11.414L16 16M14 14L15.586 12.414C15.9611 12.0391 16.4697 11.8284 17 11.8284C17.5303 11.8284 18.0389 12.0391 18.414 12.414L20 14M14 8H14.01M6 20H18C18.5304 20 19.0391 19.7893 19.4142 19.4142C19.7893 19.0391 20 18.5304 20 18V6C20 5.46957 19.7893 4.96086 19.4142 4.58579C19.0391 4.21071 18.5304 4 18 4H6C5.46957 4 4.96086 4.21071 4.58579 4.58579C4.21071 4.96086 4 5.46957 4 6V18C4 18.5304 4.21071 19.0391 4.58579 19.4142C4.96086 19.7893 5.46957 20 6 20Z" stroke="#767676" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <p class="file-msg">Drop image here or click to upload</p>
+                    <input type="file" id="image" class="file-input" name="groupForm[image]" accept="image/*">
+                </div>
+                <div id="file-name-display" class="file-name"></div>
+                <div class="helper-text">Add an image that represents your project</div>
+            </div>
+            
+            <button type="submit" class="btn">Create group</button>
+        </form>
+    </div>
+
+    <script>
+        // Display file name when selected
+        document.getElementById('image').addEventListener('change', function(e) {
+            const fileNameDisplay = document.getElementById('file-name-display');
+            const dropArea = document.getElementById('drop-area');
+            
+            if (e.target.files[0]) {
+                fileNameDisplay.textContent = e.target.files[0].name;
+                fileNameDisplay.style.display = 'block';
+                dropArea.classList.add('success');
+                
+                setTimeout(() => {
+                    dropArea.classList.remove('success');
+                }, 300);
+            } else {
+                fileNameDisplay.style.display = 'none';
+            }
+        });
+        
+        // Handle drag events
+        const dropArea = document.getElementById('drop-area');
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
+            dropArea.style.borderColor = '#333';
+        }
+        
+        function unhighlight() {
+            dropArea.style.backgroundColor = '';
+            dropArea.style.borderColor = '';
+        }
+        
+        // Handle dropped files
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            document.getElementById('image').files = files;
+            
+            const event = new Event('change');
+            document.getElementById('image').dispatchEvent(event);
+        }
+        
+        // Form validation
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const projectName = document.getElementById('projectName').value.trim();
+            const description = document.getElementById('description').value.trim();
+            
+            if (!projectName || !description) {
+                e.preventDefault();
+                alert('Please fill out all required fields.');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,93 +1,226 @@
-<style>
-    body{
-        background-color: blanchedalmond;
-    }
-    header{
-        width: 100%;
-        background-color: #fee4bd;
-    }
-    a{
-        text-decoration: none;
-    }
-    h1{
-        color: black;
-    }
-
-    a svg{
-        color: #fc9a06;
-    }
-    .card-body{
-        width: 100px; 
-        margin-left: 86%; 
-        display: flex; 
-        background-color: #fee0b4;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        border: none;
-    }
-    .icon-image{
-        display: flex;
-        gap: 80%;
-        margin-left: 5%;
-    }
-    .icons{
-        margin: 30px;
-    }
-    
-
-    @media (max-width: 1440px){
-        .card-body{
-            margin-left: 86%;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Improved Header Design</title>
+    <style>
+        :root {
+            --primary-color: #A82400;
+            --secondary-color: #fc9a06;
+            --bg-light: #fee4bd;
+            --bg-lighter: blanchedalmond;
+            --text-dark: #333333;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-    }
 
-    @media (max-width: 768px){
-        header{
-            background-color: transparent;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+
+        body {
+            background-color: var(--bg-lighter);
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            width: 100%;
+            background-color: var(--bg-light);
+            padding: 1rem 0;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 2px solid rgba(252, 154, 6, 0.2);
+        }
+
+        .icon-image {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 60px;
+        }
+
+        .icons {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .icons img {
+            transition: var(--transition);
+            border-radius: 50%;
+            padding: 4px;
+            border: 2px solid transparent;
+        }
+
+        .icons img:hover {
+            transform: scale(1.1);
+            border-color: var(--secondary-color);
+            box-shadow: 0 2px 8px rgba(252, 154, 6, 0.3);
+        }
+
         .logo {
-            display: none;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin-left: 0.75rem;
         }
-        .create-comm{
-            display: none;
-        }
-        .mobile-view{
-            display: none;
-        }
-        .icons{
-            margin-left: 50px;
-        }
-    }
-</style>
 
+        .btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .btn img {
+            transition: var(--transition);
+            border-radius: 50%;
+        }
+
+        .btn:hover img {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(168, 36, 0, 0.2);
+        }
+
+        .btn:active {
+            transform: translateY(2px);
+        }
+
+        .dropdown-menu {
+            background-color: var(--bg-light);
+            border: 2px solid var(--secondary-color);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin-top: 0.5rem;
+        }
+
+        .dropdown-toggle::after {
+            display: none;
+        }
+
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            color: var(--primary-color);
+            padding: 0.85rem 1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bg-lighter);
+            color: var(--secondary-color);
+            transform: translateX(5px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+
+        .dropdown-item svg {
+            margin-right: 8px;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                background-color: var(--bg-lighter);
+                padding: 0.5rem 0;
+            }
+
+            .icon-image {
+                padding: 0 1rem;
+                height: 50px;
+            }
+
+            .logo, .create-comm, .mobile-view {
+                display: none;
+            }
+
+            .btn img {
+                height: 36px;
+                width: 36px;
+            }
+
+            .dropdown-menu {
+                position: fixed;
+                right: 1rem;
+                top: 4rem;
+                min-width: 160px;
+            }
+        }
+    </style>
+</head>
 <body>
     <header>
         <div class="icon-image">
-            <span class="icons">
-                <img src="/group.png" alt="icons" height="40" width="40">
-            </span>
-                <a class="create-comm" href="#" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample" style="margin-top: 20px;">
-                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
-                 </svg>
-                </a>
-        </div>
-        <div>
-          <div class="collapse collapse-horizontal" id="collapseWidthExample">
-            <div class="card card-body" style="width: 100px; display: flex; background-color: #fee0b4;">
-                <span style="display: flex; gap: 30px;">
-                    <a href="/community/<%=communityId%>/personal">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-                        </svg>
-                    </a>
-                    <a href="/community/<%=communityId%>/group">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-people-fill" viewBox="0 0 16 16">
-                            <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-                        </svg>
-                    </a>
-                </span>
+            <div class="icons">
+                <img src="/group.png" alt="Community Group Icon" height="40" width="40">
             </div>
-          </div>
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" aria-expanded="false">
+                    <img src="/exit.png" alt="Menu" height="30px" width="30px">
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/community/<%=communityId%>/main">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Leave
+                    </a></li>
+                </ul>
+            </div>
         </div>
     </header>
+    <!-- Including a simple JS to make the dropdown work for demonstration -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            
+            dropdownToggle.addEventListener('click', function() {
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            // Close dropdown when clicking outside
+            window.addEventListener('click', function(event) {
+                if (!event.target.closest('.dropdown-toggle') && !event.target.closest('.dropdown-menu')) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+        });
+    </script>
 </body>
+</html>

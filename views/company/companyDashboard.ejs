@@ -1,70 +1,462 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Membership Requests</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Membership Requests Dashboard</title>
+
+    <style>
+      body {
+        background-color: #f9f9f9;
+        font-family: "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .btn-brand {
+        background-color: #a82400;
+        border-color: #a82400;
+        color: white;
+        transition: all 0.15s ease;
+      }
+
+      .btn-brand:hover {
+        background-color: #8a1d00;
+      }
+
+      .notification-row {
+        transition: background-color 0.2s ease;
+      }
+
+      /* Professional scrollbar */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #a82400;
+        border-radius: 3px;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <!-- Header with company-like styling -->
+      <header class="mb-6">
+        <div class="flex flex-col sm:flex-row justify-between items-center">
+          <div class="flex items-center mb-4 sm:mb-0">
+            <h1 class="text-2xl font-semibold text-gray-800">
+              Membership Requests
+            </h1>
+            <span
+              class="ml-3 px-2 py-1 bg-brand-secondary text-brand text-xs font-medium rounded"
+              >Company Portal</span
+            >
+          </div>
+          <div class="flex items-center">
+            <div class="mr-4">
+              <div class="text-sm font-medium text-gray-700 text-right">
+                Administrator
+              </div>
+              <div class="text-xs text-gray-500" id="last-login"></div>
+            </div>
+            <a href="/companyLogout" class="flex-shrink-0">
+              <img
+                src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg"
+                alt="Logout"
+                class="h-10 w-10 rounded-full object-cover border border-gray-200"
+              />
+            </a>
+          </div>
+        </div>
+      </header>
+
+      <!-- Stats Overview -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="bg-white p-4 rounded shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500">Pending Requests</p>
+              <p class="text-2xl font-semibold text-gray-800">
+                <%=notifications.length%>
+              </p>
+            </div>
+            <div class="p-2 bg-brand-secondary rounded">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-brand"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500">Approved Today</p>
+              <p class="text-2xl font-semibold text-gray-800">5</p>
+            </div>
+            <div class="p-2 bg-green-100 rounded">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-green-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+        <div class="bg-white p-4 rounded shadow-card">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-sm font-medium text-gray-500">Declined Today</p>
+              <p class="text-2xl font-semibold text-gray-800">2</p>
+            </div>
+            <div class="p-2 bg-red-100 rounded">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-6 w-6 text-red-600"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main content -->
+      <div class="bg-white shadow-card rounded-md overflow-hidden">
+        <div class="px-4 py-3 bg-gray-50 border-b border-gray-200">
+          <div class="flex justify-between items-center">
+            <h2 class="text-base font-medium text-gray-700">
+              Pending Membership Applications
+            </h2>
+            <div class="flex items-center space-x-2">
+              <button
+                class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded hover:bg-gray-200 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 inline mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                  />
+                </svg>
+                Filter
+              </button>
+              <button
+                class="px-3 py-1 bg-gray-100 text-gray-600 text-xs font-medium rounded hover:bg-gray-200 transition-colors"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-3 w-3 inline mr-1"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                  />
+                </svg>
+                Export
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table Header -->
+        <div
+          class="hidden md:flex text-xs font-medium text-gray-500 uppercase tracking-wider border-b border-gray-200"
+        >
+          <div class="w-12 px-6 py-3"></div>
+          <div class="flex-1 px-6 py-3">Applicant</div>
+          <div class="w-1/6 px-6 py-3">Role</div>
+          <div class="w-1/6 px-6 py-3">Date</div>
+          <div class="w-1/6 px-6 py-3">Action</div>
+        </div>
+
+        <!-- Notification List -->
+        <div
+          class="divide-y divide-gray-200 max-h-[600px] overflow-y-auto custom-scrollbar"
+        >
+          <%for(let notification of notifications){%>
+          <div class="notification-row hover:bg-gray-50">
+            <!-- Mobile View -->
+            <div class="block md:hidden p-4">
+              <div class="flex items-center mb-3">
+                <div class="flex-shrink-0 mr-3">
+                  <img
+                    src="<%=notification.content.imageUrl%>"
+                    alt=""
+                    class="h-10 w-10 rounded-full object-cover border border-gray-200"
+                  />
+                </div>
+                <div>
+                  <h2 class="text-sm font-medium text-gray-900">
+                    <%=notification.content.name%>
+                  </h2>
+                  <p class="text-xs text-gray-500">
+                    <%=notification.content.role%>
+                  </p>
+                </div>
+              </div>
+              <div class="mt-2">
+                <form
+                  action="/admindashboard/<%=notification._id%>/show"
+                  method="get"
+                >
+                  <button
+                    type="submit"
+                    class="w-full btn-brand py-2 px-4 text-xs font-medium rounded shadow-sm"
+                  >
+                    View Application
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <!-- Desktop View -->
+            <div class="hidden md:flex items-center">
+              <div class="w-12 px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="h-2 w-2 rounded-full bg-brand"></div>
+                </div>
+              </div>
+              <div class="flex-1 px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0">
+                    <img
+                      src="<%=notification.content.imageUrl%>"
+                      alt=""
+                      class="h-10 w-10 rounded-full object-cover border border-gray-200"
+                    />
+                  </div>
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      <%=notification.content.name%>
+                    </div>
+                    <div class="text-xs text-gray-500">
+                      <%=notification.content.email || 'No email provided'%>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="w-1/6 px-6 py-4 whitespace-nowrap">
+                <span
+                  class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-brand-secondary text-brand"
+                >
+                  <%=notification.content.role%>
+                </span>
+              </div>
+              <div
+                class="w-1/6 px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+              >
+                Today
+              </div>
+              <div
+                class="w-1/6 px-6 py-4 whitespace-nowrap text-right text-sm font-medium"
+              >
+                <form
+                  action="/companydashboard/<%=notification._id%>/show"
+                  method="get"
+                >
+                  <button
+                    type="submit"
+                    class="btn-brand py-1 px-3 text-xs font-medium rounded shadow-sm"
+                  >
+                    View Details
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          <%}%>
+
+          <!-- Empty state -->
+          <% if (notifications.length === 0) { %>
+          <div class="py-12 text-center">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="mx-auto h-12 w-12 text-gray-400"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+            <h3 class="mt-2 text-sm font-medium text-gray-900">
+              No pending requests
+            </h3>
+            <p class="mt-1 text-sm text-gray-500">
+              All membership requests have been processed.
+            </p>
+          </div>
+          <% } %>
+        </div>
+
+        <!-- Pagination -->
+        <div class="px-4 py-3 bg-gray-50 border-t border-gray-200 sm:px-6">
+          <div class="flex items-center justify-between">
+            <div
+              class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between"
+            >
+              <div>
+                <p class="text-sm text-gray-700">
+                  Showing <span class="font-medium">1</span> to
+                  <span class="font-medium"><%=notifications.length%></span> of
+                  <span class="font-medium"><%=notifications.length%></span>
+                  results
+                </p>
+              </div>
+              <div>
+                <nav
+                  class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px"
+                  aria-label="Pagination"
+                >
+                  <a
+                    href="#"
+                    class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  >
+                    <span class="sr-only">Previous</span>
+                    <svg
+                      class="h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                  <a
+                    href="#"
+                    aria-current="page"
+                    class="z-10 bg-brand border-brand text-white relative inline-flex items-center px-4 py-2 border text-sm font-medium"
+                  >
+                    1
+                  </a>
+                  <a
+                    href="#"
+                    class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50"
+                  >
+                    <span class="sr-only">Next</span>
+                    <svg
+                      class="h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </nav>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <footer class="mt-8 py-4 border-t border-gray-200">
+        <div class="flex flex-col md:flex-row justify-between items-center">
+          <div class="text-sm text-gray-500">
+            © 2025 Neckella. All rights reserved.
+          </div>
+          <div class="mt-2 md:mt-0 text-sm text-gray-500">Version 2.1.0</div>
+        </div>
+      </footer>
+    </div>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        custom: '#A82400',
-                    }
-                }
-            }
-        }
+      const lastLoginEl = document.getElementById("last-login");
+
+      const now = new Date();
+
+      const dayName = now.toLocaleDateString("en-US", { weekday: "long" });
+      const date = now.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      });
+      const time = now.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+      });
+
+      lastLoginEl.textContent = `${dayName}, ${date}, ${time}`;
+
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                DEFAULT: "#A82400",
+                secondary: "#fee4bd",
+                light: "#ffebcd",
+                dark: "#8a1d00",
+              },
+            },
+            fontFamily: {
+              sans: ["Helvetica Neue", "Arial", "sans-serif"],
+            },
+            boxShadow: {
+              card: "0 2px 4px rgba(0, 0, 0, 0.08)",
+            },
+          },
+        },
+      };
     </script>
-    <style>
-        body {
-            background-color: blanchedalmond;
-        }
-        .custom-color {
-            color: #A82400;
-        }
-    </style>
-</head>
-<body class="min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-3xl font-bold custom-color">Membership Requests</h1>
-            <a href="/companyLogout" class="flex-shrink-0">
-                <img 
-                    src="https://gratisography.com/wp-content/uploads/2024/11/gratisography-augmented-reality-800x525.jpg" 
-                    alt="Logout" 
-                    class="h-12 w-12 rounded-full object-cover"
-                >
-            </a>
-        </div>
-        
-        <div class="bg-white shadow rounded-lg">
-            <div class="divide-y divide-[#fdc97c]">
-                <%for(let notification of notifications){%>
-                    <div class="p-4 sm:p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between bg-[#fee4bd] hover:bg-[#ffebcd] transition-colors cursor-pointer gap-4 sm:gap-0">
-                        <div class="flex-1">
-                            <div class="flex items-center space-x-4">
-                                <div class="bg-white border-2 border-custom rounded-full flex-shrink-0">
-                                    <img src="<%=notification.content.imageUrl%>" alt="" class="h-12 w-12 rounded-full object-cover">
-                                </div>
-                                <div>
-                                    <h2 class="text-lg font-semibold custom-color"><%=notification.content.name%></h2>
-                                    <p class="text-sm custom-color opacity-75"><%=notification.content.role%></p>
-                                </div>
-                            </div>
-                        </div>
-                        <form action="/admindashboard/<%=notification._id%>/show" method="get" class="w-full sm:w-auto">
-                            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 border-2 border-custom rounded-md shadow-sm text-sm font-medium text-white bg-custom hover:bg-[#fee4bd] hover:text-custom transition-colors">
-                                View Details
-                                <svg class="ml-2 -mr-1 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                                </svg>
-                            </button>
-                        </form>
-                    </div>
-                <%}%>
-            </div>
-        </div>
-    </div>
-</body>
+  </body>
 </html>

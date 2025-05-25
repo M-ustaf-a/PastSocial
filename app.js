@@ -3,6 +3,7 @@ if (process.env.NODE_ENV != "production") {
 }
 const express = require("express");
 const mongoose = require("mongoose");
+const http = require("http");
 const path = require("path");
 const Community = require("./models/community");
 const methodOverride = require("method-override");
@@ -11,12 +12,13 @@ const MongoStore = require("connect-mongo");
 const ejsMate = require("ejs-mate");
 const multer = require("multer");
 const {storage} = require("./cloudConfig");
-const approvalRoute = require("./routes/admin");
+const userRoute = require("./routes/user");
 const profileRoute = require("./routes/profile");
 const communityApproval = require("./routes/userCommunityApproval");
 const communitieRoute = require('./routes/commuities');
 const companyRoute = require("./routes/companyPanel");
 const adminPanelRoute = require("./routes/adminPanel");
+const groupRoute = require("./routes/chat/group");
 
 // Import chat routes and socket initialization
 const { router: chatRoutes } = require("./routes/chat");
@@ -24,7 +26,8 @@ const CommunityData = require( "./models/communityData" );
 
 const app = express();
 const MONGO_URL = process.env.ATLAS;
-
+// const servers = http.createServer(app);
+// const io = socketio(server);
 // Database Connection
 mongoose
   .connect(MONGO_URL)
@@ -35,6 +38,10 @@ mongoose
   .catch((err) => {
     console.error("Database connection error:", err);
   });
+  
+// Passport middleware
+// app.use(passport.initialize());
+// app.use(passport.session());
 
 // Middleware Setup
 app.set("view engine", "ejs");
@@ -93,39 +100,6 @@ app.get("/community/:communityId/personal", async (req, res) => {
     res.status(500).send("An error occurred while fetching the personal page.");
   }
 });
-
-
-//Group message
-app.get("/community/:communityId/group", async (req, res) => {
-  try {
-    const { communityId } = req.params;
-    const sessionUser = req.session?.communityUser;
-
-    // Ensure community exists
-    const community = await Community.findById(communityId);
-    if (!community) {
-      return res.status(404).send("Community not found");
-    }
-
-    // Ensure user is authenticated
-    if (!sessionUser) {
-      console.log("User not logged in, redirecting to login");
-      return res.redirect(`/community/${communityId}/login`);
-    }
-
-    // Ensure user belongs to this community
-    if (sessionUser.communityId !== communityId) {
-      console.log("No matching user for this community");
-      return res.redirect(`/community/${communityId}/login`);
-    }
-
-    res.render("group.ejs", { community, communityId });
-  } catch (error) {
-    console.error("Error fetching group page:", error);
-    res.status(500).send("An error occurred while fetching the group page.");
-  }
-});
-
 
 app.get("/community/:communityId/meeting", async (req, res) => {
   try {
@@ -203,13 +177,14 @@ app.get("/bot", async(req,res)=>{
  
 
 // Use chat routes
-app.use(chatRoutes);
-app.use("/", approvalRoute);
+// app.use(chatRoutes);
+app.use("/", userRoute);
 app.use("/", profileRoute);
 app.use("/", communityApproval);
 app.use("/", communitieRoute);
 app.use("/", companyRoute);
 app.use("/", adminPanelRoute);
+app.use("/", groupRoute);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

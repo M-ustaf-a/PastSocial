@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <style>
+        :root {
+            --primary: #000000;
+            --background: #ffffff;
+            --surface: #f5f5f5;
+            --surface-hover: #eaeaea;
+            --border: #e0e0e0;
+            --text: #333333;
+            --text-light: #767676;
+            --accent: #505050;
+            --online: #4caf50;
+            --away: #ff9800;
+            --offline: #9e9e9e;
+            --sent-bg: #f0f0f0;
+            --received-bg: #000000;
+            --received-text: #ffffff;
+            --focus: rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        body {
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.5;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Layout */
+        .chat-container {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 280px;
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            background-color: var(--background);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--background);
+        }
+        
+        /* Sidebar Header */
+        .sidebar-header {
+            padding: 20px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+        }
+        
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 12px;
+            font-size: 14px;
+            color: var(--text);
+        }
+        
+        .user-name {
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        .icon-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            transition: background-color 0.2s;
+        }
+        
+        .icon-button:hover {
+            background-color: var(--surface);
+        }
+        
+        /* Search */
+        .search-container {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 16px;
+            border: none;
+            background-color: var(--surface);
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            background-color: var(--surface-hover);
+        }
+        
+        /* Contact List */
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .contact-item {
+            display: flex;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .contact-item:hover,
+        .contact-item.active {
+            background-color: var(--surface);
+        }
+        
+        .contact-avatar {
+            position: relative;
+            margin-right: 12px;
+        }
+        
+        .status-indicator {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            border: 2px solid var(--background);
+        }
+        
+        .status-online {
+            background-color: var(--online);
+        }
+        
+        .status-away {
+            background-color: var(--away);
+        }
+        
+        .status-offline {
+            background-color: var(--offline);
+        }
+        
+        .contact-info {
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .contact-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+        
+        .contact-name {
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .contact-time {
+            font-size: 12px;
+            color: var(--text-light);
+        }
+        
+        .contact-last-message {
+            font-size: 13px;
+            color: var(--text-light);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .unread-count {
+            background-color: var(--primary);
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 8px;
+        }
+        
+        /* Chat Header */
+        .chat-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+        }
+        
+        .chat-header-name {
+            font-weight: 600;
+            margin-left: 12px;
+        }
+        
+        .chat-header-status {
+            font-size: 13px;
+            color: var(--text-light);
+            margin-left: 12px;
+        }
+        
+        .chat-header-actions {
+            display: flex;
+            gap: 16px;
+        }
+        
+        /* Messages Area */
+        .messages-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .date-separator {
+            text-align: center;
+            margin: 16px 0;
+            position: relative;
+        }
+        
+        .date-separator span {
+            background-color: var(--background);
+            padding: 0 12px;
+            font-size: 12px;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .date-separator:before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: var(--border);
+            z-index: 0;
+        }
+        
+        .message {
+            max-width: 70%;
+            margin-bottom: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .message-sent {
+            align-self: flex-end;
+        }
+        
+        .message-received {
+            align-self: flex-start;
+        }
+        
+        .message-content {
+            padding: 10px 14px;
+            border-radius: 18px;
+            font-size: 14px;
+            word-break: break-word;
+        }
+        
+        .message-sent .message-content {
+            background-color: var(--sent-bg);
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-received .message-content {
+            background-color: var(--received-bg);
+            color: var(--received-text);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 4px;
+            align-self: flex-end;
+        }
+        
+        .message-received .message-time {
+            align-self: flex-start;
+        }
+        
+        /* Message Composer */
+        .message-composer {
+            padding: 16px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .message-input {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            resize: none;
+            max-height: 120px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .message-input:focus {
+            border-color: var(--accent);
+        }
+        
+        .send-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .send-button:hover {
+            background-color: var(--accent);
+        }
+        
+        .attachment-button {
+            background: none;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-light);
+            padding: 8px;
+            border-radius: 50%;
+            transition: background-color 0.2s;
+        }
+        
+        .attachment-button:hover {
+            background-color: var(--surface);
+        }
+        
+        /* Mobile Responsive Design */
+        @media (max-width: 768px) {
+            .chat-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 100vh;
+                position: absolute;
+                top: 0;
+                left: 0;
+                z-index: 10;
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                width: 100%;
+            }
+            
+            .show-sidebar-button {
+                display: block;
+            }
+            
+            .back-button {
+                display: block;
+            }
+        }
+        
+        /* Animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message {
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background-color: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background-color: #ddd;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #ccc;
+        }
+        
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            margin-top: 8px;
+            margin-bottom: 16px;
+            align-self: flex-start;
+        }
+        
+        .typing-bubble {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--text-light);
+            margin-right: 4px;
+            animation: typing 1s infinite ease-in-out;
+        }
+        
+        .typing-bubble:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-bubble:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+        
+        .typing-bubble:nth-child(3) {
+            animation-delay: 0.6s;
+            margin-right: 0;
+        }
+        
+        @keyframes typing {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
+        }
+        
+        /* Mobile menu button */
+        .menu-button {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .menu-button {
+                display: block;
+                margin-right: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <!-- Sidebar / Contact List -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="user-profile">
+                    <div class="avatar">JS</div>
+                    <span class="user-name">John Smith</span>
+                </div>
+                <div class="actions">
+                    <button class="icon-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="icon-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M19.43 12.98C19.47 12.66 19.5 12.34 19.5 12C19.5 11.66 19.47 11.34 19.43 11.02L21.54 9.37C21.73 9.22 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.05 19.27 4.97 19.05 5.05L16.56 6.05C16.04 5.65 15.48 5.32 14.87 5.07L14.49 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.51 2.42L9.13 5.07C8.52 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.72 4.96 4.46 5.05 4.34 5.27L2.34 8.73C2.21 8.95 2.27 9.22 2.46 9.37L4.57 11.02C4.53 11.34 4.5 11.67 4.5 12C4.5 12.33 4.53 12.66 4.57 12.98L2.46 14.63C2.27 14.78 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.95 4.73 19.03 4.95 18.95L7.44 17.95C7.96 18.35 8.52 18.68 9.13 18.93L9.51 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.49 21.58L14.87 18.93C15.48 18.68 16.04 18.34 16.56 17.95L19.05 18.95C19.28 19.04 19.54 18.95 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.98ZM12 15.5C10.07 15.5 8.5 13.93 8.5 12C8.5 10.07 10.07 8.5 12 8.5C13.93 8.5 15.5 10.07 15.5 12C15.5 13.93 13.93 15.5 12 15.5Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search or start new chat">
+            </div>
+            
+            <div class="contact-list">
+                <div class="contact-item active">
+                    <div class="contact-avatar">
+                        <div class="avatar">AJ</div>
+                        <span class="status-indicator status-online"></span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-top">
+                            <div class="contact-name">Alex Johnson</div>
+                            <div class="contact-time">10:42 AM</div>
+                        </div>
+                        <div class="contact-last-message">Hey, are we still meeting today?</div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-avatar">
+                        <div class="avatar">SL</div>
+                        <span class="status-indicator status-away"></span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-top">
+                            <div class="contact-name">Sarah Lee</div>
+                            <div class="contact-time">Yesterday</div>
+                        </div>
+                        <div class="contact-last-message">Thanks for the update!</div>
+                    </div>
+                    <div class="unread-count">2</div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-avatar">
+                        <div class="avatar">DW</div>
+                        <span class="status-indicator status-offline"></span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-top">
+                            <div class="contact-name">Design Team</div>
+                            <div class="contact-time">Tuesday</div>
+                        </div>
+                        <div class="contact-last-message">David: I just sent the final mockups</div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-avatar">
+                        <div class="avatar">MP</div>
+                        <span class="status-indicator status-online"></span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-top">
+                            <div class="contact-name">Michael Peters</div>
+                            <div class="contact-time">Monday</div>
+                        </div>
+                        <div class="contact-last-message">Let me check that and get back to you</div>
+                    </div>
+                </div>
+                
+                <div class="contact-item">
+                    <div class="contact-avatar">
+                        <div class="avatar">TN</div>
+                        <span class="status-indicator status-online"></span>
+                    </div>
+                    <div class="contact-info">
+                        <div class="contact-top">
+                            <div class="contact-name">Tech Ninjas</div>
+                            <div class="contact-time">05/08</div>
+                        </div>
+                        <div class="contact-last-message">Emma: Can someone review the PR?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Chat Area -->
+        <div class="main-content">
+            <div class="chat-header">
+                <div class="chat-header-info">
+                    <button class="icon-button menu-button" id="menu-button">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <div class="avatar">AJ</div>
+                    <div class="chat-header-name">Alex Johnson</div>
+                    <div class="chat-header-status">Online</div>
+                </div>
+                <div class="chat-header-actions">
+                    <button class="icon-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M17 10.5V7C17 6.45 16.55 6 16 6H4C3.45 6 3 6.45 3 7V17C3 17.55 3.45 18 4 18H16C16.55 18 17 17.55 17 17V13.5L21 17.5V6.5L17 10.5Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="icon-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 1C7.03 1 3 5.03 3 10V17C3 18.66 4.34 20 6 20H9V12H5V10C5 6.13 8.13 3 12 3C15.87 3 19 6.13 19 10V12H15V20H19V21H12V23H18C19.66 23 21 21.66 21 20V10C21 5.03 16.97 1 12 1Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                    <button class="icon-button">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="currentColor"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="messages-container" id="messages-container">
+                <div class="date-separator">
+                    <span>Today</span>
+                </div>
+                
+                <div class="message message-received">
+                    <div class="message-content">Hey! How are you doing?</div>
+                    <div class="message-time">10:30 AM</div>
+                </div>
+                
+                <div class="message message-sent">
+                    <div class="message-content">I'm good, thanks! Just wrapping up some work before our meeting. How about you?</div>
+                    <div class="message-time">10:32 AM</div>
+                </div>
+                
+                <div class="message message-received">
+                    <div class="message-content">Doing well! Are we still meeting today at 2pm?</div>
+                    <div class="message-time">10:33 AM</div>
+                </div>
+                
+                <div class="message message-sent">
+                    <div class="message-content">Yes, definitely. I've prepared all the materials we discussed.</div>
+                    <div class="message-time">10:35 AM</div>
+                </div>
+                
+                <div class="message message-received">
+                    <div class="message-content">Perfect! I'm looking forward to seeing what you've put together.</div>
+                    <div class="message-time">10:36 AM</div>
+                </div>
+                
+                <div class="message message-sent">
+                    <div class="message-content">Great! Do you want me to send you a quick preview beforehand?</div>
+                    <div class="message-time">10:37 AM</div>
+                </div>
+                
+                <div class="message message-received">
+                    <div class="message-content">That would be helpful! If you don't mind.</div>
+                    <div class="message-time">10:40 AM</div>
+                </div>
+                
+                <div class="message message-sent">
+                    <div class="message-content">No problem at all. I'll email it to you in about 30 minutes.</div>
+                    <div class="message-time">10:41 AM</div>
+                </div>
+                
+                <div class="message message-received">
+                    <div class="message-content">Hey, are we still meeting today?</div>
+                    <div class="message-time">10:42 AM</div>
+                </div>
+                
+                <div class="typing-indicator">
+                    <div class="typing-bubble"></div>
+                    <div class="typing-bubble"></div>
+                    <div class="typing-bubble"></div>
+                </div>
+            </div>
+            
+            <div class="message-composer">
+                <button class="attachment-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M16.5 6V17.5C16.5 19.71 14.71 21.5 12.5 21.5C10.29 21.5 8.5 19.71 8.5 17.5V5C8.5 3.62 9.62 2.5 11 2.5C12.38 2.5 13.5 3.62 13.5 5V15.5C13.5 16.05 13.05 16.5 12.5 16.5C11.95 16.5 11.5 16.05 11.5 15.5V6H10V15.5C10 16.88 11.12 18 12.5 18C13.88 18 15 16.88 15 15.5V5C15 2.79 13.21 1 11 1C8.79 1 7 2.79 7 5V17.5C7 20.54 9.46 23 12.5 23C15.54 23 18 20.54 18 17.5V6H16.5Z" fill="currentColor"/>
+                    </svg>
+                </button>
+                <input type="text" class="message-input" placeholder="Type a message..." id="message-input">
+                <button class="send-button" id="send-button">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="white"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+document.getElementById('menu-button').addEventListener('click', function() {
+    document.getElementById('sidebar').classList.toggle('open');
+});
+
+// Sending messages functionality
+const messagesContainer = document.getElementById('messages-container');
+const messageInput = document.getElementById('message-input');
+const sendButton = document.getElementById('send-button');
+
+function sendMessage() {
+    const messageText = messageInput.value.trim();
+    if (messageText === '') return;
+    
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    const formattedHours = hours % 12 || 12;
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+    const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
+    
+    const messageElement = document.createElement('div');
+    messageElement.className = 'message message-sent';
+    messageElement.innerHTML = `
+        <div class="message-content">${messageText}</div>
+        <div class="message-time">${timeString}</div>
+    `;
+    
+    messagesContainer.appendChild(messageElement);
+    messageInput.value = '';
+    
+    // Auto scroll to bottom
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // Simulate reply after delay (for demo purposes)
+    setTimeout(simulateReply, 1500);
+}
+
+// Function to simulate receiving a message
+function simulateReply() {
+    // Show typing indicator
+    showTypingIndicator();
+    
+    // Simulate typing delay before showing the message
+    setTimeout(() => {
+        // Hide typing indicator
+        hideTypingIndicator();
+        
+        // Create response messages
+        const responses = [
+            "That sounds great!",
+            "I'll get back to you on that.",
+            "Could you provide more details?",
+            "Let's discuss this in our meeting.",
+            "Thanks for letting me know!",
+            "Yes, that works for me.",
+            "I'm not sure I understand. Can you explain?",
+            "Perfect, I'll see you then."
+        ];
+        
+        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+        
+        const now = new Date();
+        const hours = now.getHours();
+        const minutes = now.getMinutes();
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        const formattedHours = hours % 12 || 12;
+        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+        const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
+        
+        const messageElement = document.createElement('div');
+        messageElement.className = 'message message-received';
+        messageElement.innerHTML = `
+            <div class="message-content">${randomResponse}</div>
+            <div class="message-time">${timeString}</div>
+        `;
+        
+        messagesContainer.appendChild(messageElement);
+        
+        // Auto scroll to bottom
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        
+    }, 2000); // Simulate typing for 2 seconds
+}
+
+// Function to show typing indicator
+function showTypingIndicator() {
+    // Check if typing indicator already exists
+    let typingIndicator = document.querySelector('.typing-indicator');
+    
+    // If it doesn't exist, create it
+    if (!typingIndicator) {
+        typingIndicator = document.createElement('div');
+        typingIndicator.className = 'typing-indicator';
+        typingIndicator.innerHTML = `
+            <div class="typing-bubble"></div>
+            <div class="typing-bubble"></div>
+            <div class="typing-bubble"></div>
+        `;
+        messagesContainer.appendChild(typingIndicator);
+    } else {
+        // Make sure it's visible
+        typingIndicator.style.display = 'flex';
+    }
+    
+    // Auto scroll to show typing indicator
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+}
+
+// Function to hide typing indicator
+function hideTypingIndicator() {
+    const typingIndicator = document.querySelector('.typing-indicator');
+    if (typingIndicator) {
+        typingIndicator.style.display = 'none';
+    }
+}
+
+// Event listeners for sending messages
+sendButton.addEventListener('click', sendMessage);
+
+messageInput.addEventListener('keypress', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();
+        sendMessage();
+    }
+});
+
+// Handle contact list selections
+const contactItems = document.querySelectorAll('.contact-item');
+contactItems.forEach(item => {
+    item.addEventListener('click', function() {
+        // Remove active class from all contacts
+        contactItems.forEach(contact => {
+            contact.classList.remove('active');
+        });
+        
+        // Add active class to clicked contact
+        this.classList.add('active');
+        
+        // Update chat header with contact info
+        const contactName = this.querySelector('.contact-name').textContent;
+        const contactInitials = this.querySelector('.avatar').textContent;
+        
+        document.querySelector('.chat-header-name').textContent = contactName;
+        document.querySelector('.chat-header .avatar').textContent = contactInitials;
+        
+        // Clear unread count if any
+        const unreadCount = this.querySelector('.unread-count');
+        if (unreadCount) {
+            unreadCount.remove();
+        }
+        
+        // For mobile: Close sidebar after selecting contact
+        document.getElementById('sidebar').classList.remove('open');
+    });
+});
+
+// Handle search functionality
+const searchInput = document.querySelector('.search-input');
+searchInput.addEventListener('input', function() {
+    const searchTerm = this.value.toLowerCase();
+    
+    contactItems.forEach(item => {
+        const contactName = item.querySelector('.contact-name').textContent.toLowerCase();
+        const lastMessage = item.querySelector('.contact-last-message').textContent.toLowerCase();
+        
+        if (contactName.includes(searchTerm) || lastMessage.includes(searchTerm)) {
+            item.style.display = 'flex';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+});
+
+// Theme toggle functionality (extra feature)
+function toggleDarkMode() {
+    document.body.classList.toggle('dark-mode');
+    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
+}
+
+// Function to initialize the chat
+function initChat() {
+    // Scroll to bottom of messages on load
+    messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    
+    // Check for saved dark mode preference
+    const darkModePreference = localStorage.getItem('darkMode');
+    if (darkModePreference === 'true') {
+        document.body.classList.add('dark-mode');
+    }
+    
+    // Remove any extra typing indicators on load
+    const typingIndicators = document.querySelectorAll('.typing-indicator');
+    if (typingIndicators.length > 1) {
+        for (let i = 1; i < typingIndicators.length; i++) {
+            typingIndicators[i].remove();
+        }
+    }
+}
+
+// Initialize everything when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', initChat);
+    </script>
