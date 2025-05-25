@@ -94,6 +94,79 @@
             box-shadow: 0 10px 20px rgba(168, 36, 0, 0.3);
         }
 
+        /* Mobile Menu */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 80%;
+            max-width: 400px;
+            height: 100vh;
+            background: var(--dark);
+            padding: 2rem;
+            transition: right 0.3s ease;
+            z-index: 1001;
+        }
+
+        .mobile-menu.active {
+            right: 0;
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--light);
+            font-size: 2rem;
+            cursor: pointer;
+        }
+
+        .mobile-menu-links {
+            margin-top: 3rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .mobile-menu-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-size: 1.2rem;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu-links a:hover {
+            color: var(--secondary);
+        }
+
+        .mobile-menu-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .mobile-menu-overlay.active {
+            display: block;
+        }
+
         /* Hero Section */
         .hero {
             min-height: 100vh;
@@ -102,6 +175,7 @@
             align-items: center;
             position: relative;
             overflow: hidden;
+            padding-top: 5rem;
         }
 
         .hero::before {
@@ -502,19 +576,51 @@
             padding: 0 2rem;
         }
 
-        /* Responsive */
+        /* Responsive Breakpoints */
+        
+        /* Large Tablets and Small Laptops */
+        @media (max-width: 1024px) {
+            .hero-text h1 {
+                font-size: 3rem;
+            }
+            
+            .hero-text p {
+                font-size: 1.2rem;
+            }
+            
+            .virtual-world {
+                width: 400px;
+                height: 400px;
+            }
+            
+            .orbit-1 { width: 240px; height: 240px; }
+            .orbit-2 { width: 320px; height: 320px; }
+            .orbit-3 { width: 400px; height: 400px; }
+        }
+
+        /* Tablets */
         @media (max-width: 768px) {
             .nav-links {
                 display: none;
+            }
+            
+            .mobile-menu-toggle {
+                display: block;
             }
 
             .hero-content {
                 grid-template-columns: 1fr;
                 text-align: center;
+                gap: 3rem;
+                padding: 0 1.5rem;
             }
 
             .hero-text h1 {
                 font-size: 2.5rem;
+            }
+            
+            .hero-text p {
+                font-size: 1.1rem;
             }
 
             .virtual-world {
@@ -535,6 +641,223 @@
             .hero-buttons {
                 justify-content: center;
             }
+            
+            .primary-button,
+            .secondary-button {
+                padding: 0.8rem 1.5rem;
+                font-size: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .section-header p {
+                font-size: 1.1rem;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .use-case-card {
+                padding: 2rem;
+            }
+            
+            .use-case-steps {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .audience-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 1.5rem;
+            }
+            
+            .cta-content h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-content p {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Mobile Phones */
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 0 1rem;
+            }
+            
+            .logo {
+                font-size: 1.3rem;
+            }
+            
+            .logo::before {
+                font-size: 1.5rem;
+            }
+            
+            .hero {
+                padding-top: 4rem;
+            }
+            
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .hero-text p {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .primary-button,
+            .secondary-button {
+                width: 100%;
+                max-width: 250px;
+                text-align: center;
+            }
+            
+            .virtual-world {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .orbit-1 { width: 150px; height: 150px; }
+            .orbit-2 { width: 200px; height: 200px; }
+            .orbit-3 { width: 250px; height: 250px; }
+            
+            .virtual-item {
+                width: 35px;
+                height: 35px;
+                font-size: 1rem;
+            }
+            
+            .features,
+            .use-cases,
+            .audience,
+            .cta-section {
+                padding: 3rem 0;
+            }
+            
+            .section-header {
+                margin-bottom: 2rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .section-header p {
+                font-size: 1rem;
+            }
+            
+            .features-grid,
+            .use-case-container,
+            .audience-grid,
+            .footer-content {
+                padding: 0 1rem;
+            }
+            
+            .feature-card {
+                padding: 1.5rem;
+            }
+            
+            .feature-icon {
+                width: 50px;
+                height: 50px;
+                font-size: 1.3rem;
+            }
+            
+            .feature-card h3 {
+                font-size: 1.3rem;
+            }
+            
+            .use-case-card {
+                padding: 1.5rem;
+            }
+            
+            .use-case-card h3 {
+                font-size: 1.5rem;
+            }
+            
+            .audience-card {
+                padding: 1.5rem;
+            }
+            
+            .audience-icon {
+                font-size: 2.5rem;
+            }
+            
+            .cta-content h2 {
+                font-size: 1.8rem;
+            }
+            
+            .cta-content p {
+                font-size: 1rem;
+            }
+            
+            .cta-button-white {
+                padding: 0.8rem 2rem;
+                font-size: 1rem;
+            }
+            
+            footer {
+                padding: 2rem 0;
+            }
+            
+            .footer-content p {
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Small Mobile Phones */
+        @media (max-width: 360px) {
+            .hero-text h1 {
+                font-size: 1.8rem;
+            }
+            
+            .virtual-world {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .orbit-1 { width: 120px; height: 120px; }
+            .orbit-2 { width: 160px; height: 160px; }
+            .orbit-3 { width: 200px; height: 200px; }
+            
+            .virtual-item {
+                width: 30px;
+                height: 30px;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Landscape Mobile */
+        @media (max-height: 600px) and (orientation: landscape) {
+            .hero {
+                min-height: auto;
+                padding: 6rem 0 3rem;
+            }
+            
+            .hero-content {
+                grid-template-columns: 1fr 1fr;
+                gap: 2rem;
+            }
+            
+            .virtual-world {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .orbit-1 { width: 150px; height: 150px; }
+            .orbit-2 { width: 200px; height: 200px; }
+            .orbit-3 { width: 250px; height: 250px; }
         }
     </style>
 </head>
@@ -549,8 +872,21 @@
                 <a href="#audience">For Who</a>
                 <a href="/community" class="cta-button">Get Started</a>
             </div>
+            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </div>
     </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu">
+        <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+        <div class="mobile-menu-links">
+            <a href="#features" onclick="closeMobileMenu()">Features</a>
+            <a href="#use-cases" onclick="closeMobileMenu()">Use Cases</a>
+            <a href="#audience" onclick="closeMobileMenu()">For Who</a>
+            <a href="/community" class="cta-button" onclick="closeMobileMenu()">Get Started</a>
+        </div>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -681,6 +1017,23 @@
     </footer>
 
     <script>
+        // Mobile menu functions
+        function toggleMobileMenu() {
+            const menu = document.querySelector('.mobile-menu');
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            menu.classList.add('active');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMobileMenu() {
+            const menu = document.querySelector('.mobile-menu');
+            const overlay = document.querySelector('.mobile-menu-overlay');
+            menu.classList.remove('active');
+            overlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
@@ -716,6 +1069,63 @@
             el.style.transform = 'translateY(20px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
             observer.observe(el);
+        });
+
+        // Responsive navigation scroll behavior
+        let lastScroll = 0;
+        const nav = document.querySelector('nav');
+        
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+            
+            if (currentScroll <= 0) {
+                nav.style.transform = 'translateY(0)';
+                return;
+            }
+            
+            if (currentScroll > lastScroll && !nav.classList.contains('scroll-down')) {
+                // Scrolling down
+                nav.style.transform = 'translateY(-100%)';
+            } else if (currentScroll < lastScroll && nav.classList.contains('scroll-down')) {
+                // Scrolling up
+                nav.style.transform = 'translateY(0)';
+            }
+            
+            lastScroll = currentScroll;
+        });
+
+        // Prevent body scroll when mobile menu is open
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileOverlay = document.querySelector('.mobile-menu-overlay');
+        
+        // Handle window resize
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                if (window.innerWidth > 768) {
+                    closeMobileMenu();
+                }
+            }, 250);
+        });
+
+        // Touch swipe to close mobile menu
+        let touchStartX = null;
+        
+        mobileMenu.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+        });
+        
+        mobileMenu.addEventListener('touchmove', (e) => {
+            if (!touchStartX) return;
+            
+            const touchEndX = e.touches[0].clientX;
+            const diff = touchEndX - touchStartX;
+            
+            if (diff > 50) {
+                closeMobileMenu();
+                touchStartX = null;
+            }
         });
     </script>
 </body>
