@@ -103,10 +103,11 @@
             font-size: 1.5rem;
             cursor: pointer;
             padding: 0.5rem;
+            z-index: 1002;
+            position: relative;
         }
 
         .mobile-menu {
-            display: none;
             position: fixed;
             top: 0;
             right: -100%;
@@ -153,7 +154,6 @@
         }
 
         .mobile-menu-overlay {
-            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -161,10 +161,14 @@
             height: 100vh;
             background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
         .mobile-menu-overlay.active {
-            display: block;
+            opacity: 1;
+            visibility: visible;
         }
 
         /* Hero Section */
@@ -872,19 +876,19 @@
                 <a href="#audience">For Who</a>
                 <a href="/community" class="cta-button">Get Started</a>
             </div>
-            <button class="mobile-menu-toggle" onclick="toggleMobileMenu()">☰</button>
+            <button class="mobile-menu-toggle">☰</button>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div class="mobile-menu-overlay" onclick="closeMobileMenu()"></div>
+    <div class="mobile-menu-overlay"></div>
     <div class="mobile-menu">
-        <button class="mobile-menu-close" onclick="closeMobileMenu()">×</button>
+        <button class="mobile-menu-close">×</button>
         <div class="mobile-menu-links">
-            <a href="#features" onclick="closeMobileMenu()">Features</a>
-            <a href="#use-cases" onclick="closeMobileMenu()">Use Cases</a>
-            <a href="#audience" onclick="closeMobileMenu()">For Who</a>
-            <a href="/community" class="cta-button" onclick="closeMobileMenu()">Get Started</a>
+            <a href="#features">Features</a>
+            <a href="#use-cases">Use Cases</a>
+            <a href="#audience">For Who</a>
+            <a href="/community" class="cta-button">Get Started</a>
         </div>
     </div>
 
@@ -1021,9 +1025,14 @@
         function toggleMobileMenu() {
             const menu = document.querySelector('.mobile-menu');
             const overlay = document.querySelector('.mobile-menu-overlay');
-            menu.classList.add('active');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            
+            if (menu.classList.contains('active')) {
+                document.body.style.overflow = 'hidden';
+            } else {
+                document.body.style.overflow = 'auto';
+            }
         }
 
         function closeMobileMenu() {
@@ -1033,6 +1042,16 @@
             overlay.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
+
+        // Add event listeners for mobile menu
+        document.querySelector('.mobile-menu-toggle').addEventListener('click', toggleMobileMenu);
+        document.querySelector('.mobile-menu-close').addEventListener('click', closeMobileMenu);
+        document.querySelector('.mobile-menu-overlay').addEventListener('click', closeMobileMenu);
+
+        // Close mobile menu when clicking on menu links
+        document.querySelectorAll('.mobile-menu-links a').forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
 
         // Smooth scrolling for navigation links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -1094,10 +1113,6 @@
             lastScroll = currentScroll;
         });
 
-        // Prevent body scroll when mobile menu is open
-        const mobileMenu = document.querySelector('.mobile-menu');
-        const mobileOverlay = document.querySelector('.mobile-menu-overlay');
-        
         // Handle window resize
         let resizeTimer;
         window.addEventListener('resize', () => {
@@ -1111,6 +1126,7 @@
 
         // Touch swipe to close mobile menu
         let touchStartX = null;
+        const mobileMenu = document.querySelector('.mobile-menu');
         
         mobileMenu.addEventListener('touchstart', (e) => {
             touchStartX = e.touches[0].clientX;
