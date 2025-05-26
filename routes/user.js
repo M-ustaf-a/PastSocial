@@ -150,7 +150,7 @@ router.post("/userapproval", upload.single("approval[image]"), async (req, res) 
 
     // Extract approval data from request body
     const { name, email, bio, role, company, reason } = req.body.approval;
-    
+    console.log(name, email, bio, role, company, reason);
     // Validate required fields
     if (!name || !email || !bio || !role || !req.file) {
       return res.status(400).json({ error: "All required fields must be provided, including an image." });
