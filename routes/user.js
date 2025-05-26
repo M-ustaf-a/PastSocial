@@ -38,33 +38,75 @@ transporter.verify((error) => {
 });
 
 router.get("/userlogin", (req, res) => {
-  res.render("./user/login.ejs");
+  res.render("user/login.ejs");
 });
 
-router.post("/userlogin", async (req, res) => {
-  const {useremail, userpassword} = req.body;
+// router.post("/userlogin", async (req, res) => {
+//   const { useremail, userpassword } = req.body;
+//   console.log("Email:", useremail, "Password:", userpassword);
   
+//   try {
+//     const user = await User.findOne({ useremail });
+//     console.log("User found:", user);
+    
+//     if (!user) {
+//       return res.render("user/login", { error: "Invalid email or password" });
+//     }
+
+//     const isMatch = await bcrypt.compare(userpassword, user.password); // assuming the field in DB is 'password'
+//     console.log("Password match:", isMatch);
+
+//     if (!isMatch) {
+//       return res.render("user/login", { error: "Invalid email or password" });
+//     }
+
+//     // Save user ID to session
+//     req.session.userId = user._id;
+
+//     // Redirect to /community after successful login
+//     res.redirect("/community");
+
+//   } catch (err) {
+//     console.error("Error during login:", err);
+//     res.render("user/login", {
+//       error: "An error occurred. Please try again later.",
+//     });
+//   }
+// });
+
+router.post("/userlogin", async (req, res) => {
+  const { email, password } = req.body;
+
+  // Check if required fields are present
+  if (!email || !password) {
+    return res.render("user/login", { error: "Email and password are required." });
+  }
+
   try {
-    const user = await User.findOne({ useremail });
-    console.log(user);
+    const user = await User.findOne({ email });
+
     if (!user) {
       return res.render("user/login", { error: "Invalid email or password" });
     }
-    const isMatch = await bcrypt.compare(userpassword, user.password);
-    console.log(isMatch);
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.render("user/login", { error: "Invalid email or password" });
     }
-    req.session.userId = user._id; //store user Id in session
-    res.redirect("/community", {user});
+
+    req.session.userId = user._id;
+    res.redirect("/community");
   } catch (err) {
-    console.error("Error during login:", err);
-    res.render("/user/login", {
-      error: "An error occurred. Please try again later.",
-    });
+    console.error("Login error:", err);
+    res.render("user/login", { error: "An error occurred. Please try again later." });
   }
 });
 
+// router.post("/userlogin", async(req,res)=>{
+//   const {email,password} = req.body;
+//   console.log(email,password);
+// })
 router.get("/userlogout", (req, res) => {
   req.session.destroy((err) => {
     if (err) {

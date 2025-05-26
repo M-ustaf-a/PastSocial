@@ -24,6 +24,7 @@ const groupRoute = require("./routes/chat/group");
 const { router: chatRoutes } = require("./routes/chat");
 const CommunityData = require( "./models/communityData" );
 
+
 const app = express();
 const MONGO_URL = process.env.ATLAS;
 // const servers = http.createServer(app);
@@ -42,6 +43,16 @@ mongoose
 // Passport middleware
 // app.use(passport.initialize());
 // app.use(passport.session());
+
+// app.use((req, res, next) => {
+//   let data = '';
+//   req.on('data', chunk => { data += chunk; });
+//   req.on('end', () => {
+//     console.log('Raw body:', data);
+//     next();
+//   });
+// });
+
 
 // Middleware Setup
 app.set("view engine", "ejs");

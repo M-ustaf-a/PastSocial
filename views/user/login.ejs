@@ -643,9 +643,6 @@
                 padding: 1rem;
             }
 
-            .brand-text {
-            }
-
             .header-link {
                 padding: 0.5rem;
                 font-size: 0.875rem;
@@ -741,7 +738,7 @@
                                 <input 
                                     type="email" 
                                     id="email" 
-                                    name="useremail" 
+                                    name="email" 
                                     class="form-input" 
                                     placeholder="Enter your email"
                                     required
@@ -762,29 +759,6 @@
                                 </svg>
                             </button>
                         </div>
-
-                        <!-- Social Login -->
-                        <!-- <div class="divider">
-                            <span>or continue with</span>
-                        </div> -->
-
-                        <!-- <div class="social-buttons">
-                            <a href="#" class="social-btn">
-                                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                                </svg>
-                                Google
-                            </a>
-                            <a href="#" class="social-btn">
-                                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.604-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/>
-                                </svg>
-                                GitHub
-                            </a>
-                        </div> -->
                     </div>
 
                     <!-- Step 2: Password -->
@@ -796,7 +770,7 @@
                                     <input 
                                         type="password" 
                                         id="password" 
-                                        name="userpassword" 
+                                        name="password" 
                                         class="form-input" 
                                         placeholder="Enter your password"
                                         required
@@ -851,15 +825,16 @@
     </main>
 
     <!-- Success Overlay -->
-       <!-- <div class="success-overlay" id="successOverlay">
-           <div class="success-message">
-               <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--success); margin-bottom: 1rem;">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-               </svg>
-               <h2 style="color: var(--text-dark); margin-bottom: 0.5rem;">Login Successful!</h2>
-               <p style="color: var(--text-secondary);">Redirecting to your communities...</p>
-           </div>
-       </div> -->
+    <!-- <div class="success-overlay" id="successOverlay">
+        <div class="success-message">
+            <svg width="64" height="64" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: var(--success); margin-bottom: 1rem;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+            <h2 style="color: var(--text-dark); margin-bottom: 0.5rem;">Login Successful!</h2>
+            <p style="color: var(--text-secondary);">Redirecting to your communities...</p>
+        </div>
+    </div> -->
+
     <script>
         let currentStep = 1;
         const totalSteps = 2;
@@ -946,7 +921,7 @@
                 toggleButton.innerHTML = `
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"></path>
                 `;
-            } else {
+                } else {
                 passwordInput.type = 'password';
                 toggleButton.innerHTML = `
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -955,20 +930,81 @@
             }
         }
 
-        // Real-time validation
+        // Form submission
+      /*  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Validate inputs
+            if (!validateEmail(email)) {
+                showError('email', 'Please enter a valid email address');
+                prevStep();
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                showError('password', 'Password must be at least 8 characters');
+                return;
+            }
+
+            //clearError('email');
+            //clearError('password');
+
+            // Show loading state
+            //const submitBtn = document.getElementById('submitBtn');
+           // const btnText = submitBtn.querySelector('.btn-text');
+            const spinner = submitBtn.querySelector('.loading-spinner');
+            
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+
+            // Simulate form submission (replace with actual submission)
+            try {
+                // In a real application, you would submit the form data here
+                // For now, we'll simulate a successful login
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                // Show success message
+                document.getElementById('successOverlay').style.display = 'flex';
+
+                // Redirect after a delay
+                setTimeout(() => {
+                    // Uncomment the line below for actual form submission
+                    // this.submit();
+                    window.location.href = '/community'; // Redirect to community page
+                }, 2000);
+
+            } catch (error) {
+                // Handle error
+                console.error('Login failed:', error);
+                
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                spinner.style.display = 'none';
+
+                // Show error message
+                showError('password', 'Login failed. Please check your credentials.');
+            }
+        });
+*/
+        // Clear errors on input
         document.getElementById('email').addEventListener('input', function() {
-            if (this.value && validateEmail(this.value)) {
+            if (this.value.trim()) {
                 clearError('email');
             }
         });
 
         document.getElementById('password').addEventListener('input', function() {
-            if (validatePassword(this.value)) {
+            if (this.value) {
                 clearError('password');
             }
         });
 
-        // Handle Enter key
+        // Enter key navigation
         document.getElementById('email').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 e.preventDefault();
@@ -976,99 +1012,83 @@
             }
         });
 
-        // Form submission
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            // Validate all fields
-            let hasError = false;
-
-            if (!validateEmail(email)) {
-                showError('email', 'Please enter a valid email address');
-                hasError = true;
-            }
-
-            if (!validatePassword(password)) {
-                showError('password', 'Password must be at least 8 characters');
-                hasError = true;
-            }
-
-            if (hasError) {
-                return;
-            }
-
-            // Show loading state
-            const submitBtn = document.getElementById('submitBtn');
-            const btnText = submitBtn.querySelector('.btn-text');
-            const spinner = submitBtn.querySelector('.loading-spinner');
-
-            submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            spinner.style.display = 'block';
-
-            try {
-                // Submit form data
-                const formData = new FormData(this);
-                const response = await fetch(this.action, {
-                    method: 'POST',
-                    body: formData
-                });
-
-                if (response.ok) {
-                    // Show success overlay
-                    document.getElementById('successOverlay').style.display = 'flex';
-                    
-                    // Redirect after delay
-                    setTimeout(() => {
-                        window.location.href = '/community';
-                    }, 2000);
-                } else {
-                    throw new Error('Login failed');
-                }
-            } catch (error) {
-                // Show error message
-                showError('password', 'Invalid email or password. Please try again.');
-                
-                // Reset button state
-                submitBtn.disabled = false;
-                btnText.style.display = 'block';
-                spinner.style.display = 'none';
-                
-                // Shake animation
-                const loginCard = document.querySelector('.login-card');
-                loginCard.style.animation = 'shake 0.5s ease';
-                setTimeout(() => {
-                    loginCard.style.animation = '';
-                }, 500);
-            }
-        });
-
-        // Auto-focus on page load
-        window.addEventListener('DOMContentLoaded', () => {
+        // Auto-focus on first field
+        window.addEventListener('load', function() {
             document.getElementById('email').focus();
         });
 
-        // Social login handlers
+        // Prevent going back when on step 1
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && currentStep > 1) {
+                prevStep();
+            }
+        });
+
+        // Add animation to brand icon on page load
+        window.addEventListener('load', function() {
+            const brandIcon = document.querySelector('.brand-icon');
+            brandIcon.style.animation = 'pulse 2s ease-out';
+            setTimeout(() => {
+                brandIcon.style.animation = '';
+            }, 2000);
+        });
+
+        // Optional: Add social login functionality
         document.querySelectorAll('.social-btn').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const provider = this.textContent.trim();
-                console.log(`Login with ${provider}`);
+                console.log(`Logging in with ${provider}`);
                 // Implement social login logic here
             });
         });
 
-        // Forgot password handler
+        // Optional: Implement "Forgot Password" functionality
         document.querySelector('.forgot-link').addEventListener('click', function(e) {
             e.preventDefault();
+            // Show forgot password modal or redirect to reset page
             console.log('Forgot password clicked');
-            // Implement forgot password logic here
+            // You could show a modal or redirect to a password reset page
+            // window.location.href = '/forgot-password';
         });
 
-        // Prevent form resubmission on refresh
+        // Optional: Remember me functionality
+        document.getElementById('remember').addEventListener('change', function() {
+            if (this.checked) {
+                // Set flag to remember user
+                console.log('Remember me checked');
+                // In a real application, you might set a cookie or localStorage item
+            }
+        });
+
+        // Add visual feedback for input focus
+        document.querySelectorAll('.form-input').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('focused');
+            });
+
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('focused');
+            });
+        });
+
+        // Optional: Add password strength indicator
+        document.getElementById('password').addEventListener('input', function() {
+            const password = this.value;
+            let strength = 0;
+
+            // Check password strength
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]/)) strength++;
+            if (password.match(/[A-Z]/)) strength++;
+            if (password.match(/[0-9]/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+
+            // You could display a strength indicator here
+            console.log('Password strength:', strength);
+        });
+
+        // Prevent form resubmission on page refresh
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
         }
