@@ -114,7 +114,7 @@ router.get("/userlogout", (req, res) => {
       res.redirect("/community");
     }
     res.clearCookie("connect.sid");
-    res.redirect("/user/login");
+    res.redirect("/userlogin");
   });
 });
 

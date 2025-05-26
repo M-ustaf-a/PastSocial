@@ -1,124 +1,466 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Approval</title>
+    <title>Sign Up - VirtuHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #A82400;
+            --primary-dark: #8A1E00;
+            --secondary-color: #D63A0D;
+            --accent-color: #FFEBCD;
+            --bg-color: #FFEBCD;
+            --card-bg: #FFF5E6;
+            --hover-bg: #FFE4CC;
+            --text-primary: #A82400;
+            --text-secondary: #6B4423;
+            --text-dark: #3A2317;
+            --white: #FFFFFF;
+            --error: #DC2626;
+            --success: #059669;
+            --shadow-sm: 0 2px 4px rgba(168, 36, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(168, 36, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(168, 36, 0, 0.16);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background: linear-gradient(135deg, #ffebcd 0%, #fdd8a0 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: var(--bg-color);
             min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow-x: hidden;
         }
-        .approval{
-            margin-bottom: 23px;
-            color: #d34848;
-        }
-        header img{
-            width: 75%;
-        }
-        .form-container {
-            background: #fee4bd;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+
+        /* Background Animation */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            max-width: 500px;
-            padding: 40px;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.03;
+            background-image: 
+                repeating-linear-gradient(45deg, var(--primary-color) 25%, transparent 25%, transparent 75%, var(--primary-color) 75%, var(--primary-color)),
+                repeating-linear-gradient(-45deg, var(--primary-color) 25%, transparent 25%, transparent 75%, var(--primary-color) 75%, var(--primary-color));
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .shape {
+            position: absolute;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.05;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            top: 10%;
+            left: 5%;
+        }
+
+        .shape:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+            bottom: 10%;
+            right: 5%;
+            animation-delay: -5s;
+        }
+
+        .shape:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            top: 50%;
+            right: 20%;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            33% {
+                transform: translate(30px, -50px) rotate(120deg);
+            }
+            66% {
+                transform: translate(-30px, 50px) rotate(240deg);
+            }
+        }
+
+        /* Header */
+        .header {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .brand:hover {
+            transform: translateX(5px);
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .brand:hover .brand-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .brand-text {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .header-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+        }
+
+        .header-link:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+        }
+
+        /* Main Container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        .signup-wrapper {
+            display: flex;
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            max-width: 1000px;
+            width: 100%;
+            min-height: 600px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Left Panel - Progress */
+        .progress-panel {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 3rem 2rem;
+            width: 300px;
+            color: var(--white);
             position: relative;
             overflow: hidden;
         }
-        .form-container::before {
+
+        .progress-panel::before {
             content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -100px;
+            right: -100px;
+        }
+
+        .progress-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .progress-steps {
+            position: relative;
+        }
+
+        .progress-step-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            position: relative;
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step-item.active {
+            opacity: 1;
+        }
+
+        .progress-step-item.completed {
+            opacity: 0.8;
+        }
+
+        .step-indicator {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            margin-right: 1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+
+        .progress-step-item.active .step-indicator {
+            background: var(--white);
+            color: var(--primary-color);
+            border-color: var(--white);
+            transform: scale(1.1);
+        }
+
+        .progress-step-item.completed .step-indicator {
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--primary-color);
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .step-content h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .step-content p {
+            font-size: 0.875rem;
+            opacity: 0.8;
+        }
+
+        .progress-line {
+            position: absolute;
+            left: 20px;
+            top: 50px;
+            bottom: 50px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            z-index: 1;
+        }
+
+        .progress-line-fill {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 5px;
-            background: linear-gradient(to right, #A82400, #FF6B6B);
+            background: var(--white);
+            transition: height 0.5s ease;
+            height: 0%;
         }
+
+        /* Right Panel - Form */
+        .form-panel {
+            flex: 1;
+            padding: 3rem;
+            overflow-y: auto;
+            background: var(--white);
+        }
+
+        .form-header {
+            margin-bottom: 2rem;
+        }
+
+        .form-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+
+        .form-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Form Steps */
         .form-step {
             display: none;
-            animation: slideIn 0.5s forwards;
+            animation: slideIn 0.4s ease-out;
         }
+
         .form-step.active {
             display: block;
         }
+
         @keyframes slideIn {
-            from { opacity: 0; transform: translateX(20px); }
-            to { opacity: 1; transform: translateX(0); }
+            from {
+                opacity: 0;
+                transform: translateX(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
         }
-        .input-group {
-            margin-bottom: 20px;
+
+        .form-group {
+            margin-bottom: 1.5rem;
         }
-        .input-label {
+
+        .form-label {
             display: block;
-            margin-bottom: 10px;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
             font-weight: 600;
-            color: #A82400;
+            font-size: 0.875rem;
         }
-        .input-field {
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .form-input {
             width: 100%;
-            padding: 12px;
-            border: 2px solid rgb(255, 231, 195);
-            border-radius: 10px;
+            padding: 0.875rem 1rem;
+            padding-left: 3rem;
+            border: 2px solid var(--hover-bg);
+            border-radius: var(--radius-md);
+            font-size: 1rem;
+            font-family: inherit;
+            background: var(--white);
             transition: all 0.3s ease;
-            background-color: blanchedalmond;
         }
-        .input-field:focus {
+
+        .form-input:focus {
             outline: none;
-            border-color: #A82400;
+            border-color: var(--primary-color);
             box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
         }
-        .input-field:hover {
-            transform: scale(1.01);
+
+        .form-input:hover {
+            border-color: var(--secondary-color);
         }
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
+
+        .input-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            transition: color 0.3s ease;
         }
-        .btn {
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
+
+        .form-input:focus ~ .input-icon {
+            color: var(--primary-color);
         }
-        .btn-primary {
-            background: linear-gradient(to right, #A82400, #FF6B6B);
-            color: white;
+
+        textarea.form-input {
+            resize: vertical;
+            min-height: 100px;
+            padding-top: 0.875rem;
         }
-        .btn-secondary {
-            background: #E0E0E0;
-            color: #333;
+
+        textarea ~ .input-icon {
+            top: 1.25rem;
+            transform: none;
         }
-        .prev-step {
-            padding: 6px 20px;
-            border: 2px solid #A82400;
-            border-radius: 25px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: none;
-            color: #A82400;
-            font-weight: 500;
-            font-size: 14px;
-        }
-        .prev-step:hover {
-            background-color: #A82400;
-            color: blanchedalmond;
-        }
-        .file-input-wrapper {
+
+        /* File Upload */
+        .file-upload-wrapper {
             position: relative;
-            overflow: hidden;
+            border: 2px dashed var(--hover-bg);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--card-bg);
         }
-        .file-input-wrapper input[type="file"] {
+
+        .file-upload-wrapper:hover {
+            border-color: var(--primary-color);
+            background: var(--hover-bg);
+        }
+
+        .file-upload-wrapper.has-file {
+            border-style: solid;
+            border-color: var(--success);
+            background: rgba(5, 150, 105, 0.05);
+        }
+
+        .file-input {
             position: absolute;
             top: 0;
             left: 0;
@@ -127,156 +469,684 @@
             opacity: 0;
             cursor: pointer;
         }
-        textarea.input-field {
-            resize: vertical;
-            min-height: 100px;
+
+        .upload-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 1rem;
+            color: var(--text-secondary);
         }
-        @media(max-width: 650px){
-            body{
-                display: block;
+
+        .upload-text {
+            color: var(--text-dark);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-hint {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .file-name {
+            color: var(--success);
+            font-weight: 500;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        /* Character Counter */
+        .input-footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 0.25rem;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .char-count {
+            transition: color 0.3s ease;
+        }
+
+        .char-count.warning {
+            color: var(--error);
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.875rem 1.5rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            flex: 1;
+            max-width: 200px;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(168, 36, 0, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Error Message */
+        .error-message {
+            color: var(--error);
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Success Overlay */
+        .success-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 150, 105, 0.1);
+            backdrop-filter: blur(5px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .success-card {
+            background: var(--white);
+            padding: 3rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            max-width: 400px;
+            animation: scaleIn 0.5s ease-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
             }
-            header{
-                box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .signup-wrapper {
+                flex-direction: column;
+            }
+
+            .progress-panel {
                 width: 100%;
-                height: 85px;
+                padding: 2rem;
+                min-height: auto;
             }
-            header img{
-                width: 10%;
-                margin-left: 20px;
-                margin-top: 20px;
+
+            .progress-steps {
+                display: flex;
+                justify-content: space-between;
+                overflow-x: auto;
+                padding-bottom: 1rem;
             }
-            .form-container{
-                position: relative;
-                margin-top: 200px;
-                max-width: 660px;
+
+            .progress-step-item {
+                flex-direction: column;
+                text-align: center;
+                margin-right: 2rem;
+                margin-bottom: 0;
+            }
+
+            .step-indicator {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+
+            .progress-line {
+                display: none;
+            }
+
+            .step-content p {
+                display: none;
+            }
+
+            .form-panel {
+                padding: 2rem;
+            }
+
+            .form-title {
+                font-size: 1.5rem;
+            }
+
+            .header-content {
+                padding: 1rem;
+            }
+
+            .brand-text {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-container {
+                padding: 1rem;
+            }
+
+            .form-panel {
+                padding: 1.5rem;
+            }
+
+            .form-actions {
+                flex-direction: column-reverse;
+            }
+
+            .btn {
+                width: 100%;
+                max-width: none;
+            }
+
+            .file-upload-wrapper {
+                padding: 1.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <header>
-        <a href="/community" class="brand">
-            <img src="/group.png" alt="Community Hub"/>
-        </a> 
+    <div class="bg-pattern"></div>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <a href="/community" class="brand">
+                <div class="brand-icon">🌐</div>
+                <span class="brand-text">VirtuHub</span>
+            </a>
+            <div class="header-actions">
+                <a href="/community" class="header-link">Back to Communities</a>
+                <a href="/userlogin" class="header-link">Sign In</a>
+            </div>
+        </div>
     </header>
-    <div class="form-container">
-        <h1 class="approval">Approval</h1>
-        <form id="userApproval" action="/userapproval" method="post" enctype="multipart/form-data">
-            <div id="step1" class="form-step active">
-                <div class="input-group">
-                    <label for="name" class="input-label">Name</label>
-                    <input type="text" id="name" class="input-field" name="approval[name]" required placeholder="Enter Name" maxlength="100">
-                </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="btn btn-primary next-step">Next</button>
-                </div>
-            </div>
 
-            <div id="step2" class="form-step">
-                <div class="input-group">
-                    <label for="email" class="input-label">Email</label>
-                    <input type="email" id="email" class="input-field" name="approval[email]" required placeholder="Enter Email">
-                </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="prev-step">Back</button>
-                    <button type="button" class="btn btn-primary next-step">Next</button>
-                </div>
-            </div>
-            <div id="step3" class="form-step">
-                <div class="input-group">
-                    <label for="bio" class="input-label">Bio</label>
-                    <input type="text" id="bio" class="input-field" name="approval[bio]" required placeholder="Enter bio" maxlength="250">
-                </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="prev-step">Back</button>
-                    <button type="button" class="btn btn-primary next-step">Next</button>
-                </div>
-            </div>
-
-            <div id="step4" class="form-step">
-                <div class="input-group">
-                    <label for="image" class="input-label">Image</label>
-                    <div class="file-input-wrapper">
-                        <input type="file" id="image" name="approval[image]" accept="image/*" required>
-                        <button type="button" class="input-field thumbnail">Choose File</button>
+    <!-- Main Content -->
+    <main class="main-container">
+        <div class="signup-wrapper">
+            <!-- Progress Panel -->
+            <div class="progress-panel">
+                <h2 class="progress-title">Join VirtuHub</h2>
+                <div class="progress-steps">
+                    <div class="progress-line">
+                        <div class="progress-line-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-step-item active" id="progressStep1">
+                        <div class="step-indicator">1</div>
+                        <div class="step-content">
+                            <h3>Personal Info</h3>
+                            <p>Basic details</p>
+                        </div>
+                    </div>
+                    <div class="progress-step-item" id="progressStep2">
+                        <div class="step-indicator">2</div>
+                        <div class="step-content">
+                            <h3>Profile</h3>
+                            <p>Bio & photo</p>
+                        </div>
+                    </div>
+                    <div class="progress-step-item" id="progressStep3">
+                        <div class="step-indicator">3</div>
+                        <div class="step-content">
+                            <h3>Professional</h3>
+                            <p>Work details</p>
+                        </div>
+                    </div>
+                    <div class="progress-step-item" id="progressStep4">
+                        <div class="step-indicator">4</div>
+                        <div class="step-content">
+                            <h3>Complete</h3>
+                            <p>Final step</p>
+                        </div>
                     </div>
                 </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="prev-step">Back</button>
-                    <button type="button" class="btn btn-primary next-step">Next</button>
-                </div>
             </div>
 
-            <div id="step5" class="form-step">
-                <div class="input-group">
-                    <label for="company" class="input-label">Company</label>
-                    <input type="text" id="company" class="input-field" name="approval[company]" required placeholder="Enter Company" maxlength="100">
+            <!-- Form Panel -->
+            <div class="form-panel">
+                <div class="form-header">
+                    <h1 class="form-title">Create Your Account</h1>
+                    <p class="form-subtitle">Join thousands building virtual communities</p>
                 </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="prev-step">Back</button>
-                    <button type="button" class="btn btn-primary next-step">Next</button>
-                </div>
-            </div>
 
-            <div id="step6" class="form-step">
-                <div class="input-group">
-                    <label for="role" class="input-label">Role</label>
-                    <input type="text" id="role" class="input-field" name="approval[role]" required placeholder="Enter Role" maxlength="100">
-                </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="prev-step">Back</button>
-                    <button type="button" class="btn btn-primary next-step">Next</button>
-                </div>
-            </div>
+                <form id="signupForm" action="/userapproval" method="post" enctype="multipart/form-data">
+                    <!-- Step 1: Personal Info -->
+                    <div id="step1" class="form-step active">
+                        <div class="form-group">
+                            <label for="role" class="form-label">Role / Title</label>
+                            <div class="input-wrapper">
+                                <input 
+                                    type="text" 
+                                    id="role" 
+                                    name="approval[role]" 
+                                    class="form-input" 
+                                    placeholder="What do you do?"
+                                    required
+                                    maxlength="100"
+                                >
+                                <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                                </svg>
+                            </div>
+                            <span class="error-message" id="roleError"></span>
+                        </div>
 
-            <div id="step7" class="form-step">
-                <div class="input-group">
-                    <label for="reason" class="input-label">Reason</label>
-                    <textarea id="reason" class="input-field" name="approval[reason]" required placeholder="Why do you want to join?" maxlength="500"></textarea>
-                </div>
-                <div class="navigation-buttons">
-                    <button type="button" class="prev-step">Back</button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                        </div>
+                    </div>
+
+                    <!-- Step 4: Final -->
+                    <div id="step4" class="form-step">
+                        <div class="form-group">
+                            <label for="reason" class="form-label">Why do you want to join VirtuHub?</label>
+                            <div class="input-wrapper">
+                                <textarea 
+                                    id="reason" 
+                                    name="approval[reason]" 
+                                    class="form-input" 
+                                    placeholder="Tell us what excites you about joining our community..."
+                                    required
+                                    maxlength="500"
+                                    onkeyup="updateCharCount(this, 500)"
+                                ></textarea>
+                                <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+                                </svg>
+                            </div>
+                            <div class="input-footer">
+                                <span class="error-message" id="reasonError"></span>
+                                <span class="char-count" id="reasonCount">0 / 500</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <input type="checkbox" id="terms" required style="margin-right: 0.5rem;">
+                                I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a>
+                            </label>
+                            <span class="error-message" id="termsError"></span>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="submit" class="btn btn-primary" id="submitBtn">
+                                <span class="btn-text">Create Account</span>
+                                <span class="loading-spinner" style="display: none;">Creating...</span>
+                            </button>
+                        </div>
+                    </div>
+                </form>
             </div>
-        </form>
+        </div>
+    </main>
+
+    <!-- Success Overlay -->
+    <div class="success-overlay" id="successOverlay">
+        <div class="success-card">
+            <div class="success-icon">
+                <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+            </div>
+            <h2 style="color: var(--text-dark); margin-bottom: 0.5rem;">Welcome to VirtuHub!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Your account has been created successfully.</p>
+            <a href="/userlogin" class="btn btn-primary" style="display: inline-block;">Sign In Now</a>
+        </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('adminApproval');
-            const steps = document.querySelectorAll('.form-step');
-            const nextButtons = document.querySelectorAll('.next-step');
-            const prevButtons = document.querySelectorAll('.prev-step');
-            const fileInput = document.querySelector('.file-input-wrapper input[type="file"]');
-            const fileButton = document.querySelector('.file-input-wrapper .thumbnail');
+        let currentStep = 1;
+        const totalSteps = 4;
 
-            nextButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const currentStep = button.closest('.form-step');
-                    const inputs = currentStep.querySelectorAll('input, textarea');
-                    const isValid = Array.from(inputs).every(input => input.reportValidity());
-                    
-                    if (isValid) {
-                        currentStep.classList.remove('active');
-                        currentStep.nextElementSibling.classList.add('active');
-                    }
+        // Update progress
+        function updateProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+            progressFill.style.height = `${progressPercentage}%`;
+
+            // Update step indicators
+            for (let i = 1; i <= totalSteps; i++) {
+                const stepElement = document.getElementById(`progressStep${i}`);
+                if (i < currentStep) {
+                    stepElement.classList.remove('active');
+                    stepElement.classList.add('completed');
+                    stepElement.querySelector('.step-indicator').innerHTML = '✓';
+                } else if (i === currentStep) {
+                    stepElement.classList.add('active');
+                    stepElement.classList.remove('completed');
+                    stepElement.querySelector('.step-indicator').textContent = i;
+                } else {
+                    stepElement.classList.remove('active', 'completed');
+                    stepElement.querySelector('.step-indicator').textContent = i;
+                }
+            }
+        }
+
+        // Validation functions
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function validateStep(step) {
+            let isValid = true;
+
+            if (step === 1) {
+                const name = document.getElementById('name').value.trim();
+                const email = document.getElementById('email').value.trim();
+
+                if (!name || name.length < 2) {
+                    showError('name', 'Name must be at least 2 characters');
+                    isValid = false;
+                } else {
+                    clearError('name');
+                }
+
+                if (!email || !validateEmail(email)) {
+                    showError('email', 'Please enter a valid email address');
+                    isValid = false;
+                } else {
+                    clearError('email');
+                }
+            } else if (step === 2) {
+                const bio = document.getElementById('bio').value.trim();
+                const image = document.getElementById('image').files[0];
+
+                if (!bio || bio.length < 10) {
+                    showError('bio', 'Bio must be at least 10 characters');
+                    isValid = false;
+                } else {
+                    clearError('bio');
+                }
+
+                if (!image) {
+                    showError('image', 'Please upload a profile photo');
+                    isValid = false;
+                } else {
+                    clearError('image');
+                }
+            } else if (step === 3) {
+                const company = document.getElementById('company').value.trim();
+                const role = document.getElementById('role').value.trim();
+
+                if (!company || company.length < 2) {
+                    showError('company', 'Company name is required');
+                    isValid = false;
+                } else {
+                    clearError('company');
+                }
+
+                if (!role || role.length < 2) {
+                    showError('role', 'Role is required');
+                    isValid = false;
+                } else {
+                    clearError('role');
+                }
+            } else if (step === 4) {
+                const reason = document.getElementById('reason').value.trim();
+                const terms = document.getElementById('terms').checked;
+
+                if (!reason || reason.length < 20) {
+                    showError('reason', 'Please provide a reason (at least 20 characters)');
+                    isValid = false;
+                } else {
+                    clearError('reason');
+                }
+
+                if (!terms) {
+                    showError('terms', 'You must agree to the terms and conditions');
+                    isValid = false;
+                } else {
+                    clearError('terms');
+                }
+            }
+
+            return isValid;
+        }
+
+        function showError(fieldId, message) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            
+            if (errorElement) {
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            }
+            
+            if (inputElement) {
+                inputElement.style.borderColor = 'var(--error)';
+            }
+        }
+
+        function clearError(fieldId) {
+            const errorElement = document.getElementById(fieldId + 'Error');
+            const inputElement = document.getElementById(fieldId);
+            
+            if (errorElement) {
+                errorElement.classList.remove('show');
+            }
+            
+            if (inputElement) {
+                inputElement.style.borderColor = 'var(--hover-bg)';
+            }
+        }
+
+        // Navigation
+        function nextStep() {
+            if (validateStep(currentStep)) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                updateProgress();
+                
+                // Focus on first input of new step
+                setTimeout(() => {
+                    const firstInput = document.querySelector(`#step${currentStep} input, #step${currentStep} textarea`);
+                    if (firstInput) firstInput.focus();
+                }, 300);
+            }
+        }
+
+        function prevStep() {
+            document.getElementById(`step${currentStep}`).classList.remove('active');
+            currentStep--;
+            document.getElementById(`step${currentStep}`).classList.add('active');
+            updateProgress();
+        }
+
+        // Character counter
+        function updateCharCount(textarea, maxLength) {
+            const currentLength = textarea.value.length;
+            const countElement = document.getElementById(textarea.id + 'Count');
+            
+            if (countElement) {
+                countElement.textContent = `${currentLength} / ${maxLength}`;
+                countElement.classList.toggle('warning', currentLength > maxLength * 0.9);
+            }
+        }
+
+        // File upload
+        function handleFileSelect(input) {
+            const file = input.files[0];
+            const wrapper = document.getElementById('fileUploadWrapper');
+            const fileName = document.getElementById('fileName');
+            
+            if (file) {
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showError('image', 'File size must be less than 5MB');
+                    input.value = '';
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    showError('image', 'Please upload an image file');
+                    input.value = '';
+                    return;
+                }
+                
+                wrapper.classList.add('has-file');
+                fileName.textContent = file.name;
+                fileName.style.display = 'block';
+                clearError('image');
+            } else {
+                wrapper.classList.remove('has-file');
+                fileName.style.display = 'none';
+            }
+        }
+
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!validateStep(4)) {
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const loadingText = submitBtn.querySelector('.loading-spinner');
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            loadingText.style.display = 'inline';
+
+            try {
+                // Create FormData for file upload
+                const formData = new FormData(this);
+                
+                // Submit form
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData
                 });
-            });
 
-            prevButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const currentStep = button.closest('.form-step');
-                    currentStep.classList.remove('active');
-                    currentStep.previousElementSibling.classList.add('active');
-                });
-            });
-
-            fileInput.addEventListener('change', function(e) {
-                const fileName = e.target.value.split('\\').pop();
-                fileButton.textContent = fileName || 'Choose File';
-            });
+                if (response.ok) {
+                    // Show success overlay
+                    document.getElementById('successOverlay').style.display = 'flex';
+                } else {
+                    throw new Error('Signup failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+                
+                // Reset button
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline';
+                loadingText.style.display = 'none';
+            }
         });
+
+        // Real-time validation
+        document.getElementById('email').addEventListener('blur', function() {
+            if (this.value && !validateEmail(this.value)) {
+                showError('email', 'Please enter a valid email address');
+            } else if (this.value) {
+                clearError('email');
+            }
+        });
+
+        // Initialize
+        updateProgress();
+
+        // Auto-focus first input
+        window.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('name').focus();
+        });
+
+        // Prevent form resubmission
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
     </script>
 </body>
 </html>
