@@ -350,15 +350,47 @@ router.get("/community/:communityId/main", async (req, res) => {
   try {
     const { communityId } = req.params;
 
+    // Ensure communityId is valid
+    if (!mongoose.Types.ObjectId.isValid(communityId)) {
+      return res.status(400).send("Invalid community ID");
+    }
+
+    // Fetch the specific community
+    const currentCommunity = await Community.findById(communityId);
+    if (!currentCommunity) {
+      return res.status(404).send("Community not found");
+    }
+
+    // Fetch posts for this community
+    const communityPosts = await Post.find({ community: communityId });
+
+    // Retrieve logged-in user details from session
+    const sessionUser = req.session?.communityUser;
+    if (!sessionUser) {
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Ensure user belongs to the current community
+    if (sessionUser.communityId !== communityId) {
+      console.log("No matching user for this community");
+      return res.redirect(`/community/${communityId}/login`);
+    }
+
+    // Fetch the correct user based on session
+    const currUser = await CommunityUser.findById(sessionUser.id);
+    if (!currUser) {
+      return res.status(404).send("User not found");
+    }
+
     // Validate if communityId is a valid ObjectId
     if (!mongoose.Types.ObjectId.isValid(communityId)) {
       return res.status(400).send("Invalid community ID");
     }
 
     // Retrieve the current user's ID from the session
-    const currUserId = req.session?.communityUser?.id;
+    // const currUserId = req.session?.communityUser?.id;
     // Fetch the current user
-    const currUser = await CommunityUser.findById(currUserId);
+    // const currUser = await CommunityUser.findById(currUserId);
 
     // Fetch the community by ID
     const community = await Community.findById(communityId);

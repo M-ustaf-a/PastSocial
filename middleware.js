@@ -1,3 +1,5 @@
+const communityId = 
+
 
 module.exports.saveRedirectUrl = (req,res,next)=>{
     if(req.session.redirectUrl){
