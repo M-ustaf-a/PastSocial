@@ -25,7 +25,7 @@ router.get("/community/:communityId/communityApproval", async(req, res) => {
   const {communityId} = req.params;
   const community = await Community.findById(communityId);
   console.log(community)
-  res.render("communityApproval", {community});
+  res.render("communityUser/communityApproval", {community});
 });
 
 router.post(
