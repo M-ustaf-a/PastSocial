@@ -23,6 +23,7 @@
             --shadow-sm: 0 2px 4px rgba(168, 36, 0, 0.08);
             --shadow-md: 0 4px 12px rgba(168, 36, 0, 0.12);
             --shadow-lg: 0 8px 24px rgba(168, 36, 0, 0.16);
+            --shadow-xl: 0 12px 48px rgba(168, 36, 0, 0.2);
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -45,8 +46,8 @@
             overflow-x: hidden;
         }
 
-        /* Background Animation */
-        .bg-pattern {
+        /* Enhanced Background */
+        .background-wrapper {
             position: fixed;
             top: 0;
             left: 0;
@@ -54,73 +55,81 @@
             height: 100%;
             pointer-events: none;
             z-index: 0;
-            opacity: 0.03;
-            background-image: 
-                repeating-linear-gradient(45deg, var(--primary-color) 25%, transparent 25%, transparent 75%, var(--primary-color) 75%, var(--primary-color)),
-                repeating-linear-gradient(-45deg, var(--primary-color) 25%, transparent 25%, transparent 75%, var(--primary-color) 75%, var(--primary-color));
-            background-size: 50px 50px;
-            background-position: 0 0, 25px 25px;
+        }
+
+        .bg-gradient {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at top left, rgba(168, 36, 0, 0.05) 0%, transparent 50%),
+                        radial-gradient(ellipse at bottom right, rgba(214, 58, 13, 0.05) 0%, transparent 50%);
         }
 
         .floating-shapes {
-            position: fixed;
+            position: absolute;
             width: 100%;
             height: 100%;
-            pointer-events: none;
-            z-index: 1;
         }
 
         .shape {
             position: absolute;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            opacity: 0.05;
+            opacity: 0.03;
             animation: float 20s infinite ease-in-out;
+            filter: blur(40px);
         }
 
         .shape:nth-child(1) {
-            width: 300px;
-            height: 300px;
+            width: 400px;
+            height: 400px;
             border-radius: 50%;
-            top: 10%;
-            left: 5%;
+            top: -200px;
+            left: -100px;
+            animation-duration: 25s;
         }
 
         .shape:nth-child(2) {
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-            bottom: 10%;
-            right: 5%;
+            bottom: -150px;
+            right: -100px;
+            animation-duration: 30s;
             animation-delay: -5s;
         }
 
         .shape:nth-child(3) {
-            width: 150px;
-            height: 150px;
+            width: 250px;
+            height: 250px;
             border-radius: 50%;
             top: 50%;
-            right: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation-duration: 35s;
             animation-delay: -10s;
         }
 
         @keyframes float {
             0%, 100% {
-                transform: translate(0, 0) rotate(0deg);
+                transform: translate(0, 0) rotate(0deg) scale(1);
             }
             33% {
-                transform: translate(30px, -50px) rotate(120deg);
+                transform: translate(30px, -60px) rotate(120deg) scale(1.1);
             }
             66% {
-                transform: translate(-30px, 50px) rotate(240deg);
+                transform: translate(-40px, 40px) rotate(240deg) scale(0.9);
             }
         }
 
         /* Header */
         .header {
-            background: var(--white);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             box-shadow: var(--shadow-sm);
-            position: relative;
+            position: sticky;
+            top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
         }
 
         .header-content {
@@ -146,19 +155,21 @@
         }
 
         .brand-icon {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            border-radius: var(--radius-sm);
+            border-radius: var(--radius-md);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
             transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
         }
 
         .brand:hover .brand-icon {
             transform: rotate(10deg) scale(1.1);
+            box-shadow: var(--shadow-md);
         }
 
         .brand-text {
@@ -176,7 +187,7 @@
             color: var(--text-secondary);
             text-decoration: none;
             font-weight: 500;
-            padding: 0.5rem 1rem;
+            padding: 0.6rem 1.2rem;
             border-radius: var(--radius-sm);
             transition: all 0.3s ease;
         }
@@ -184,6 +195,18 @@
         .header-link:hover {
             background: var(--hover-bg);
             color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .header-link.primary {
+            background: var(--primary-color);
+            color: var(--white);
+        }
+
+        .header-link.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         /* Main Container */
@@ -192,145 +215,186 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 2rem;
+            padding: 3rem 2rem;
             position: relative;
             z-index: 10;
         }
 
-        .signup-wrapper {
-            display: flex;
+        /* Signup Card */
+        .signup-card {
             background: var(--white);
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             overflow: hidden;
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
-            min-height: 600px;
-            animation: fadeInUp 0.6s ease-out;
+            display: flex;
+            height: 525px;
+            animation: fadeInScale 0.6s ease-out;
         }
 
-        @keyframes fadeInUp {
+        @keyframes fadeInScale {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: scale(0.95) translateY(20px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: scale(1) translateY(0);
             }
         }
 
-        /* Left Panel - Progress */
-        .progress-panel {
+        /* Progress Sidebar */
+        .progress-sidebar {
+            width: 320px;
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             padding: 3rem 2rem;
-            width: 300px;
             color: var(--white);
             position: relative;
             overflow: hidden;
         }
 
-        .progress-panel::before {
+        .progress-sidebar::before {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -150px;
+            right: -150px;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .progress-sidebar::after {
             content: '';
             position: absolute;
             width: 200px;
             height: 200px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 50%;
-            top: -100px;
-            right: -100px;
+            bottom: -100px;
+            left: -100px;
+            animation: pulse 4s ease-in-out infinite;
+            animation-delay: 2s;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.3;
+            }
+        }
+
+        .progress-header {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 3rem;
         }
 
         .progress-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 2rem;
-            position: relative;
+            font-size: 1.75rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
+        }
+
+        .progress-subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
         }
 
         .progress-steps {
             position: relative;
+            z-index: 1;
         }
 
-        .progress-step-item {
+        .progress-connector {
+            position: absolute;
+            left: 24px;
+            top: 60px;
+            bottom: 20px;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .progress-connector-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--white);
+            transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 0%;
+        }
+
+        .step-item {
             display: flex;
-            align-items: center;
-            margin-bottom: 2rem;
+            align-items: flex-start;
+            gap: 1.25rem;
+            margin-bottom: 2.5rem;
             position: relative;
-            opacity: 0.6;
-            transition: all 0.3s ease;
+            opacity: 0.5;
+            transition: all 0.4s ease;
         }
 
-        .progress-step-item.active {
+        .step-item.active {
             opacity: 1;
         }
 
-        .progress-step-item.completed {
+        .step-item.completed {
             opacity: 0.8;
         }
 
-        .step-indicator {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 2px solid rgba(255, 255, 255, 0.5);
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(255, 255, 255, 0.15);
+            border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            margin-right: 1rem;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: all 0.4s ease;
             position: relative;
             z-index: 2;
+            flex-shrink: 0;
         }
 
-        .progress-step-item.active .step-indicator {
+        .step-item.active .step-icon {
             background: var(--white);
             color: var(--primary-color);
             border-color: var(--white);
             transform: scale(1.1);
+            box-shadow: 0 0 0 8px rgba(255, 255, 255, 0.2);
         }
 
-        .progress-step-item.completed .step-indicator {
+        .step-item.completed .step-icon {
             background: rgba(255, 255, 255, 0.9);
             color: var(--primary-color);
             border-color: rgba(255, 255, 255, 0.9);
         }
 
         .step-content h3 {
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 0.25rem;
         }
 
         .step-content p {
-            font-size: 0.875rem;
+            font-size: 0.85rem;
             opacity: 0.8;
+            line-height: 1.4;
         }
 
-        .progress-line {
-            position: absolute;
-            left: 20px;
-            top: 50px;
-            bottom: 50px;
-            width: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            z-index: 1;
-        }
-
-        .progress-line-fill {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background: var(--white);
-            transition: height 0.5s ease;
-            height: 0%;
-        }
-
-        /* Right Panel - Form */
-        .form-panel {
+        /* Form Container */
+        .form-container {
             flex: 1;
             padding: 3rem;
             overflow-y: auto;
@@ -338,19 +402,32 @@
         }
 
         .form-header {
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.6s ease-out 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .form-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 2.25rem;
+            font-weight: 800;
             color: var(--text-dark);
             margin-bottom: 0.5rem;
+            letter-spacing: -0.5px;
         }
 
         .form-subtitle {
             color: var(--text-secondary);
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
 
         /* Form Steps */
@@ -366,7 +443,7 @@
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateX(20px);
+                transform: translateX(30px);
             }
             to {
                 opacity: 1;
@@ -375,7 +452,7 @@
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
         }
 
         .form-label {
@@ -383,7 +460,14 @@
             margin-bottom: 0.5rem;
             color: var(--text-dark);
             font-weight: 600;
-            font-size: 0.875rem;
+            font-size: 0.95rem;
+        }
+
+        .form-label-hint {
+            font-weight: 400;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-left: 0.5rem;
         }
 
         .input-wrapper {
@@ -392,8 +476,8 @@
 
         .form-input {
             width: 100%;
-            padding: 0.875rem 1rem;
-            padding-left: 3rem;
+            padding: 1rem 1.25rem;
+            padding-left: 3.5rem;
             border: 2px solid var(--hover-bg);
             border-radius: var(--radius-md);
             font-size: 1rem;
@@ -405,7 +489,8 @@
         .form-input:focus {
             outline: none;
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
+            box-shadow: 0 0 0 4px rgba(168, 36, 0, 0.1);
+            transform: translateY(-1px);
         }
 
         .form-input:hover {
@@ -414,49 +499,79 @@
 
         .input-icon {
             position: absolute;
-            left: 1rem;
+            left: 1.25rem;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-secondary);
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
 
         .form-input:focus ~ .input-icon {
             color: var(--primary-color);
+            transform: translateY(-50%) scale(1.1);
         }
 
         textarea.form-input {
             resize: vertical;
-            min-height: 100px;
-            padding-top: 0.875rem;
+            min-height: 120px;
+            padding-top: 1rem;
+            line-height: 1.5;
         }
 
         textarea ~ .input-icon {
-            top: 1.25rem;
+            top: 1.5rem;
             transform: none;
         }
 
-        /* File Upload */
-        .file-upload-wrapper {
+        textarea.form-input:focus ~ .input-icon {
+            transform: scale(1.1);
+        }
+
+        /* Enhanced File Upload */
+        .file-upload-area {
             position: relative;
-            border: 2px dashed var(--hover-bg);
-            border-radius: var(--radius-md);
-            padding: 2rem;
+            border: 3px dashed var(--hover-bg);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2rem;
             text-align: center;
             transition: all 0.3s ease;
             cursor: pointer;
             background: var(--card-bg);
+            overflow: hidden;
         }
 
-        .file-upload-wrapper:hover {
+        .file-upload-area::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .file-upload-area:hover {
             border-color: var(--primary-color);
             background: var(--hover-bg);
+            transform: translateY(-2px);
         }
 
-        .file-upload-wrapper.has-file {
+        .file-upload-area:hover::before {
+            opacity: 0.05;
+        }
+
+        .file-upload-area.has-file {
             border-style: solid;
             border-color: var(--success);
             background: rgba(5, 150, 105, 0.05);
+        }
+
+        .file-upload-area.has-error {
+            border-color: var(--error);
+            background: rgba(220, 38, 38, 0.05);
         }
 
         .file-input {
@@ -467,48 +582,111 @@
             height: 100%;
             opacity: 0;
             cursor: pointer;
+            z-index: 2;
+        }
+
+        .upload-content {
+            position: relative;
+            z-index: 1;
         }
 
         .upload-icon {
-            width: 48px;
-            height: 48px;
-            margin: 0 auto 1rem;
-            color: var(--text-secondary);
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1.5rem;
+            color: var(--primary-color);
+            opacity: 0.8;
+            transition: all 0.3s ease;
         }
 
-        .upload-text {
+        .file-upload-area:hover .upload-icon {
+            transform: scale(1.1) rotate(5deg);
+            opacity: 1;
+        }
+
+        .upload-title {
             color: var(--text-dark);
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 1.1rem;
             margin-bottom: 0.5rem;
         }
 
-        .upload-hint {
+        .upload-subtitle {
             color: var(--text-secondary);
-            font-size: 0.875rem;
+            font-size: 0.9rem;
+        }
+
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--white);
+            border-radius: var(--radius-md);
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+            animation: fadeInUp 0.3s ease-out;
         }
 
         .file-name {
             color: var(--success);
-            font-weight: 500;
-            margin-top: 0.5rem;
-            display: none;
+            font-weight: 600;
+            font-size: 0.9rem;
         }
 
         /* Character Counter */
         .input-footer {
             display: flex;
             justify-content: space-between;
-            margin-top: 0.25rem;
-            font-size: 0.75rem;
-            color: var(--text-secondary);
+            align-items: center;
+            margin-top: 0.5rem;
         }
 
-        .char-count {
+        .char-counter {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             transition: color 0.3s ease;
         }
 
-        .char-count.warning {
+        .char-counter.warning {
             color: var(--error);
+            font-weight: 500;
+        }
+
+        /* Checkbox Styling */
+        .checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+
+        .checkbox-input {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .checkbox-label {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .checkbox-label a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-label a:hover {
+            color: var(--secondary-color);
+            text-decoration: underline;
         }
 
         /* Form Actions */
@@ -516,27 +694,33 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 2rem;
+            margin-top: 2.5rem;
             gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--hover-bg);
         }
 
         .btn {
-            padding: 0.875rem 1.5rem;
+            padding: 1rem 2rem;
             border: none;
             border-radius: var(--radius-md);
             font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            font-size: 0.95rem;
+            font-size: 1rem;
             position: relative;
             overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: var(--white);
-            flex: 1;
-            max-width: 200px;
+            min-width: 140px;
+            box-shadow: var(--shadow-md);
         }
 
         .btn-primary::before {
@@ -546,53 +730,95 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: rgba(255, 255, 255, 0.2);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
             transition: left 0.5s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
         }
 
         .btn-primary:hover::before {
             left: 100%;
         }
 
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(168, 36, 0, 0.3);
+        .btn-primary:active {
+            transform: translateY(0);
         }
 
         .btn-secondary {
             background: transparent;
             color: var(--primary-color);
             border: 2px solid var(--primary-color);
+            min-width: 100px;
         }
 
         .btn-secondary:hover {
             background: var(--primary-color);
             color: var(--white);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: none !important;
         }
 
-        /* Error Message */
+        .btn-icon {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover .btn-icon {
+            transform: translateX(3px);
+        }
+
+        .btn-secondary:hover .btn-icon {
+            transform: translateX(-3px);
+        }
+
+        /* Loading State */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: var(--white);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error Messages */
         .error-message {
             color: var(--error);
-            font-size: 0.75rem;
-            margin-top: 0.25rem;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
             display: none;
+            animation: shake 0.3s ease;
         }
 
         .error-message.show {
             display: block;
-            animation: shake 0.3s ease;
         }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
             25% { transform: translateX(-5px); }
             75% { transform: translateX(5px); }
+        }
+
+        .form-input.error {
+            border-color: var(--error);
+            animation: shake 0.3s ease;
         }
 
         /* Success Overlay */
@@ -602,8 +828,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(5, 150, 105, 0.1);
-            backdrop-filter: blur(5px);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             display: none;
             align-items: center;
             justify-content: center;
@@ -613,42 +839,71 @@
         .success-card {
             background: var(--white);
             padding: 3rem;
-            border-radius: var(--radius-lg);
-            box-shadow: var(--shadow-lg);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
             text-align: center;
-            max-width: 400px;
-            animation: scaleIn 0.5s ease-out;
+            max-width: 450px;
+            animation: successBounce 0.6s ease-out;
         }
 
-        @keyframes scaleIn {
-            from {
+        @keyframes successBounce {
+            0% {
                 opacity: 0;
-                transform: scale(0.8);
+                transform: scale(0.8) translateY(20px);
             }
-            to {
+            60% {
+                transform: scale(1.05) translateY(-5px);
+            }
+            100% {
                 opacity: 1;
-                transform: scale(1);
+                transform: scale(1) translateY(0);
             }
         }
 
-        .success-icon {
-            width: 64px;
-            height: 64px;
-            background: var(--success);
+        .success-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--success), #10B981);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 auto 1.5rem;
+            margin: 0 auto 2rem;
+            box-shadow: 0 0 0 12px rgba(5, 150, 105, 0.1);
+            animation: successPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes successPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 12px rgba(5, 150, 105, 0.1);
+            }
+            50% {
+                box-shadow: 0 0 0 20px rgba(5, 150, 105, 0);
+            }
+        }
+
+        .success-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.75rem;
+        }
+
+        .success-message {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.5;
         }
 
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .signup-wrapper {
+        @media (max-width: 968px) {
+            .signup-card {
                 flex-direction: column;
+                max-width: 600px;
             }
 
-            .progress-panel {
+            .progress-sidebar {
                 width: 100%;
                 padding: 2rem;
                 min-height: auto;
@@ -657,77 +912,135 @@
             .progress-steps {
                 display: flex;
                 justify-content: space-between;
+                gap: 1rem;
                 overflow-x: auto;
                 padding-bottom: 1rem;
             }
 
-            .progress-step-item {
+            .progress-connector {
+                display: none;
+            }
+
+            .step-item {
                 flex-direction: column;
                 text-align: center;
-                margin-right: 2rem;
+                align-items: center;
                 margin-bottom: 0;
+                min-width: 100px;
             }
 
-            .step-indicator {
-                margin-right: 0;
-                margin-bottom: 0.5rem;
-            }
-
-            .progress-line {
-                display: none;
+            .step-icon {
+                margin-bottom: 0.75rem;
             }
 
             .step-content p {
                 display: none;
             }
 
-            .form-panel {
+            .form-container {
                 padding: 2rem;
+            }
+
+            .form-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .header-content {
+                padding: 0.875rem 1rem;
+            }
+
+            .brand-text {
+                display: none;
+            }
+
+            .header-link {
+                padding: 0.5rem 0.875rem;
+                font-size: 0.9rem;
+            }
+
+            .main-container {
+                padding: 2rem 1rem;
+            }
+
+            .signup-card {
+                border-radius: var(--radius-lg);
+            }
+
+            .form-container {
+                padding: 1.5rem;
             }
 
             .form-title {
                 font-size: 1.5rem;
             }
 
-            .header-content {
-                padding: 1rem;
-            }
-
-            .brand-text {
-                display: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .main-container {
-                padding: 1rem;
-            }
-
-            .form-panel {
-                padding: 1.5rem;
+            .form-subtitle {
+                font-size: 1rem;
             }
 
             .form-actions {
                 flex-direction: column-reverse;
+                gap: 0.75rem;
             }
 
             .btn {
                 width: 100%;
-                max-width: none;
             }
 
-            .file-upload-wrapper {
-                padding: 1.5rem;
+            .btn-secondary {
+                order: 1;
+            }
+
+            .file-upload-area {
+                padding: 2rem 1.5rem;
+            }
+
+            .upload-icon {
+                width: 48px;
+                height: 48px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .progress-sidebar {
+                padding: 1.5rem 1rem;
+            }
+
+            .progress-title {
+                font-size: 1.5rem;
+            }
+
+            .step-item {
+                min-width: 80px;
+            }
+
+            .step-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+
+            .form-input {
+                padding-left: 3rem;
+                font-size: 16px; /* Prevent zoom on iOS */
+            }
+
+            .input-icon {
+                left: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="bg-pattern"></div>
-    <div class="floating-shapes">
-        <div class="shape"></div>
-        <div class="shape"></div>
-        <div class="shape"></div>
+    <div class="background-wrapper">
+        <div class="bg-gradient"></div>
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
     </div>
 
     <header class="header">
@@ -737,68 +1050,74 @@
                 <span class="brand-text">VirtuHub</span>
             </a>
             <div class="header-actions">
-                <a href="/community" class="header-link">Back to Communities</a>
                 <a href="/userlogin" class="header-link">Sign In</a>
             </div>
         </div>
     </header>
 
     <main class="main-container">
-        <div class="signup-wrapper">
-            <div class="progress-panel">
-                <h2 class="progress-title">Join VirtuHub</h2>
+        <div class="signup-card">
+            <div class="progress-sidebar">
+                <div class="progress-header">
+                    <h2 class="progress-title">Join VirtuHub</h2>
+                    <p class="progress-subtitle">Create your account in just a few steps</p>
+                </div>
                 <div class="progress-steps">
-                    <div class="progress-line">
-                        <div class="progress-line-fill" id="progressFill"></div>
+                    <div class="progress-connector">
+                        <div class="progress-connector-fill" id="progressFill"></div>
                     </div>
-                    <div class="progress-step-item active" id="progressStep1">
-                        <div class="step-indicator">1</div>
+                    <div class="step-item active" id="progressStep1">
+                        <div class="step-icon">1</div>
                         <div class="step-content">
                             <h3>Personal Info</h3>
-                            <p>Basic details</p>
+                            <p>Your basic information</p>
                         </div>
                     </div>
-                    <div class="progress-step-item" id="progressStep2">
-                        <div class="step-indicator">2</div>
+                    <div class="step-item" id="progressStep2">
+                        <div class="step-icon">2</div>
                         <div class="step-content">
-                            <h3>Profile</h3>
-                            <p>Bio & photo</p>
+                            <h3>Profile Setup</h3>
+                            <p>Bio and profile photo</p>
                         </div>
                     </div>
-                    <div class="progress-step-item" id="progressStep3">
-                        <div class="step-indicator">3</div>
+                    <div class="step-item" id="progressStep3">
+                        <div class="step-icon">3</div>
                         <div class="step-content">
                             <h3>Professional</h3>
-                            <p>Work details</p>
+                            <p>Work information</p>
                         </div>
                     </div>
-                    <div class="progress-step-item" id="progressStep4">
-                        <div class="step-indicator">4</div>
+                    <div class="step-item" id="progressStep4">
+                        <div class="step-icon">4</div>
                         <div class="step-content">
-                            <h3>Complete</h3>
-                            <p>Final step</p>
+                            <h3>Final Step</h3>
+                            <p>Why you're joining</p>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="form-panel">
+            <div class="form-container">
                 <div class="form-header">
                     <h1 class="form-title">Create Your Account</h1>
                     <p class="form-subtitle">Join thousands building virtual communities</p>
                 </div>
 
                 <form id="signupForm" action="/userapproval" method="post" enctype="multipart/form-data">
+                    <!-- Step 1: Personal Info -->
                     <div id="step1" class="form-step active">
                         <div class="form-group">
-                            <label for="name" class="form-label">Full Name</label>
+                            <label for="name" class="form-label">
+                                Full Name
+                                <span class="form-label-hint">(as you'd like to be known)</span>
+                            </label>
                             <div class="input-wrapper">
                                 <input 
                                     type="text" 
                                     id="name" 
                                     name="approval[name]" 
                                     class="form-input" 
-                                    placeholder="Your full name"
+                                    placeholder="John Doe"
                                     required
                                     maxlength="100"
                                 >
@@ -810,39 +1129,56 @@
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="form-label">Email Address</label>
+                            <label for="email" class="form-label">
+                                Email Address
+                                <span class="form-label-hint">(we'll send a verification link)</span>
+                            </label>
                             <div class="input-wrapper">
                                 <input 
                                     type="email" 
                                     id="email" 
                                     name="approval[email]" 
                                     class="form-input" 
-                                    placeholder="your.email@example.com"
+                                    placeholder="john@example.com"
                                     required
                                     maxlength="100"
                                 >
                                 <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8m-18 4v7a2 2 0 002 2h14a2 2 0 002-2v-7m-18 0V5a2 2 0 012-2h14a2 2 0 012 2v7"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
                                 </svg>
                             </div>
                             <span class="error-message" id="emailError"></span>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()" disabled>Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                            <!-- <button type="button" class="btn btn-secondary" onclick="prevStep()" disabled>
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                Back
+                            </button> -->
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">
+                                Continue
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Step 2: Profile Setup -->
                     <div id="step2" class="form-step">
                         <div class="form-group">
-                            <label for="bio" class="form-label">Tell us about yourself</label>
+                            <label for="bio" class="form-label">
+                                Tell us about yourself
+                                <span class="form-label-hint">(this helps others connect with you)</span>
+                            </label>
                             <div class="input-wrapper">
                                 <textarea 
                                     id="bio" 
                                     name="approval[bio]" 
                                     class="form-input" 
-                                    placeholder="Write a brief bio (e.g., your interests, what you hope to gain from VirtuHub)..."
+                                    placeholder="I'm passionate about virtual worlds and building communities..."
                                     required
                                     maxlength="300"
                                     onkeyup="updateCharCount(this, 300)"
@@ -853,59 +1189,87 @@
                             </div>
                             <div class="input-footer">
                                 <span class="error-message" id="bioError"></span>
-                                <span class="char-count" id="bioCount">0 / 300</span>
+                                <span class="char-counter" id="bioCount">0 / 300</span>
                             </div>
                         </div>
 
                         <div class="form-group">
                             <label for="image" class="form-label">Profile Photo</label>
-                            <div class="file-upload-wrapper" id="fileUploadWrapper">
-                                <input type="file" id="image" name="approval[image]" class="file-input" accept="image/*">
-                                <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
-                                </svg>
-                                <p class="upload-text">Drag & Drop your photo here or <span style="color: var(--primary-color); font-weight: 600;">Browse</span></p>
-                                <p class="upload-hint">JPG, PNG, GIF up to 5MB</p>
-                                <p class="file-name" id="imageFileName"></p>
+                            <div class="file-upload-area" id="fileUploadWrapper">
+                                <input 
+                                    type="file" 
+                                    id="image" 
+                                    name="approval[image]" 
+                                    class="file-input" 
+                                    accept="image/*"
+                                    required
+                                >
+                                <div class="upload-content">
+                                    <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                    </svg>
+                                    <h3 class="upload-title">Drop your photo here, or browse</h3>
+                                    <p class="upload-subtitle">Supports: JPG, PNG, GIF (max 5MB)</p>
+                                    <div class="file-info" id="fileInfo">
+                                        <p class="file-name" id="fileName"></p>
+                                    </div>
+                                </div>
                             </div>
                             <span class="error-message" id="imageError"></span>
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">
+                                Continue
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Step 3: Professional Info -->
                     <div id="step3" class="form-step">
                         <div class="form-group">
-                            <label for="company" class="form-label">Company / Organization</label>
+                            <label for="company" class="form-label">
+                                Company / Organization
+                                <span class="form-label-hint">(or school if you're a student)</span>
+                            </label>
                             <div class="input-wrapper">
                                 <input 
                                     type="text" 
                                     id="company" 
                                     name="approval[company]" 
                                     class="form-input" 
-                                    placeholder="Where do you work or study?"
+                                    placeholder="VirtuHub Inc."
                                     required
                                     maxlength="100"
                                 >
                                 <svg class="input-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m-1 4h1m-1 4h1m-1-14h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1m-1 4h1"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
                                 </svg>
                             </div>
                             <span class="error-message" id="companyError"></span>
                         </div>
 
                         <div class="form-group">
-                            <label for="role" class="form-label">Role / Title</label>
+                            <label for="role" class="form-label">
+                                Role / Title
+                                <span class="form-label-hint">(what do you do?)</span>
+                            </label>
                             <div class="input-wrapper">
                                 <input 
                                     type="text" 
                                     id="role" 
                                     name="approval[role]" 
                                     class="form-input" 
-                                    placeholder="What do you do?"
+                                    placeholder="Community Manager"
                                     required
                                     maxlength="100"
                                 >
@@ -917,20 +1281,34 @@
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
-                            <button type="button" class="btn btn-primary" onclick="nextStep()">Continue</button>
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                Back
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="nextStep()">
+                                Continue
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Step 4: Final Step -->
                     <div id="step4" class="form-step">
                         <div class="form-group">
-                            <label for="reason" class="form-label">Why do you want to join VirtuHub?</label>
+                            <label for="reason" class="form-label">
+                                Why do you want to join VirtuHub?
+                                <span class="form-label-hint">(help us understand your goals)</span>
+                            </label>
                             <div class="input-wrapper">
                                 <textarea 
                                     id="reason" 
                                     name="approval[reason]" 
                                     class="form-input" 
-                                    placeholder="Tell us what excites you about joining our community..."
+                                    placeholder="I'm excited to connect with like-minded creators and build virtual products..."
                                     required
                                     maxlength="500"
                                     onkeyup="updateCharCount(this, 500)"
@@ -941,23 +1319,30 @@
                             </div>
                             <div class="input-footer">
                                 <span class="error-message" id="reasonError"></span>
-                                <span class="char-count" id="reasonCount">0 / 500</span>
+                                <span class="char-counter" id="reasonCount">0 / 500</span>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">
-                                <input type="checkbox" id="terms" required style="margin-right: 0.5rem;">
-                                I agree to the <a href="#" style="color: var(--primary-color);">Terms of Service</a> and <a href="#" style="color: var(--primary-color);">Privacy Policy</a>
-                            </label>
+                            <div class="checkbox-wrapper">
+                                <input type="checkbox" id="terms" class="checkbox-input" required>
+                                <label for="terms" class="checkbox-label">
+                                    I agree to the <a href="#" target="_blank">Terms of Service</a> and <a href="#" target="_blank">Privacy Policy</a>. I understand that my application will be reviewed before approval.
+                                </label>
+                            </div>
                             <span class="error-message" id="termsError"></span>
                         </div>
 
                         <div class="form-actions">
-                            <button type="button" class="btn btn-secondary" onclick="prevStep()">Back</button>
+                            <button type="button" class="btn btn-secondary" onclick="prevStep()">
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                                </svg>
+                                Back
+                            </button>
                             <button type="submit" class="btn btn-primary" id="submitBtn">
                                 <span class="btn-text">Create Account</span>
-                                <span class="loading-spinner" style="display: none;">Creating...</span>
+                                <div class="loading-spinner"></div>
                             </button>
                         </div>
                     </div>
@@ -968,14 +1353,19 @@
 
     <div class="success-overlay" id="successOverlay">
         <div class="success-card">
-            <div class="success-icon">
-                <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+            <div class="success-icon-wrapper">
+                <svg width="40" height="40" fill="white" viewBox="0 0 24 24">
                     <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
                 </svg>
             </div>
-            <h2 style="color: var(--text-dark); margin-bottom: 0.5rem;">VirtuHub!</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Your application has been sent successfully.</p>
-            <a href="/community" class="btn btn-primary" style="display: inline-block;">Community</a>
+            <h2 class="success-title">Application Submitted!</h2>
+            <p class="success-message">Thank you for joining VirtuHub. We'll review your application and send you an email once approved.</p>
+            <a href="/community" class="btn btn-primary">
+                Explore Communities
+                <svg class="btn-icon" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"></path>
+                </svg>
+            </a>
         </div>
     </div>
 
@@ -983,7 +1373,7 @@
         let currentStep = 1;
         const totalSteps = 4;
 
-        // Update progress
+        // Update progress UI
         function updateProgress() {
             const progressFill = document.getElementById('progressFill');
             const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
@@ -995,14 +1385,14 @@
                 if (i < currentStep) {
                     stepElement.classList.remove('active');
                     stepElement.classList.add('completed');
-                    stepElement.querySelector('.step-indicator').innerHTML = '✓';
+                    stepElement.querySelector('.step-icon').innerHTML = '✓';
                 } else if (i === currentStep) {
                     stepElement.classList.add('active');
                     stepElement.classList.remove('completed');
-                    stepElement.querySelector('.step-indicator').textContent = i;
+                    stepElement.querySelector('.step-icon').textContent = i;
                 } else {
                     stepElement.classList.remove('active', 'completed');
-                    stepElement.querySelector('.step-indicator').textContent = i;
+                    stepElement.querySelector('.step-icon').textContent = i;
                 }
             }
         }
@@ -1015,10 +1405,15 @@
 
         function validateStep(step) {
             let isValid = true;
-            // Clear all errors before re-validating
-            document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
-            document.querySelectorAll('.form-input').forEach(el => el.style.borderColor = 'var(--hover-bg)');
-            document.querySelectorAll('.file-upload-wrapper').forEach(el => el.style.borderColor = 'var(--hover-bg)');
+            
+            // Clear all errors first
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+            document.querySelectorAll('.form-input').forEach(el => {
+                el.classList.remove('error');
+            });
 
             if (step === 1) {
                 const name = document.getElementById('name').value.trim();
@@ -1027,15 +1422,11 @@
                 if (!name || name.length < 2) {
                     showError('name', 'Name must be at least 2 characters');
                     isValid = false;
-                } else {
-                    clearError('name');
                 }
 
                 if (!email || !validateEmail(email)) {
                     showError('email', 'Please enter a valid email address');
                     isValid = false;
-                } else {
-                    clearError('email');
                 }
             } else if (step === 2) {
                 const bio = document.getElementById('bio').value.trim();
@@ -1044,15 +1435,12 @@
                 if (!bio || bio.length < 10) {
                     showError('bio', 'Bio must be at least 10 characters');
                     isValid = false;
-                } else {
-                    clearError('bio');
                 }
 
                 if (!image) {
                     showError('image', 'Please upload a profile photo');
+                    document.getElementById('fileUploadWrapper').classList.add('has-error');
                     isValid = false;
-                } else {
-                    clearError('image');
                 }
             } else if (step === 3) {
                 const company = document.getElementById('company').value.trim();
@@ -1061,32 +1449,24 @@
                 if (!company || company.length < 2) {
                     showError('company', 'Company name is required');
                     isValid = false;
-                } else {
-                    clearError('company');
                 }
 
                 if (!role || role.length < 2) {
                     showError('role', 'Role is required');
                     isValid = false;
-                } else {
-                    clearError('role');
                 }
             } else if (step === 4) {
                 const reason = document.getElementById('reason').value.trim();
                 const terms = document.getElementById('terms').checked;
 
                 if (!reason || reason.length < 20) {
-                    showError('reason', 'Please provide a reason (at least 20 characters)');
+                    showError('reason', 'Please provide at least 20 characters');
                     isValid = false;
-                } else {
-                    clearError('reason');
                 }
 
                 if (!terms) {
                     showError('terms', 'You must agree to the terms and conditions');
                     isValid = false;
-                } else {
-                    clearError('terms');
                 }
             }
 
@@ -1096,35 +1476,14 @@
         function showError(fieldId, message) {
             const errorElement = document.getElementById(fieldId + 'Error');
             const inputElement = document.getElementById(fieldId);
-            const fileUploadWrapper = document.getElementById('fileUploadWrapper');
-
+            
             if (errorElement) {
                 errorElement.textContent = message;
                 errorElement.classList.add('show');
             }
             
-            if (inputElement && inputElement.type !== 'checkbox' && inputElement.type !== 'file') {
-                inputElement.style.borderColor = 'var(--error)';
-            } else if (inputElement && inputElement.type === 'file' && fileUploadWrapper) {
-                fileUploadWrapper.style.borderColor = 'var(--error)';
-            }
-        }
-
-        function clearError(fieldId) {
-            const errorElement = document.getElementById(fieldId + 'Error');
-            const inputElement = document.getElementById(fieldId);
-            const fileUploadWrapper = document.getElementById('fileUploadWrapper');
-            
-            if (errorElement) {
-                errorElement.classList.remove('show');
-            }
-            
-            if (inputElement && inputElement.type !== 'checkbox' && inputElement.type !== 'file') {
-                inputElement.style.borderColor = 'var(--hover-bg)';
-            } else if (inputElement && inputElement.type === 'file' && fileUploadWrapper) {
-                 if (!document.getElementById('imageFileName').textContent) { // Only reset if no file selected
-                    fileUploadWrapper.style.borderColor = 'var(--hover-bg)';
-                 }
+            if (inputElement && inputElement.type !== 'checkbox') {
+                inputElement.classList.add('error');
             }
         }
 
@@ -1136,6 +1495,15 @@
                 document.getElementById(`step${currentStep}`).classList.add('active');
                 updateProgress();
                 updateNavigationButtons();
+                
+                // Scroll to top of form
+                document.querySelector('.form-container').scrollTop = 0;
+                
+                // Focus first input
+                setTimeout(() => {
+                    const firstInput = document.querySelector(`#step${currentStep} .form-input`);
+                    if (firstInput) firstInput.focus();
+                }, 300);
             }
         }
 
@@ -1146,95 +1514,183 @@
                 document.getElementById(`step${currentStep}`).classList.add('active');
                 updateProgress();
                 updateNavigationButtons();
+                
+                // Scroll to top
+                document.querySelector('.form-container').scrollTop = 0;
             }
         }
 
         function updateNavigationButtons() {
-            const backBtn = document.querySelector('.form-step.active .btn-secondary');
-            if (backBtn) {
-                backBtn.disabled = currentStep === 1;
+            const backButtons = document.querySelectorAll('.btn-secondary');
+            backButtons.forEach((btn, index) => {
+                btn.disabled = currentStep === 1;
+            });
+        }
+
+        // Character counter
+        function updateCharCount(textarea, maxLength) {
+            const currentLength = textarea.value.length;
+            const countElement = document.getElementById(textarea.id + 'Count');
+            
+            if (countElement) {
+                countElement.textContent = `${currentLength} / ${maxLength}`;
+                countElement.classList.toggle('warning', currentLength > maxLength * 0.9);
             }
         }
 
-        // Character Counter
-        function updateCharCount(element, max) {
-            const countElement = document.getElementById(element.id + 'Count');
-            const currentLength = element.value.length;
-            countElement.textContent = `${currentLength} / ${max}`;
+        // File upload handling
+        const fileInput = document.getElementById('image');
+        const fileUploadWrapper = document.getElementById('fileUploadWrapper');
+        const fileInfo = document.getElementById('fileInfo');
+        const fileName = document.getElementById('fileName');
 
-            if (currentLength > max * 0.9) {
-                countElement.classList.add('warning');
-            } else {
-                countElement.classList.remove('warning');
-            }
-        }
-
-        // File Upload Handler
-        document.getElementById('image').addEventListener('change', function() {
-            const fileNameDisplay = document.getElementById('imageFileName');
-            const fileUploadWrapper = document.getElementById('fileUploadWrapper');
-            if (this.files && this.files.length > 0) {
-                const fileName = this.files[0].name;
-                fileNameDisplay.textContent = fileName;
-                fileNameDisplay.style.display = 'block';
+        fileInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            
+            if (file) {
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showError('image', 'File size must be less than 5MB');
+                    fileInput.value = '';
+                    fileUploadWrapper.classList.add('has-error');
+                    return;
+                }
+                
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    showError('image', 'Please upload an image file');
+                    fileInput.value = '';
+                    fileUploadWrapper.classList.add('has-error');
+                    return;
+                }
+                
+                // Show file info
+                fileName.textContent = `Selected: ${file.name}`;
+                fileInfo.classList.add('show');
                 fileUploadWrapper.classList.add('has-file');
-                clearError('image'); // Clear error once file is selected
+                fileUploadWrapper.classList.remove('has-error');
+                
+                // Clear error
+                const errorElement = document.getElementById('imageError');
+                if (errorElement) errorElement.classList.remove('show');
             } else {
-                fileNameDisplay.textContent = '';
-                fileNameDisplay.style.display = 'none';
+                fileInfo.classList.remove('show');
                 fileUploadWrapper.classList.remove('has-file');
             }
         });
 
-        // Form submission handler
-        document.getElementById('signupForm').addEventListener('submit', function(event) {
-            //event.preventDefault(); // Prevent default form submission
+        // Drag and drop
+        fileUploadWrapper.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            fileUploadWrapper.style.borderColor = 'var(--primary-color)';
+            fileUploadWrapper.style.background = 'var(--hover-bg)';
+        });
 
-            if (validateStep(totalSteps)) { // Validate the final step
-                const submitBtn = document.getElementById('submitBtn');
-                const btnText = submitBtn.querySelector('.btn-text');
-                const loadingSpinner = submitBtn.querySelector('.loading-spinner');
+        fileUploadWrapper.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            fileUploadWrapper.style.borderColor = '';
+            fileUploadWrapper.style.background = '';
+        });
 
-                submitBtn.disabled = true;
-                btnText.style.display = 'none';
-                loadingSpinner.style.display = 'inline';
-
-                // Simulate form submission (replace with actual AJAX call)
-                setTimeout(() => {
-                    document.getElementById('successOverlay').style.display = 'flex';
-                    submitBtn.disabled = false;
-                    btnText.style.display = 'inline';
-                    loadingSpinner.style.display = 'none';
-                    this.reset(); // Reset form after successful submission
-                    currentStep = 1; // Reset to first step
-                    updateProgress();
-                    updateNavigationButtons();
-                    document.getElementById('step4').classList.remove('active');
-                    document.getElementById('step1').classList.add('active');
-                    document.getElementById('imageFileName').textContent = ''; // Clear file name display
-                    document.getElementById('imageFileName').style.display = 'none';
-                    document.getElementById('fileUploadWrapper').classList.remove('has-file');
-                    document.getElementById('bioCount').textContent = '0 / 300';
-                    document.getElementById('reasonCount').textContent = '0 / 500';
-
-                    // Clear all errors from all steps after successful submission
-                    document.querySelectorAll('.error-message').forEach(el => el.classList.remove('show'));
-                    document.querySelectorAll('.form-input').forEach(el => el.style.borderColor = 'var(--hover-bg)');
-                    document.querySelectorAll('.file-upload-wrapper').forEach(el => el.style.borderColor = 'var(--hover-bg)');
-
-                }, 40000); // Simulate network delay
+        fileUploadWrapper.addEventListener('drop', (e) => {
+            e.preventDefault();
+            fileUploadWrapper.style.borderColor = '';
+            fileUploadWrapper.style.background = '';
+            
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                fileInput.files = files;
+                const event = new Event('change', { bubbles: true });
+                fileInput.dispatchEvent(event);
             }
         });
 
-        // Initial setup
+        // Form submission
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!validateStep(4)) {
+                return;
+            }
+
+            const submitBtn = document.getElementById('submitBtn');
+            const btnText = submitBtn.querySelector('.btn-text');
+            const spinner = submitBtn.querySelector('.loading-spinner');
+
+            // Show loading state
+            submitBtn.disabled = true;
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+
+            try {
+                // Create FormData
+                const formData = new FormData(this);
+                
+                // Submit form
+                const response = await fetch(this.action, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    // Show success overlay
+                    document.getElementById('successOverlay').style.display = 'flex';
+                    
+                    // Reset form
+                    this.reset();
+                    currentStep = 1;
+                    updateProgress();
+                    updateNavigationButtons();
+                    
+                    // Reset file upload
+                    fileInfo.classList.remove('show');
+                    fileUploadWrapper.classList.remove('has-file');
+                    
+                    // Reset character counters
+                    document.getElementById('bioCount').textContent = '0 / 300';
+                    document.getElementById('reasonCount').textContent = '0 / 500';
+                } else {
+                    throw new Error('Submission failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again.');
+            } finally {
+                // Reset button state
+                submitBtn.disabled = false;
+                btnText.style.display = 'inline-flex';
+                spinner.style.display = 'none';
+            }
+        });
+
+        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             updateProgress();
             updateNavigationButtons();
-            // Initialize character counts
-            updateCharCount(document.getElementById('bio'), 300);
-            updateCharCount(document.getElementById('reason'), 500);
+            
+            // Initialize character counters
+            const bioTextarea = document.getElementById('bio');
+            const reasonTextarea = document.getElementById('reason');
+            
+            if (bioTextarea) updateCharCount(bioTextarea, 300);
+            if (reasonTextarea) updateCharCount(reasonTextarea, 500);
+            
+            // Add input event listeners for real-time validation
+            document.querySelectorAll('.form-input').forEach(input => {
+                input.addEventListener('blur', () => {
+                    if (input.value.trim()) {
+                        input.classList.remove('error');
+                        const errorElement = document.getElementById(input.id + 'Error');
+                        if (errorElement) errorElement.classList.remove('show');
+                    }
+                });
+            });
         });
 
+        // Prevent accidental form resubmission
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
     </script>
 </body>
 </html>
