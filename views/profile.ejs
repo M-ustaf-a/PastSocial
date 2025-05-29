@@ -47,7 +47,6 @@
             overflow-x: hidden;
         }
 
-        /* Animated Background */
         .bg-animation {
             position: fixed;
             top: 0;
@@ -98,7 +97,6 @@
             75% { transform: translate(40px, 10px) rotate(270deg) scale(1.05); }
         }
 
-        /* Header */
         .header {
             position: fixed;
             top: 0;
@@ -204,7 +202,47 @@
             transform: translateY(-2px);
         }
 
-        /* Main Container */
+        .mobile-menu-toggle {
+            display: none;
+            cursor: pointer;
+            padding: 0.5rem;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--white);
+            z-index: 1001;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .mobile-menu.active {
+            display: flex;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .mobile-menu-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
         .main-container {
             margin-top: 80px;
             padding: 2rem;
@@ -215,7 +253,6 @@
             z-index: 10;
         }
 
-        /* Hero Section */
         .hero-section {
             position: relative;
             margin-bottom: 3rem;
@@ -372,14 +409,47 @@
         }
 
         .badge {
-            padding: 0.25rem 0.75rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            padding: 0.375rem 0.875rem;
+            background: linear-gradient(135deg, var(--secondary-color), var(--warning));
             color: var(--white);
             border-radius: 20px;
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .badge:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .verified-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            box-shadow: 0 2px 8px rgba(168, 36, 0, 0.3);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid var(--white);
+        }
+
+        .verified-badge:hover {
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 4px 16px rgba(168, 36, 0, 0.4);
+        }
+
+        .verified-badge svg {
+            width: 16px;
+            height: 16px;
+            filter: none;
         }
 
         .profile-bio {
@@ -387,6 +457,7 @@
             color: var(--text-secondary);
             line-height: 1.7;
             margin-bottom: 1.5rem;
+            word-break: break-word;
         }
 
         .profile-meta {
@@ -467,7 +538,6 @@
             transform: translateY(-3px);
         }
 
-        /* Stats Grid */
         .stats-section {
             margin: 4rem 0;
             animation: fadeInUp 0.8s ease-out 0.6s both;
@@ -535,7 +605,6 @@
             letter-spacing: 1px;
         }
 
-        /* Content Section */
         .content-section {
             background: var(--white);
             border-radius: var(--radius-xl);
@@ -600,7 +669,6 @@
             min-height: 600px;
         }
 
-        /* Enhanced Content Grid */
         .content-grid {
             display: grid;
             gap: 2rem;
@@ -702,7 +770,6 @@
             height: 16px;
         }
 
-        /* Loading States */
         .loading-container {
             display: none;
             justify-content: center;
@@ -727,7 +794,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Empty State */
         .empty-state {
             text-align: center;
             padding: 4rem;
@@ -740,7 +806,6 @@
             opacity: 0.5;
         }
 
-        /* Responsive Design */
         @media (max-width: 1024px) {
             .hero-content {
                 flex-direction: column;
@@ -764,7 +829,7 @@
             }
 
             .cover-container {
-                height: 300px;
+                height: 40vh;
             }
 
             .profile-avatar {
@@ -795,20 +860,33 @@
             }
 
             .tab {
-                padding: 1rem;
+                padding: 0.75rem 1rem;
             }
 
             .content-body {
                 padding: 2rem 1rem;
             }
 
+            .content-item {
+                padding: 1.5rem;
+            }
+
             .header-nav {
                 display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
             }
 
             .profile-meta {
                 flex-direction: column;
                 gap: 1rem;
+            }
+
+            .floating-orb {
+                opacity: 0.02;
+                transform: scale(0.5);
             }
         }
 
@@ -816,10 +894,24 @@
             .hero-content {
                 left: 1rem;
                 right: 1rem;
+                bottom: -140px;
             }
 
             .profile-info {
                 padding: 1.5rem;
+            }
+
+            .profile-avatar {
+                width: 100px;
+                height: 100px;
+            }
+
+            .profile-details h1 {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.75rem 1.5rem;
             }
 
             .stats-grid {
@@ -829,9 +921,21 @@
             .stat-number {
                 font-size: 2rem;
             }
+
+            .item-thumbnail {
+                width: 60px;
+                height: 60px;
+            }
+
+            .item-info h3 {
+                font-size: 1.25rem;
+            }
+
+            .item-description {
+                font-size: 0.9rem;
+            }
         }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar {
             width: 12px;
         }
@@ -851,7 +955,6 @@
             background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
         }
 
-        /* Accessibility */
         @media (prefers-reduced-motion: reduce) {
             * {
                 animation-duration: 0.01ms !important;
@@ -860,7 +963,6 @@
             }
         }
 
-        /* Focus States */
         .btn:focus,
         .tab:focus,
         .nav-link:focus {
@@ -870,14 +972,12 @@
     </style>
 </head>
 <body>
-    <!-- Animated Background -->
     <div class="bg-animation">
         <div class="floating-orb"></div>
         <div class="floating-orb"></div>
         <div class="floating-orb"></div>
     </div>
 
-    <!-- Header -->
     <header class="header" id="header">
         <div class="header-content">
             <a href="/community" class="brand">
@@ -890,12 +990,24 @@
                 <a href="/messages" class="nav-link">Messages</a>
                 <a href="/settings" class="nav-link">Settings</a>
             </nav>
+            <div class="mobile-menu-toggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="12" x2="21" y2="12"></line>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <line x1="3" y1="18" x2="21" y2="18"></line>
+                </svg>
+            </div>
+            <div class="mobile-menu">
+                <button class="mobile-menu-close">&times;</button>
+                <a href="/community" class="nav-link">Communities</a>
+                <a href="/discover" class="nav-link">Discover</a>
+                <a href="/messages" class="nav-link">Messages</a>
+                <a href="/settings" class="nav-link">Settings</a>
+            </div>
         </div>
     </header>
 
-    <!-- Main Container -->
     <div class="main-container">
-        <!-- Hero Section -->
         <section class="hero-section">
             <div class="cover-container">
                 <img src="https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1400&h=400&fit=crop" alt="Cover" class="cover-image">
@@ -916,7 +1028,11 @@
                             <h1>John Doe</h1>
                             <div class="profile-username">@johndoe</div>
                             <div class="profile-badges">
-                                <span class="badge">Verified</span>
+                                <div class="verified-badge" title="Verified User">
+                                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
                                 <span class="badge">Pro</span>
                             </div>
                             <p class="profile-bio">
@@ -963,7 +1079,6 @@
             </div>
         </section>
 
-        <!-- Stats Section -->
         <section class="stats-section">
             <div class="stats-grid">
                 <div class="stat-card">
@@ -985,7 +1100,6 @@
             </div>
         </section>
 
-        <!-- Content Section -->
         <section class="content-section">
             <div class="content-header">
                 <div class="content-tabs">
@@ -1011,12 +1125,10 @@
             </div>
 
             <div class="content-body">
-                <!-- Loading State -->
                 <div class="loading-container" id="loadingContainer">
                     <div class="loader"></div>
                 </div>
 
-                <!-- Communities Content -->
                 <div class="content-container active" id="communitiesContent">
                     <div class="content-grid">
                         <div class="content-item">
@@ -1129,7 +1241,6 @@
                     </div>
                 </div>
 
-                <!-- Activities Content -->
                 <div class="content-container" id="activitiesContent">
                     <div class="content-grid">
                         <div class="content-item">
@@ -1178,7 +1289,6 @@
                     </div>
                 </div>
 
-                <!-- Achievements Content -->
                 <div class="content-container" id="achievementsContent">
                     <div class="content-grid">
                         <div class="content-item">
@@ -1232,7 +1342,6 @@
     </div>
 
     <script>
-        // Header scroll effect
         window.addEventListener('scroll', () => {
             const header = document.getElementById('header');
             if (window.scrollY > 100) {
@@ -1242,7 +1351,24 @@
             }
         });
 
-        // Animated counter for stats
+        const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileMenu = document.querySelector('.mobile-menu');
+        const mobileMenuClose = document.querySelector('.mobile-menu-close');
+
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenu.classList.add('active');
+        });
+
+        mobileMenuClose.addEventListener('click', () => {
+            mobileMenu.classList.remove('active');
+        });
+
+        mobileMenu.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+        });
+
         function animateCounter(element) {
             const target = parseInt(element.getAttribute('data-count'));
             const duration = 2000;
@@ -1257,7 +1383,6 @@
                     clearInterval(timer);
                 }
                 
-                // Format large numbers
                 let displayValue = Math.floor(current);
                 if (displayValue >= 1000000) {
                     displayValue = (displayValue / 1000000).toFixed(1) + 'M';
@@ -1269,7 +1394,6 @@
             }, duration / steps);
         }
 
-        // Intersection Observer for animations
         const observerOptions = {
             threshold: 0.1,
             rootMargin: '0px 0px -50px 0px'
@@ -1287,34 +1411,25 @@
             });
         }, observerOptions);
 
-        // Observe stat numbers for animation
         document.querySelectorAll('.stat-number').forEach(stat => {
             observer.observe(stat);
         });
 
-        // Tab switching functionality
         function switchTab(tabName, element) {
-            // Remove active class from all tabs and content
             document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.content-container').forEach(content => content.classList.remove('active'));
             
-            // Add active class to clicked tab and corresponding content
             element.classList.add('active');
             document.getElementById(tabName + 'Content').classList.add('active');
             
-            // Show loading animation
             const loadingContainer = document.getElementById('loadingContainer');
-            const contentBody = document.querySelector('.content-body');
-            
             loadingContainer.classList.add('show');
             
-            // Simulate loading delay
             setTimeout(() => {
                 loadingContainer.classList.remove('show');
             }, 800);
         }
 
-        // Button interactions
         document.getElementById('followBtn').addEventListener('click', function() {
             const isFollowing = this.textContent.trim() === 'Following';
             
@@ -1340,23 +1455,17 @@
         });
 
         document.getElementById('messageBtn').addEventListener('click', function() {
-            // Simulate message action
             this.style.transform = 'scale(0.95)';
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
             }, 150);
-            
-            // In a real app, this would open a message modal or redirect
             console.log('Opening message dialog...');
         });
 
-        // Profile avatar click for full-size view
         document.querySelector('.profile-avatar').addEventListener('click', function() {
-            // In a real app, this would open a modal with full-size image
             console.log('Opening full-size profile image...');
         });
 
-        // Add smooth scroll behavior for internal links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -1370,7 +1479,6 @@
             });
         });
 
-        // Lazy loading for images
         const imageObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1386,7 +1494,6 @@
             imageObserver.observe(img);
         });
 
-        // Add CSS class for successful button state
         const style = document.createElement('style');
         style.textContent = `
             .btn-success {
@@ -1400,9 +1507,7 @@
         `;
         document.head.appendChild(style);
 
-        // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
-            // Add entrance animations to elements
             const elementsToAnimate = document.querySelectorAll('.content-item, .stat-card');
             elementsToAnimate.forEach((element, index) => {
                 element.style.opacity = '0';
@@ -1411,7 +1516,6 @@
                 element.style.transitionDelay = `${index * 0.1}s`;
             });
 
-            // Trigger animations after a short delay
             setTimeout(() => {
                 elementsToAnimate.forEach(element => {
                     observer.observe(element);
