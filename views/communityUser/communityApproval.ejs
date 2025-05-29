@@ -858,6 +858,7 @@
                 padding: 0.875rem 1rem;
             }
 
+
             .main-container {
                 padding: 5rem 1rem 2rem;
             }
@@ -1016,7 +1017,7 @@
                     <p class="form-subtitle">Tell us about yourself to join this community</p>
                 </div>
 
-                <form id="communityApproval" action="#" method="post" enctype="multipart/form-data">
+                <form id="communityApproval" action="/community/<%=community._id%>/communityApproval" method="post" enctype="multipart/form-data">
                     <!-- Step 1: Personal Info -->
                     <div id="step1" class="form-step active">
                         <div class="form-group">
