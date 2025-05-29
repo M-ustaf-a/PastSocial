@@ -610,6 +610,59 @@
             letter-spacing: 1px;
         }
 
+        /* Combined Stats Card for Mobile */
+        .combined-stats-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+
+        .combined-stats-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .combined-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            text-align: center;
+        }
+
+        .combined-stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .combined-stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.25rem;
+        }
+
+        .combined-stat-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         /* Content Section */
         .content-section {
             background: var(--white);
@@ -1001,30 +1054,58 @@
                 min-height: 44px;
             }
 
-            /* Mobile Stats Section */
+            /* Mobile Stats Section - Show combined card and communities card */
             .stats-section {
                 margin: 2rem 0;
                 padding: 0 1rem;
             }
 
             .stats-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 1rem;
+                display: none; /* Hide original stats grid */
             }
 
-            .stat-card {
-                padding: 1.25rem 1rem;
-                border-radius: var(--radius-md);
+            .combined-stats-card {
+                display: block; /* Show combined stats card */
+                margin-bottom: 1.5rem;
             }
 
-            .stat-number {
-                font-size: 2rem;
-                margin-bottom: 0.25rem;
+            .mobile-communities-card {
+                display: block;
+                background: var(--white);
+                padding: 1.5rem;
+                border-radius: var(--radius-lg);
+                box-shadow: var(--shadow-md);
+                border: 1px solid var(--glass-border);
+                position: relative;
+                overflow: hidden;
+                text-align: center;
             }
 
-            .stat-label {
-                font-size: 0.9rem;
+            .mobile-communities-card::before {
+                content: '';
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            }
+
+            .mobile-communities-card .stat-number {
+                font-size: 2.5rem;
+                font-weight: 800;
+                background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+                background-clip: text;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 0.5rem;
+            }
+
+            .mobile-communities-card .stat-label {
+                font-size: 1rem;
+                color: var(--text-secondary);
+                font-weight: 600;
+                text-transform: uppercase;
                 letter-spacing: 0.5px;
             }
 
@@ -1186,21 +1267,28 @@
                 padding: 0 0.75rem;
             }
 
-            .stats-grid {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 0.5rem;
+            .combined-stats-grid {
+                gap: 1rem;
             }
 
-            .stat-card {
-                padding: 0.875rem 0.5rem;
+            .combined-stat-number {
+                font-size: 1.75rem;
             }
 
-            .stat-number {
-                font-size: 1.5rem;
+            .combined-stat-label {
+                font-size: 0.8rem;
             }
 
-            .stat-label {
-                font-size: 0.75rem;
+            .mobile-communities-card {
+                padding: 1.25rem;
+            }
+
+            .mobile-communities-card .stat-number {
+                font-size: 2rem;
+            }
+
+            .mobile-communities-card .stat-label {
+                font-size: 0.9rem;
             }
 
             .content-section {
@@ -1293,15 +1381,27 @@
                 padding: 0 0.5rem;
             }
 
-            .stat-card {
-                padding: 0.875rem;
+            .combined-stats-grid {
+                gap: 0.75rem;
             }
 
-            .stat-number {
+            .combined-stat-number {
                 font-size: 1.5rem;
             }
 
-            .stat-label {
+            .combined-stat-label {
+                font-size: 0.75rem;
+            }
+
+            .mobile-communities-card {
+                padding: 1rem;
+            }
+
+            .mobile-communities-card .stat-number {
+                font-size: 1.75rem;
+            }
+
+            .mobile-communities-card .stat-label {
                 font-size: 0.8rem;
             }
 
@@ -1474,6 +1574,7 @@
 
         <!-- Stats Section -->
         <section class="stats-section">
+            <!-- Original Desktop Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" data-count="15200">0</div>
@@ -1491,6 +1592,30 @@
                     <div class="stat-number" data-count="47">0</div>
                     <div class="stat-label">Communities</div>
                 </div>
+            </div>
+
+            <!-- Mobile Combined Stats Card -->
+            <div class="combined-stats-card">
+                <div class="combined-stats-grid">
+                    <div class="combined-stat-item">
+                        <div class="combined-stat-number" data-count="15200">0</div>
+                        <div class="combined-stat-label">Followers</div>
+                    </div>
+                    <div class="combined-stat-item">
+                        <div class="combined-stat-number" data-count="892">0</div>
+                        <div class="combined-stat-label">Following</div>
+                    </div>
+                    <div class="combined-stat-item">
+                        <div class="combined-stat-number" data-count="1200000">0</div>
+                        <div class="combined-stat-label">Total Likes</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Communities Card -->
+            <div class="mobile-communities-card">
+                <div class="stat-number" data-count="47">0</div>
+                <div class="stat-label">Communities</div>
             </div>
         </section>
 
@@ -1834,7 +1959,7 @@
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    if (entry.target.classList.contains('stat-number')) {
+                    if (entry.target.classList.contains('stat-number') || entry.target.classList.contains('combined-stat-number')) {
                         animateCounter(entry.target);
                     }
                     entry.target.style.opacity = '1';
@@ -1844,7 +1969,7 @@
         }, observerOptions);
 
         // Observe stat numbers for animation
-        document.querySelectorAll('.stat-number').forEach(stat => {
+        document.querySelectorAll('.stat-number, .combined-stat-number').forEach(stat => {
             observer.observe(stat);
         });
 
@@ -2042,7 +2167,7 @@
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             // Add entrance animations to elements
-            const elementsToAnimate = document.querySelectorAll('.content-item, .stat-card');
+            const elementsToAnimate = document.querySelectorAll('.content-item, .stat-card, .combined-stats-card, .mobile-communities-card');
             elementsToAnimate.forEach((element, index) => {
                 element.style.opacity = '0';
                 element.style.transform = 'translateY(30px)';
