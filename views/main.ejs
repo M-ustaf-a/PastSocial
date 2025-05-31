@@ -931,23 +931,25 @@
                 <% newUploadPost.forEach((uploadPost, index) => { %>
                 <article class="post-card" style="animation-delay: <%= index * 0.1 %>s">
                     <header class="post-card__header">
-                        <a href="/community/<%= community.id %>/<%= uploadPost.user.id %>/showProfile" class="post-card__author">
-                            <img 
-                                src="<%= uploadPost.user.image.url %>" 
-                                alt="<%= uploadPost.user.name %>" 
-                                class="post-card__avatar"
-                            >
-                            <div class="post-card__author-info">
-                                <h3 class="post-card__author-name"><%= uploadPost.user.name %></h3>
-                                <time class="post-card__timestamp" datetime="<%= uploadPost.createdAt %>">
-                                    <%= new Date(uploadPost.createdAt || Date.now()).toLocaleDateString('en-US', { 
-                                        year: 'numeric', 
-                                        month: 'short', 
-                                        day: 'numeric' 
-                                    }) %>
-                                </time>
-                            </div>
-                        </a>
+                        <div class="flex">
+                            <a href="/community/<%= community.id %>/<%= uploadPost.user.id %>/showProfile" class="post-card__author">
+                                <img 
+                                    src="<%= uploadPost.user.image.url %>" 
+                                    alt="<%= uploadPost.user.name %>" 
+                                    class="post-card__avatar"
+                                >
+                                <div class="post-card__author-info">
+                                    <h3 class="post-card__author-name"><%= uploadPost.user.name %></h3>
+                                    <time class="post-card__timestamp" datetime="<%= uploadPost.createdAt %>">
+                                        <%= new Date(uploadPost.createdAt || Date.now()).toLocaleDateString('en-US', { 
+                                            year: 'numeric', 
+                                            month: 'short', 
+                                            day: 'numeric' 
+                                        }) %>
+                                    </time>
+                                </div>
+                            </a>
+                        </div>
                     </header>
                     
                     <div class="post-card__content">
