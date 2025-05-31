@@ -587,49 +587,49 @@
         <div class="header-container">
             <!-- Brand Section -->
             <div class="brand-section">
-                <a href="#" class="header-logo">
-                    <img src="https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=100&h=100&fit=crop&crop=center" alt="company logo" class="img-company">
-                    <h1>TechCorp</h1>
+                <a href="/community/<%=community.id%>/about" class="header-logo">
+                    <img src="<%=community.thumbnail.url%>" alt="company logo" class="img-company">
+                    <h1><%=community.title%></h1>
                 </a>
             </div>
             
             <!-- Navigation Section -->
             <div class="nav-section">
                 <div class="nav-icons">
-                    <a href="#" class="nav-icon active" title="Home">
+                    <a href="/community/<%=community.id%>/main" class="nav-icon" title="Home" data-page="home">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
                         </svg>
                     </a>
                     
-                    <a href="#" class="nav-icon" title="Links">
+                    <a href="/community/<%=community.id%>/link" class="nav-icon" title="Links" data-page="link">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
                             <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
                         </svg>
                     </a>
                     
-                    <a href="#" class="nav-icon" title="Video">
+                    <a href="/community/<%=community.id%>/video" class="nav-icon" title="Video" data-page="video">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
                             <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm10.798 11c-.453-1.27-1.76-3-4.798-3-3.037 0-4.345 1.73-4.798 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1z"/>
                         </svg>
                     </a>
                     
-                    <a href="#" class="nav-icon" title="Groups">
+                    <a href="/community/<%=community.id%>/group" class="nav-icon" title="Groups" data-page="group">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
                         </svg>
                     </a>
                     
-                    <a href="#" class="nav-icon" title="Company">
+                    <a href="/community/<%=community.id%>/company" class="nav-icon" title="Company" data-page="company">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
                             <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
                         </svg>
                     </a>
                     
-                    <a href="#" class="nav-icon" title="Notifications">
+                    <a href="#" class="nav-icon" title="Notifications" data-page="notification">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                             <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
                             <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -643,22 +643,22 @@
                 <!-- Chatbot -->
                 <div class="chatbot-container">
                     <button class="chatbot-button" id="chatbotButton" aria-expanded="false" title="AI Assistant">
-                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=50&h=50&fit=crop" alt="AI Assistant"/>
+                        <img src="/bot.png" alt="AI Assistant"/>
                     </button>
                     <div class="chatbot-content" id="chatbotContent">
-                        <p>Welcome to TechCorp! I'm your AI assistant. How can I help you navigate our community platform today?</p>
+                        <p>Welcome to <%=community.title%>! I'm your AI assistant. How can I help you navigate our community platform today?</p>
                     </div>
                 </div>
                 
-                <!-- User Profile (Logged In) -->
+                <%if(currUser && currUser.communityId === communityId){%>
                 <div class="profile-menu-user">
                     <div class="dropdown">
                         <button class="dropdown-toggle profile-button" type="button" id="profileDropdown" aria-expanded="false">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Profile Picture" class="profile-image">
+                            <img src="<%= currUser.image.url %>" alt="Profile Picture" class="profile-image">
                         </button>
                         <ul class="dropdown-menu" id="profileMenu">
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/community/<%=community.id%>/showProfile">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
                                     </svg>
@@ -666,15 +666,16 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/community/<%=community.id/settings%>">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
-                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6M8 9s-5 0-5 4v3h10v-3s0-4-5-4"/>
+                                        <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+                                        <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
                                     </svg>
                                     Settings
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="/community/<%=community.id%>/logout">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
                                         <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
                                         <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
@@ -685,10 +686,8 @@
                         </ul>
                     </div>
                 </div>
-                
-                <!-- Guest User (Alternative - Uncomment to use) -->
-                <!--
-                <div class="profile-menu">
+                <%}else{%>
+                    <div class="profile-menu">
                     <div class="dropdown">
                         <button class="dropdown-toggle profile-button" type="button" id="guestDropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
@@ -715,36 +714,10 @@
                         </ul>
                     </div>
                 </div>
-                -->
+                <%}%>
             </div>
         </div>
     </header>
-
-    <!-- Demo Content -->
-    <div class="demo-content">
-        <div class="demo-section">
-            <h2>Welcome to TechCorp Community</h2>
-            <p>This is a demo of the restructured header design using the VirtuHub color schema. The header features a modern glassmorphism design with improved navigation and user experience.</p>
-            <p>Key features include:</p>
-            <ul style="color: var(--text-secondary); margin-left: 2rem; line-height: 1.8;">
-                <li>Responsive design that works on all devices</li>
-                <li>Smooth animations and hover effects</li>
-                <li>Accessible dropdown menus</li>
-                <li>Professional glassmorphism styling</li>
-                <li>Consistent color scheme throughout</li>
-            </ul>
-        </div>
-
-        <div class="demo-section">
-            <h2>Navigation Features</h2>
-            <p>The navigation bar includes all essential community features with intuitive icons and hover states. Each icon has tooltip support and active state indicators.</p>
-        </div>
-
-        <div class="demo-section">
-            <h2>User Experience</h2>
-            <p>The chatbot assistant and user profile dropdowns provide quick access to important features while maintaining a clean, uncluttered interface.</p>
-        </div>
-    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -758,13 +731,53 @@
                 }
             });
 
-            // Navigation icons active state
+            // Set active navigation icon based on current URL
+            function setActiveNavIcon() {
+                const navIcons = document.querySelectorAll(".nav-icon");
+                const currentPath = window.location.pathname;
+                
+                // Remove active class from all icons
+                navIcons.forEach(icon => icon.classList.remove("active"));
+                
+                // Determine which icon should be active based on the current path
+                let activeIcon = null;
+                
+                if (currentPath.includes('/link')) {
+                    activeIcon = document.querySelector('a[href*="/link"]');
+                } else if (currentPath.includes('/video')) {
+                    activeIcon = document.querySelector('a[href*="/video"]');
+                } else if (currentPath.includes('/group')) {
+                    activeIcon = document.querySelector('a[href*="/group"]');
+                } else if (currentPath.includes('/company')) {
+                    activeIcon = document.querySelector('a[href*="/company"]');
+                } else if (currentPath.includes('/notification')) {
+                    activeIcon = document.querySelector('a[href*="/notification"]');
+                } else {
+                    // Default to home icon if no specific page or if on community home
+                    activeIcon = document.querySelector('a[href*="/community/"][title="Home"]');
+                }
+                
+                // Add active class to the determined icon
+                if (activeIcon) {
+                    activeIcon.classList.add("active");
+                }
+            }
+            
+            // Set active icon on page load
+            setActiveNavIcon();
+            
+            // Navigation icons click handler - just add loading effect, let natural navigation happen
             const navIcons = document.querySelectorAll(".nav-icon");
             navIcons.forEach(icon => {
                 icon.addEventListener("click", (e) => {
-                    e.preventDefault();
-                    navIcons.forEach(i => i.classList.remove("active"));
-                    icon.classList.add("active");
+                    // Add loading state visual feedback
+                    icon.style.opacity = '0.8';
+                    icon.style.transform = 'translateY(-2px) scale(0.95)';
+                    
+                    setTimeout(() => {
+                        icon.style.opacity = '';
+                        icon.style.transform = '';
+                    }, 200);
                 });
             });
             
@@ -879,20 +892,6 @@
                 });
             });
 
-            // Add loading states for nav icons
-            navIcons.forEach(icon => {
-                icon.addEventListener('click', function() {
-                    const originalContent = this.innerHTML;
-                    this.style.opacity = '0.6';
-                    this.style.pointerEvents = 'none';
-                    
-                    setTimeout(() => {
-                        this.style.opacity = '1';
-                        this.style.pointerEvents = 'auto';
-                    }, 300);
-                });
-            });
-
             // Add ripple effect to buttons
             function createRipple(event) {
                 const button = event.currentTarget;
@@ -914,7 +913,7 @@
             }
 
             // Add ripple effect to clickable elements
-            document.querySelectorAll('.nav-icon, .chatbot-button, .profile-button').forEach(element => {
+            document.querySelectorAll('.chatbot-button, .profile-button').forEach(element => {
                 element.addEventListener('click', createRipple);
             });
 
@@ -965,7 +964,7 @@
             `;
             document.head.appendChild(rippleStyle);
 
-            console.log('Header initialized successfully!');
+            console.log('Header initialized successfully - Navigation links are now working!');
         });
     </script>
 </body>
