@@ -1,482 +1,972 @@
-  <style>
-    /* Base styles */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    
-    body {
-      background-color: blanchedalmond;
-      padding-top: 80px;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    /* Header styles */
-    header {
-      background-color: #fee4bd;
-      border-bottom: 1px solid #f9d8a6;
-      padding: 12px 20px;
-      width: 100%;
-      position: fixed;
-      top: 0;
-      z-index: 1000;
-      box-shadow: 0 2px 10px rgba(234, 140, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-    
-    /* Header container */
-    .header-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
-    
-    /* Logo styling */
-    .brand-section {
-      display: flex;
-      align-items: center;
-    }
-    
-    .header-logo {
-      font-weight: bold;
-      font-size: 1.4rem;
-      color: #A82400;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      transition: transform 0.2s ease;
-    }
-    
-    .header-logo:hover {
-      transform: translateY(-1px);
-    }
-    
-    .img-company {
-      height: 32px; 
-      width: 32px; 
-      border-radius: 50%;
-      border: 2px solid rgba(168, 36, 0, 0.2);
-      object-fit: cover;
-    }
-    
-    /* Navigation section */
-    .nav-section {
-      display: flex;
-      align-items: center;
-      flex-grow: 1;
-      justify-content: center;
-    }
-    
-    .nav-icons {
-      display: flex;
-      gap: 2rem;
-      margin: 0;
-    }
-    
-    .nav-icon {
-      color: #ea8c00;
-      transition: all 0.3s ease;
-      padding: 8px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .nav-icon:hover {
-      color: #ff5733;
-      background-color: rgba(255, 228, 189, 0.7);
-      transform: translateY(-2px);
-    }
-    
-    .nav-icon.active {
-      color: #ff5733;
-      background-color: rgba(255, 228, 189, 0.7);
-    }
-    
-    /* User section */
-    .user-section {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-    
-    /* Chatbot styles */
-    .chatbot-container {
-      position: relative;
-    }
-    
-    .chatbot-button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #ffd280, #ffc267);
-      border-radius: 50%;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid #ffc267;
-      padding: 5px;
-      width: 42px;
-      height: 42px;
-      box-shadow: 0 2px 5px rgba(234, 140, 0, 0.15);
-    }
-    
-    .chatbot-button:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 4px 8px rgba(234, 140, 0, 0.2);
-      border-color: #ea8c00;
-    }
-    
-    .chatbot-content {
-      position: absolute;
-      top: 100%;
-      right: 0;
-      min-width: 250px;
-      background-color: #fee4bd;
-      border: 1px solid #f9d8a6;
-      border-radius: 12px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-      padding: 1rem;
-      margin-top: 0.75rem;
-      display: none;
-      z-index: 1000;
-      animation: fadeIn 0.3s ease;
-    }
-    
-    .chatbot-content.show {
-      display: block;
-    }
-    
-    /* Profile styles */
-    .profile-menu-user {
-      position: relative;
-    }
-    
-    .profile-button {
-      background: none;
-      border: none;
-      padding: 0;
-      cursor: pointer;
-      transition: transform 0.2s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .profile-button:hover {
-      transform: scale(1.05);
-    }
-    
-    .profile-image {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 2px solid #A82400;
-      box-shadow: 0 2px 5px rgba(168, 36, 0, 0.15);
-      transition: all 0.3s ease;
-    }
-    
-    .profile-button:hover .profile-image {
-      border-color: #ff5733;
-      box-shadow: 0 4px 8px rgba(255, 87, 51, 0.2);
-    }
-    
-    .profile-menu {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 42px;
-      width: 42px;
-      border-radius: 50%;
-      background-color: #ffc267;
-      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-    }
-    
-    .profile-menu:hover {
-      transform: scale(1.05);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-    
-    .dropdown-menu {
-      background-color: #fee4bd;
-      border: 1px solid #f9d8a6;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-      border-radius: 12px;
-      margin-top: 0.5rem;
-      padding: 0.5rem 0;
-      min-width: 180px;
-      transform-origin: top;
-      animation: dropdown-slide 0.3s ease;
-      display: none;
-      position: absolute;
-      right: 0;
-      z-index: 1001;
-    }
-    
-    .dropdown-menu.show {
-      display: block;
-    }
-    
-    .dropdown-item {
-      color: #A82400;
-      padding: 0.75rem 1.25rem;
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      text-decoration: none;
-    }
-    
-    .dropdown-item:hover {
-      background-color: rgba(255, 228, 189, 0.7);
-      color: #ff5733;
-    }
-    
-    @keyframes dropdown-slide {
-      from {
-        opacity: 0;
-        transform: scaleY(0.8);
-      }
-      to {
-        opacity: 1;
-        transform: scaleY(1);
-      }
-    }
-    
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-    
-    /* Media Queries */
-    @media (max-width: 768px) {
-      .header-container {
-        flex-wrap: wrap;
-      }
-      
-      .nav-section {
-        order: 3;
-        width: 100%;
-        margin-top: 10px;
-      }
-      
-      .nav-icons {
-        width: 100%;
-        justify-content: space-around;
-        gap: 0.5rem;
-      }
-      
-      .user-section {
-        margin-left: auto;
-      }
-      
-      .header-logo {
-        font-size: 1.2rem;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      body {
-        padding-top: 120px;
-      }
-      
-      header {
-        padding: 10px;
-      }
-      
-      .img-company {
-        height: 28px;
-        width: 28px;
-      }
-      
-      .profile-image, .profile-menu {
-        width: 38px;
-        height: 38px;
-      }
-      
-      .chatbot-button {
-        width: 38px;
-        height: 38px;
-      }
-      
-      .nav-icon {
-        padding: 5px;
-      }
-    }
-  </style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Header</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #A82400;
+            --primary-dark: #8A1E00;
+            --secondary-color: #D63A0D;
+            --accent-color: #FFEBCD;
+            --bg-color: #FFEBCD;
+            --card-bg: #FFF5E6;
+            --hover-bg: #FFE4CC;
+            --text-primary: #A82400;
+            --text-secondary: #6B4423;
+            --text-dark: #3A2317;
+            --white: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --success: #059669;
+            --warning: #F59E0B;
+            --shadow-sm: 0 2px 4px rgba(168, 36, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(168, 36, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(168, 36, 0, 0.16);
+            --shadow-xl: 0 20px 40px rgba(168, 36, 0, 0.2);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #FFD7A3 50%, var(--bg-color) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            padding-top: 80px;
+        }
+
+        /* Header Styles */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        header.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            gap: 2rem;
+        }
+
+        /* Brand Section */
+        .brand-section {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+            padding: 0.5rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .header-logo:hover {
+            transform: translateY(-2px);
+            background: var(--hover-bg);
+        }
+
+        .img-company {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .header-logo:hover .img-company {
+            transform: rotate(5deg) scale(1.05);
+            border-color: var(--secondary-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .header-logo h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        /* Navigation Section */
+        .nav-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            max-width: 600px;
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--white);
+            padding: 0.5rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--glass-border);
+        }
+
+        .nav-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: left 0.3s ease;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .nav-icon:hover::before,
+        .nav-icon.active::before {
+            left: 0;
+        }
+
+        .nav-icon:hover,
+        .nav-icon.active {
+            color: var(--primary-color);
+            background: var(--hover-bg);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .nav-icon svg {
+            width: 22px;
+            height: 22px;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-icon:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* User Section */
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-shrink: 0;
+        }
+
+        /* Chatbot Styles */
+        .chatbot-container {
+            position: relative;
+        }
+
+        .chatbot-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--warning), #FCD34D);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .chatbot-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .chatbot-button:hover::before {
+            left: 100%;
+        }
+
+        .chatbot-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chatbot-button img {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.3s ease;
+        }
+
+        .chatbot-button:hover img {
+            transform: rotate(10deg);
+        }
+
+        .chatbot-content {
+            position: absolute;
+            top: calc(100% + 1rem);
+            right: 0;
+            min-width: 300px;
+            max-width: 400px;
+            background: var(--white);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            padding: 1.5rem;
+            display: none;
+            z-index: 1000;
+            animation: slideInDown 0.3s ease;
+        }
+
+        .chatbot-content.show {
+            display: block;
+        }
+
+        .chatbot-content::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 16px;
+            height: 16px;
+            background: var(--white);
+            border: 1px solid var(--glass-border);
+            border-bottom: none;
+            border-right: none;
+            transform: rotate(45deg);
+        }
+
+        .chatbot-content p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Profile Styles */
+        .profile-menu-user {
+            position: relative;
+        }
+
+        .profile-button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            overflow: hidden;
+        }
+
+        .profile-button:hover {
+            transform: translateY(-2px) scale(1.05);
+        }
+
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-color);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .profile-button:hover .profile-image {
+            border-color: var(--secondary-color);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .profile-menu {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .profile-menu:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 1rem);
+            right: 0;
+            background: var(--white);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            min-width: 200px;
+            padding: 0.5rem;
+            display: none;
+            z-index: 1001;
+            animation: slideInDown 0.3s ease;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+
+        .dropdown-menu::before {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 20px;
+            width: 16px;
+            height: 16px;
+            background: var(--white);
+            border: 1px solid var(--glass-border);
+            border-bottom: none;
+            border-right: none;
+            transform: rotate(45deg);
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.875rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .dropdown-item:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+            transform: translateX(5px);
+        }
+
+        .dropdown-item svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .dropdown-item:hover svg {
+            opacity: 1;
+        }
+
+        /* Animations */
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 1024px) {
+            .header-container {
+                padding: 1rem 1.5rem;
+                gap: 1.5rem;
+            }
+
+            .nav-icons {
+                gap: 0.25rem;
+            }
+
+            .nav-icon {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding-top: 140px;
+            }
+
+            .header-container {
+                flex-wrap: wrap;
+                padding: 1rem;
+                gap: 1rem;
+            }
+
+            .brand-section {
+                order: 1;
+                flex: 1;
+            }
+
+            .user-section {
+                order: 2;
+                flex-shrink: 0;
+            }
+
+            .nav-section {
+                order: 3;
+                width: 100%;
+                max-width: none;
+                margin-top: 0.5rem;
+            }
+
+            .nav-icons {
+                width: 100%;
+                justify-content: space-around;
+                gap: 0.25rem;
+                padding: 0.75rem 0.5rem;
+            }
+
+            .nav-icon {
+                width: 40px;
+                height: 40px;
+                flex: 1;
+                max-width: 50px;
+            }
+
+            .nav-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .header-logo h1 {
+                font-size: 1.25rem;
+            }
+
+            .img-company {
+                width: 40px;
+                height: 40px;
+            }
+
+            .chatbot-button,
+            .profile-image,
+            .profile-menu {
+                width: 44px;
+                height: 44px;
+            }
+
+            .chatbot-content,
+            .dropdown-menu {
+                min-width: 280px;
+                max-width: 90vw;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding-top: 130px;
+            }
+
+            .header-container {
+                padding: 0.75rem;
+            }
+
+            .header-logo h1 {
+                font-size: 1.1rem;
+            }
+
+            .img-company {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .nav-icon svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .chatbot-button,
+            .profile-image,
+            .profile-menu {
+                width: 40px;
+                height: 40px;
+            }
+
+            .chatbot-button img {
+                width: 24px;
+                height: 24px;
+            }
+
+            .chatbot-content,
+            .dropdown-menu {
+                min-width: 260px;
+            }
+        }
+
+        /* Demo Content */
+        .demo-content {
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .demo-section {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+        }
+
+        .demo-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .demo-section p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <div class="header-container">
-      <!-- Brand Section -->
-      <div class="brand-section">
-        <a href="https://<%= community.title %>.com/about" class="header-logo">
-          <img src="<%=community.thumbnail.url%>" alt="company logo" class="img-company">
-          <h1 class="text-lg font-semibold"><%= community.title %></h1>
-        </a>
-      </div>
-      
-      <!-- Navigation Section -->
-      <div class="nav-section">
-        <div class="nav-icons">
-          <a href="/community/<%= community.id %>/main" class="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-house" viewBox="0 0 16 16">
-              <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
-            </svg>
-          </a>
-          
-          <a href="/community/<%= community.id %>/link" class="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-link" viewBox="0 0 16 16">
-              <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
-              <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
-            </svg>
-          </a>
-          
-          <a href="/community/<%= community.id %>/video" class="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-video" viewBox="0 0 16 16">
-              <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
-              <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm10.798 11c-.453-1.27-1.76-3-4.798-3-3.037 0-4.345 1.73-4.798 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1z"/>
-            </svg>
-          </a>
-          
-          <a href="/community/<%= community.id %>/group" class="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-collection" viewBox="0 0 16 16">
-              <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
-            </svg>
-          </a>
-          
-          <a href="/community/<%= community.id %>/company" class="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-buildings" viewBox="0 0 16 16">
-              <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
-              <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
-            </svg>
-          </a>
-          
-          <a href="/community/<%= community.id %>/notification" class="nav-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-app-indicator" viewBox="0 0 16 16">
-              <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
-              <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-            </svg>
-          </a>
-        </div>
-      </div>
-      
-      <!-- User Section -->
-      <div class="user-section">
-        <!-- Chatbot -->
-        <div class="chatbot-container">
-          <button class="chatbot-button" id="chatbotButton" aria-expanded="false">
-            <img src="/bot.png" alt="chatbot assistant" width="28" height="28"/>
-          </button>
-          <div class="chatbot-content" id="chatbotContent">
-            <p><%= community.description %>.</p>
-          </div>
-        </div>
-        
-        <!-- User Profile or Login -->
-       <% if (currUser && currUser.communityId === communityId) { %>
-        <div class="profile-menu-user">
-          <div class="dropdown">
-            <button class="dropdown-toggle profile-button" type="button" id="profileDropdown" aria-expanded="false">
-              <img src="<%= currUser.image.url %>" alt="Profile Picture" class="profile-image">
-            </button>
-            <ul class="dropdown-menu" id="profileMenu">
-              <li><a class="dropdown-item" href="/community/<%= community.id %>/<%= currUser.id %>/showProfile">Profile</a></li>
-              <li><a class="dropdown-item" href="/community/<%= community.id %>/logout">Logout</a></li>
-            </ul>
-          </div>
-        </div>
-        <%}else{%>
-          <div class="profile-menu" style="display: block;">
-            <div class="dropdown">
-              <button class="dropdown-toggle profile-button" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <svg xmlns="http://www.w3.org/2000/svg" width="30px" height="30px" fill="currentColor" class="bi bi-person-fill-lock" viewBox="0 0 16 16">
-                  <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
-                </svg>
-              </button>
-              <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/community/<%= community.id %>/login">Login</a></li>
-                <li><a class="dropdown-item" href="/community/<%= community.id %>/communityApproval">Approval</a></li>
-              </ul>
+    <header id="header">
+        <div class="header-container">
+            <!-- Brand Section -->
+            <div class="brand-section">
+                <a href="#" class="header-logo">
+                    <img src="https://images.unsplash.com/photo-1572044162444-ad60f128bdea?w=100&h=100&fit=crop&crop=center" alt="company logo" class="img-company">
+                    <h1>TechCorp</h1>
+                </a>
             </div>
-          </div>
-        <%}%>
-      </div>
+            
+            <!-- Navigation Section -->
+            <div class="nav-section">
+                <div class="nav-icons">
+                    <a href="#" class="nav-icon active" title="Home">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="#" class="nav-icon" title="Links">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M6.354 5.5H4a3 3 0 0 0 0 6h3a3 3 0 0 0 2.83-4H9q-.13 0-.25.031A2 2 0 0 1 7 10.5H4a2 2 0 1 1 0-4h1.535c.218-.376.495-.714.82-1z"/>
+                            <path d="M9 5.5a3 3 0 0 0-2.83 4h1.098A2 2 0 0 1 9 6.5h3a2 2 0 1 1 0 4h-1.535a4 4 0 0 1-.82 1H12a3 3 0 1 0 0-6z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="#" class="nav-icon" title="Video">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M8 9.05a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
+                            <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zm10.798 11c-.453-1.27-1.76-3-4.798-3-3.037 0-4.345 1.73-4.798 3H2a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="#" class="nav-icon" title="Groups">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M2.5 3.5a.5.5 0 0 1 0-1h11a.5.5 0 0 1 0 1zm2-2a.5.5 0 0 1 0-1h7a.5.5 0 0 1 0 1zM0 13a1.5 1.5 0 0 0 1.5 1.5h13A1.5 1.5 0 0 0 16 13V6a1.5 1.5 0 0 0-1.5-1.5h-13A1.5 1.5 0 0 0 0 6zm1.5.5A.5.5 0 0 1 1 13V6a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-.5.5z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="#" class="nav-icon" title="Company">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M14.763.075A.5.5 0 0 1 15 .5v15a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5V14h-1v1.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V10a.5.5 0 0 1 .342-.474L6 7.64V4.5a.5.5 0 0 1 .276-.447l8-4a.5.5 0 0 1 .487.022M6 8.694 1 10.36V15h5zM7 15h2v-1.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 .5.5V15h2V1.309l-7 3.5z"/>
+                            <path d="M2 11h1v1H2zm2 0h1v1H4zm-2 2h1v1H2zm2 0h1v1H4zm4-4h1v1H8zm2 0h1v1h-1zm-2 2h1v1H8zm2 0h1v1h-1zm2-2h1v1h-1zm0 2h1v1h-1zM8 7h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zM8 5h1v1H8zm2 0h1v1h-1zm2 0h1v1h-1zm0-2h1v1h-1z"/>
+                        </svg>
+                    </a>
+                    
+                    <a href="#" class="nav-icon" title="Notifications">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M5.5 2A3.5 3.5 0 0 0 2 5.5v5A3.5 3.5 0 0 0 5.5 14h5a3.5 3.5 0 0 0 3.5-3.5V8a.5.5 0 0 1 1 0v2.5a4.5 4.5 0 0 1-4.5 4.5h-5A4.5 4.5 0 0 1 1 10.5v-5A4.5 4.5 0 0 1 5.5 1H8a.5.5 0 0 1 0 1z"/>
+                            <path d="M16 3a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- User Section -->
+            <div class="user-section">
+                <!-- Chatbot -->
+                <div class="chatbot-container">
+                    <button class="chatbot-button" id="chatbotButton" aria-expanded="false" title="AI Assistant">
+                        <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?w=50&h=50&fit=crop" alt="AI Assistant"/>
+                    </button>
+                    <div class="chatbot-content" id="chatbotContent">
+                        <p>Welcome to TechCorp! I'm your AI assistant. How can I help you navigate our community platform today?</p>
+                    </div>
+                </div>
+                
+                <!-- User Profile (Logged In) -->
+                <div class="profile-menu-user">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle profile-button" type="button" id="profileDropdown" aria-expanded="false">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" alt="Profile Picture" class="profile-image">
+                        </button>
+                        <ul class="dropdown-menu" id="profileMenu">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/>
+                                    </svg>
+                                    Profile
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6M8 9s-5 0-5 4v3h10v-3s0-4-5-4"/>
+                                    </svg>
+                                    Settings
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0z"/>
+                                        <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708z"/>
+                                    </svg>
+                                    Logout
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Guest User (Alternative - Uncomment to use) -->
+                <!--
+                <div class="profile-menu">
+                    <div class="dropdown">
+                        <button class="dropdown-toggle profile-button" type="button" id="guestDropdown" aria-expanded="false">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M11 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0m-9 8c0 1 1 1 1 1h5v-1a2 2 0 0 1 .01-.2 4.49 4.49 0 0 1 1.534-3.693Q8.844 9.002 8 9c-5 0-6 3-6 4m7 0a1 1 0 0 1 1-1v-1a2 2 0 1 1 4 0v1a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1zm3-3a1 1 0 0 0-1 1v1h2v-1a1 1 0 0 0-1-1"/>
+                            </svg>
+                        </button>
+                        <ul class="dropdown-menu" id="guestMenu">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m0 2a9 9 0 0 1 8 8h-2a7 7 0 0 0-14 0H0a9 9 0 0 1 8-8"/>
+                                    </svg>
+                                    Login
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M15 14s1 0 1-1-1-4-5-4-5 3-5 4 1 1 1 1zm-7.978-1L7 12.996c.001-.264.167-1.03.76-1.72C8.312 10.629 9.282 10 11 10c1.717 0 2.687.63 3.24 1.276.593.69.758 1.457.76 1.72l-.008.002-.014.002zM11 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4m3-2a3 3 0 1 1-6 0 3 3 0 0 1 6 0M6.936 9.28a6 6 0 0 0-1.23-.247A7 7 0 0 0 5 9c-4 0-5 3-5 4q0 1 1 1h4.216A2.24 2.24 0 0 1 5 13c0-1.01.377-2.042 1.09-2.904.243-.294.526-.569.846-.816M4.92 10A5.5 5.5 0 0 0 4 13H1c0-.26.164-1.03.76-1.724.545-.636 1.492-1.256 3.16-1.275ZM1.5 5.5a3 3 0 1 1 6 0 3 3 0 0 1-6 0m3-2a2 2 0 1 0 0 4 2 2 0 0 0 0-4"/>
+                                    </svg>
+                                    Approval
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Demo Content -->
+    <div class="demo-content">
+        <div class="demo-section">
+            <h2>Welcome to TechCorp Community</h2>
+            <p>This is a demo of the restructured header design using the VirtuHub color schema. The header features a modern glassmorphism design with improved navigation and user experience.</p>
+            <p>Key features include:</p>
+            <ul style="color: var(--text-secondary); margin-left: 2rem; line-height: 1.8;">
+                <li>Responsive design that works on all devices</li>
+                <li>Smooth animations and hover effects</li>
+                <li>Accessible dropdown menus</li>
+                <li>Professional glassmorphism styling</li>
+                <li>Consistent color scheme throughout</li>
+            </ul>
+        </div>
+
+        <div class="demo-section">
+            <h2>Navigation Features</h2>
+            <p>The navigation bar includes all essential community features with intuitive icons and hover states. Each icon has tooltip support and active state indicators.</p>
+        </div>
+
+        <div class="demo-section">
+            <h2>User Experience</h2>
+            <p>The chatbot assistant and user profile dropdowns provide quick access to important features while maintaining a clean, uncluttered interface.</p>
+        </div>
     </div>
-  </header>
-  
-  <script>
-    document.addEventListener('DOMContentLoaded', function() {
-      // Navigation icons active state
-      const navIcons = document.querySelectorAll(".nav-icon");
-      navIcons.forEach(icon => {
-        icon.addEventListener("click", () => {
-          navIcons.forEach(i => i.classList.remove("active"));
-          icon.classList.add("active");
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Header scroll effect
+            window.addEventListener('scroll', () => {
+                const header = document.getElementById('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+
+            // Navigation icons active state
+            const navIcons = document.querySelectorAll(".nav-icon");
+            navIcons.forEach(icon => {
+                icon.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    navIcons.forEach(i => i.classList.remove("active"));
+                    icon.classList.add("active");
+                });
+            });
+            
+            // Chatbot functionality
+            const chatbotButton = document.getElementById('chatbotButton');
+            const chatbotContent = document.getElementById('chatbotContent');
+            
+            if (chatbotButton && chatbotContent) {
+                chatbotButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    chatbotContent.classList.toggle('show');
+                    chatbotButton.setAttribute('aria-expanded', chatbotContent.classList.contains('show'));
+                });
+            }
+            
+            // Profile dropdown functionality
+            const profileButton = document.getElementById('profileDropdown');
+            const profileMenu = document.getElementById('profileMenu');
+            
+            if (profileButton && profileMenu) {
+                profileButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    profileMenu.classList.toggle('show');
+                    profileButton.setAttribute('aria-expanded', profileMenu.classList.contains('show'));
+                });
+            }
+
+            // Guest dropdown functionality (if using guest menu)
+            const guestButton = document.getElementById('guestDropdown');
+            const guestMenu = document.getElementById('guestMenu');
+            
+            if (guestButton && guestMenu) {
+                guestButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    guestMenu.classList.toggle('show');
+                    guestButton.setAttribute('aria-expanded', guestMenu.classList.contains('show'));
+                });
+            }
+            
+            // Close all dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close chatbot
+                if (chatbotContent && !chatbotButton.contains(e.target) && !chatbotContent.contains(e.target)) {
+                    chatbotContent.classList.remove('show');
+                    chatbotButton.setAttribute('aria-expanded', 'false');
+                }
+                
+                // Close profile menu
+                if (profileMenu && !profileButton.contains(e.target) && !profileMenu.contains(e.target)) {
+                    profileMenu.classList.remove('show');
+                    profileButton.setAttribute('aria-expanded', 'false');
+                }
+
+                // Close guest menu
+                if (guestMenu && !guestButton.contains(e.target) && !guestMenu.contains(e.target)) {
+                    guestMenu.classList.remove('show');
+                    guestButton.setAttribute('aria-expanded', 'false');
+                }
+            });
+
+            // Keyboard navigation for accessibility
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') {
+                    // Close all dropdowns on Escape key
+                    if (chatbotContent) {
+                        chatbotContent.classList.remove('show');
+                        chatbotButton.setAttribute('aria-expanded', 'false');
+                    }
+                    if (profileMenu) {
+                        profileMenu.classList.remove('show');
+                        profileButton.setAttribute('aria-expanded', 'false');
+                    }
+                    if (guestMenu) {
+                        guestMenu.classList.remove('show');
+                        guestButton.setAttribute('aria-expanded', 'false');
+                    }
+                }
+            });
+
+            // Smooth scroll for demo links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // Add focus states for better accessibility
+            const focusableElements = document.querySelectorAll('button, a, [tabindex]');
+            focusableElements.forEach(element => {
+                element.addEventListener('focus', function() {
+                    this.style.outline = '2px solid var(--primary-color)';
+                    this.style.outlineOffset = '2px';
+                });
+                
+                element.addEventListener('blur', function() {
+                    this.style.outline = '';
+                    this.style.outlineOffset = '';
+                });
+            });
+
+            // Prevent dropdown menu clicks from closing the dropdown
+            document.querySelectorAll('.dropdown-menu').forEach(menu => {
+                menu.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            });
+
+            // Add loading states for nav icons
+            navIcons.forEach(icon => {
+                icon.addEventListener('click', function() {
+                    const originalContent = this.innerHTML;
+                    this.style.opacity = '0.6';
+                    this.style.pointerEvents = 'none';
+                    
+                    setTimeout(() => {
+                        this.style.opacity = '1';
+                        this.style.pointerEvents = 'auto';
+                    }, 300);
+                });
+            });
+
+            // Add ripple effect to buttons
+            function createRipple(event) {
+                const button = event.currentTarget;
+                const circle = document.createElement('span');
+                const diameter = Math.max(button.clientWidth, button.clientHeight);
+                const radius = diameter / 2;
+
+                circle.style.width = circle.style.height = `${diameter}px`;
+                circle.style.left = `${event.clientX - button.offsetLeft - radius}px`;
+                circle.style.top = `${event.clientY - button.offsetTop - radius}px`;
+                circle.classList.add('ripple');
+
+                const ripple = button.getElementsByClassName('ripple')[0];
+                if (ripple) {
+                    ripple.remove();
+                }
+
+                button.appendChild(circle);
+            }
+
+            // Add ripple effect to clickable elements
+            document.querySelectorAll('.nav-icon, .chatbot-button, .profile-button').forEach(element => {
+                element.addEventListener('click', createRipple);
+            });
+
+            // Performance optimization - throttle scroll events
+            function throttle(func, limit) {
+                let inThrottle;
+                return function() {
+                    const args = arguments;
+                    const context = this;
+                    if (!inThrottle) {
+                        func.apply(context, args);
+                        inThrottle = true;
+                        setTimeout(() => inThrottle = false, limit);
+                    }
+                }
+            }
+
+            // Throttled scroll handler for better performance
+            const throttledScrollHandler = throttle(() => {
+                const header = document.getElementById('header');
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }, 16);
+
+            window.addEventListener('scroll', throttledScrollHandler);
+
+            // Add CSS for ripple effect
+            const rippleStyle = document.createElement('style');
+            rippleStyle.textContent = `
+                .ripple {
+                    position: absolute;
+                    border-radius: 50%;
+                    background-color: rgba(255, 255, 255, 0.3);
+                    transform: scale(0);
+                    animation: ripple-animation 600ms linear;
+                    pointer-events: none;
+                }
+
+                @keyframes ripple-animation {
+                    to {
+                        transform: scale(4);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(rippleStyle);
+
+            console.log('Header initialized successfully!');
         });
-      });
-      
-      // Chatbot functionality
-      const chatbotButton = document.getElementById('chatbotButton');
-      const chatbotContent = document.getElementById('chatbotContent');
-      
-      chatbotButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        chatbotContent.classList.toggle('show');
-        chatbotButton.setAttribute('aria-expanded', chatbotContent.classList.contains('show'));
-      });
-      
-      // Profile dropdown functionality
-      const profileButton = document.getElementById('profileDropdown');
-      const profileMenu = document.getElementById('profileMenu');
-      
-      profileButton.addEventListener('click', function(e) {
-        e.stopPropagation();
-        profileMenu.classList.toggle('show');
-        profileButton.setAttribute('aria-expanded', profileMenu.classList.contains('show'));
-      });
-      
-      // Close all dropdowns when clicking outside
-      document.addEventListener('click', function(e) {
-        // Close chatbot
-        if (!chatbotButton.contains(e.target) && !chatbotContent.contains(e.target)) {
-          chatbotContent.classList.remove('show');
-          chatbotButton.setAttribute('aria-expanded', 'false');
-        }
-        
-        // Close profile menu
-        if (!profileButton.contains(e.target) && !profileMenu.contains(e.target)) {
-          profileMenu.classList.remove('show');
-          profileButton.setAttribute('aria-expanded', 'false');
-        }
-      });
-      
-      // Smooth scroll header effect
-      let lastScrollTop = 0;
-      window.addEventListener('scroll', function() {
-        const st = window.pageYOffset || document.documentElement.scrollTop;
-        const header = document.querySelector('header');
-        
-        if (st > lastScrollTop && st > 80) {
-          // Scrolling down
-          header.style.transform = 'translateY(-100%)';
-        } else {
-          // Scrolling up
-          header.style.transform = 'translateY(0)';
-        }
-        
-        lastScrollTop = st <= 0 ? 0 : st;
-      }, false);
-    });
-  </script>
+    </script>
 </body>
+</html>

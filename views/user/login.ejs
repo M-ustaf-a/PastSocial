@@ -931,7 +931,7 @@
         }
 
         // Form submission
-      /*  document.getElementById('loginForm').addEventListener('submit', async function(e) {
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
             const email = document.getElementById('email').value.trim();
@@ -963,8 +963,17 @@
 
             // Simulate form submission (replace with actual submission)
             try {
-                // In a real application, you would submit the form data here
-                // For now, we'll simulate a successful login
+                // Create FormData for submission
+                const formData = new FormData(this.form);
+
+                // Submit form (uncomment for actual submission)
+                const response = await fetch(this.form.action, {
+                    method: 'POST',
+                    body: formData
+                })
+                if (!response.ok) {
+                    throw new Error('Failed to create community');
+                }
                 await new Promise(resolve => setTimeout(resolve, 1500));
 
                 // Show success message
@@ -990,7 +999,7 @@
                 showError('password', 'Login failed. Please check your credentials.');
             }
         });
-*/
+
         // Clear errors on input
         document.getElementById('email').addEventListener('input', function() {
             if (this.value.trim()) {
