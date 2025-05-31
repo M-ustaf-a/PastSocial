@@ -1,423 +1,1326 @@
 <%- layout('/layouts/boilerplate.ejs') %>
 
-<style>
-    :root {
-        --primary-color: #A82400;
-        --primary-hover: #8A1F00;
-        --bg-color: #FFF8F0;
-        --card-bg: #FFFFFF;
-        --card-border: #A82400;
-        --text-primary: #A82400;
-        --text-secondary: #4A5568;
-        --text-accent: #A82400;
-        --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
-        --shadow-md: 0 4px 6px rgba(0,0,0,0.07);
-        --border-radius-lg: 16px;
-        --border-radius-md: 12px;
-        --border-radius-sm: 8px;
-    }
-
-    body {
-        background-color: var(--bg-color);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        color: var(--text-primary);
-        line-height: 1.5;
-        padding-top: 120px;
-    }
-    
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 1.5rem 1rem;
-    }
-
-    .content-card {
-        background-color: var(--card-bg);
-        border-radius: var(--border-radius-lg);
-        border: 1px solid var(--card-border);
-        box-shadow: var(--shadow-md);
-        overflow: hidden;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .content-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-    }
-
-    .post-header {
-        display: flex;
-        align-items: center;
-        padding: 1rem;
-        border-bottom: 1px solid rgba(0,0,0,0.05);
-    }
-
-    .profile-link {
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .profile-img {
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid var(--card-border);
-    }
-
-    .user-info {
-        margin-left: 0.75rem;
-    }
-
-    .username {
-        font-weight: 600;
-        color: var(--text-accent);
-        margin: 0;
-    }
-
-    .post-time {
-        font-size: 0.75rem;
-        color: var(--text-secondary);
-        margin: 0;
-    }
-
-    .post-body {
-        padding: 1rem;
-    }
-
-    .post-title {
-        font-size: 1.25rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
-        color: var(--text-primary);
-    }
-
-    .post-content {
-        font-size: 1rem;
-        color: #7e1b00;
-        line-height: 1.6;
-        max-height: 150px;
-        overflow-y: auto;
-        margin-bottom: 1rem;
-    }
-
-    .post-image-container {
-        width: 100%;
-        max-height: 350px;
-        overflow: hidden;
-        border-radius: var(--border-radius-md);
-        margin: 1rem 0;
-    }
-
-    .post-image {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .post-image:hover {
-        transform: scale(1.02);
-    }
-
-    .interaction-bar {
-        display: flex;
-        padding: 0.75rem 1rem;
-        border-top: 1px solid rgba(0,0,0,0.05);
-        background-color: rgba(249, 250, 251, 0.5);
-    }
-
-    .interaction-button {
-        display: flex;
-        align-items: center;
-        background: none;
-        border: none;
-        padding: 0.5rem 1rem;
-        margin-right: 1rem;
-        border-radius: var(--border-radius-sm);
-        color: var(--text-secondary);
-        font-weight: 500;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .interaction-button:hover {
-        background-color: rgba(0,0,0,0.03);
-        color: var(--primary-color);
-    }
-
-    .interaction-button svg {
-        margin-right: 0.5rem;
-    }
-
-    /* Post Creation Form */
-    .post-form {
-        margin-bottom: 2rem;
-    }
-
-    .form-card {
-        background-color: var(--card-bg);
-        border-radius: var(--border-radius-lg);
-        border: 1px solid var(--card-border);
-        box-shadow: var(--shadow-md);
-        padding: 1.5rem;
-        margin-bottom: 2rem;
-    }
-
-    .form-header {
-        display: flex;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-
-    .form-title {
-        font-weight: 600;
-        margin-left: 1rem;
-        color: var(--text-primary);
-    }
-
-    .input-group {
-        margin-bottom: 1rem;
-    }
-
-    .form-input {
-        width: 100%;
-        padding: 0.75rem 1rem;
-        border-radius: var(--border-radius-sm);
-        border: 1px solid var(--card-border);
-        background-color: rgba(249, 250, 251, 0.8);
-        font-size: 1rem;
-        transition: border-color 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .form-input:focus {
-        outline: none;
-        border-color: var(--primary-color);
-        box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
-    }
-
-    .form-textarea {
-        min-height: 100px;
-        resize: vertical;
-    }
-
-    .form-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 1rem;
-    }
-
-    .file-input-wrapper {
-        position: relative;
-    }
-
-    .file-input {
-        opacity: 0;
-        width: 0.1px;
-        height: 0.1px;
-        position: absolute;
-    }
-
-    .file-input-label {
-        display: flex;
-        align-items: center;
-        padding: 0.5rem 1rem;
-        background-color: rgba(0,0,0,0.05);
-        border-radius: var(--border-radius-sm);
-        cursor: pointer;
-        font-weight: 500;
-        color: var(--text-primary);
-        transition: all 0.2s ease;
-    }
-
-    .file-input-label:hover {
-        background-color: rgba(0,0,0,0.08);
-    }
-
-    .file-input-label svg {
-        margin-right: 0.5rem;
-        color: #A82400;
-    }
-
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border-radius: 9999px;
-        border: none;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-    }
-
-    .btn-primary {
-        background-color: var(--primary-color);
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background-color: var(--primary-hover);
-    }
-
-    /* Responsive Adjustments */
-    @media (max-width: 640px) {
-        .container {
-            padding: 1rem 0.5rem;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Posts - VirtuHub</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #A82400;
+            --primary-dark: #8A1E00;
+            --secondary-color: #D63A0D;
+            --accent-color: #FFEBCD;
+            --bg-color: #FFEBCD;
+            --card-bg: #FFF5E6;
+            --hover-bg: #FFE4CC;
+            --text-primary: #A82400;
+            --text-secondary: #6B4423;
+            --text-dark: #3A2317;
+            --white: #FFFFFF;
+            --glass: rgba(255, 255, 255, 0.25);
+            --glass-border: rgba(255, 255, 255, 0.18);
+            --success: #059669;
+            --warning: #F59E0B;
+            --error: #DC2626;
+            --shadow-sm: 0 2px 4px rgba(168, 36, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(168, 36, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(168, 36, 0, 0.16);
+            --shadow-xl: 0 20px 40px rgba(168, 36, 0, 0.2);
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
         }
 
-        .form-footer {
-            flex-direction: column;
-            align-items: stretch;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
-        .file-input-wrapper {
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #FFD7A3 50%, var(--bg-color) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-orb {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            opacity: 0.03;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .floating-orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            right: -150px;
+            animation-delay: 0s;
+        }
+
+        .floating-orb:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            bottom: -100px;
+            left: -100px;
+            animation-delay: -10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg) scale(1); }
+            25% { transform: translate(30px, -30px) rotate(90deg) scale(1.1); }
+            50% { transform: translate(-20px, 20px) rotate(180deg) scale(0.9); }
+            75% { transform: translate(40px, 10px) rotate(270deg) scale(1.05); }
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 1000;
+            padding: 1rem 0;
+            transition: all 0.3s ease;
+        }
+
+        .header.scrolled {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .brand:hover {
+            transform: translateX(5px);
+        }
+
+        .brand-icon {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .brand:hover .brand-icon {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .brand-text {
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            transition: left 0.3s ease;
+            z-index: -1;
+            opacity: 0.1;
+        }
+
+        .nav-link:hover::before {
+            left: 0;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        /* Main Container */
+        .main-container {
+            margin-top: 100px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Compact Post Creator */
+        .post-creator-compact {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 3rem;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            animation: slideInDown 0.6s ease-out;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .post-creator-compact:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .compact-content {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-color);
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+        }
+
+        .post-prompt {
+            flex: 1;
+            background: var(--card-bg);
+            border: 2px solid var(--hover-bg);
+            border-radius: 25px;
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .post-creator-compact:hover .post-prompt {
+            border-color: var(--primary-color);
+            background: var(--white);
+            color: var(--primary-color);
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Post Creation Modal */
+        .post-creation-modal {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-xl);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .post-creation-modal {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--card-bg), var(--hover-bg));
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+            transform: rotate(90deg);
+        }
+
+        .modal-body {
+            padding: 2rem;
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 1rem 1.25rem;
+            border: 2px solid var(--hover-bg);
+            border-radius: var(--radius-md);
+            background: var(--white);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+            color: var(--text-dark);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-input:hover {
+            border-color: var(--secondary-color);
+        }
+
+        .form-textarea {
+            min-height: 120px;
+            resize: vertical;
+            font-family: inherit;
+        }
+
+        .file-upload-section {
+            border: 2px dashed var(--hover-bg);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            text-align: center;
+            background: var(--card-bg);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-section:hover {
+            border-color: var(--primary-color);
+            background: var(--hover-bg);
+        }
+
+        .file-upload-section.dragover {
+            border-color: var(--primary-color);
+            background: var(--hover-bg);
+            transform: scale(1.02);
+        }
+
+        .file-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--text-secondary);
             margin-bottom: 1rem;
         }
 
-        .btn {
-            width: 100%;
+        .upload-text {
+            color: var(--text-dark);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
         }
 
-        .interaction-bar {
-            justify-content: space-around;
-            padding: 0.5rem;
+        .upload-subtext {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
         }
 
-        .interaction-button {
-            margin-right: 0;
-            padding: 0.5rem;
-        }
-
-        .interaction-button span {
+        .file-preview {
             display: none;
+            align-items: center;
+            gap: 1rem;
+            background: var(--card-bg);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
         }
 
-        .interaction-button svg {
-            margin-right: 0;
+        .file-preview.show {
+            display: flex;
         }
-    }
-</style>
 
-<div class="container">
-    <% if(currUser && currUser.communityId === communityId) { %>
-        <form action="/community/<%= community.id %>/main" method="post" enctype="multipart/form-data" class="post-form">
-            <div class="form-card">
-                <div class="form-header">
-                    <a href="/community/<%=community.id%>/<%=currUser.id%>/showProfile" class="profile-link">
-                        <img src="<%= currUser.image.url %>" class="profile-img" alt="<%= currUser.name %>'s profile">
-                    </a>
-                    <h3 class="form-title">Create a new post</h3>
-                </div>
-                
-                <div class="input-group">
-                    <input 
-                        type="text" 
-                        name="upload[title]" 
-                        placeholder="Add a title to your post" 
-                        class="form-input" 
-                        required
-                    >
-                </div>
-                
-                <div class="input-group">
-                    <textarea 
-                        name="upload[content]" 
-                        placeholder="What's on your mind today?" 
-                        class="form-input form-textarea" 
-                        required
-                    ></textarea>
-                </div>
-                
-                <div class="form-footer">
-                    <div class="file-input-wrapper">
-                        <input type="file" name="upload[image]" id="file-upload" class="file-input" required>
-                        <label for="file-upload" class="file-input-label">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
-                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2zM14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1zM2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1h-10z"/>
-                            </svg>
-                            Add Image
-                        </label>
-                    </div>
-                    <button type="submit" class="btn btn-primary">Publish Post</button>
-                </div>
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+        }
+
+        .file-size {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .file-remove {
+            background: var(--error);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .file-remove:hover {
+            background: #B91C1C;
+            transform: scale(1.1);
+        }
+
+        .modal-footer {
+            padding: 1.5rem 2rem;
+            background: var(--card-bg);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.875rem 2rem;
+            border: none;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-secondary {
+            background: var(--white);
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* Posts Feed */
+        .posts-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .post-card {
+            background: var(--white);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s ease;
+            animation: slideInUp 0.6s ease-out;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .post-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .post-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .author-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-color);
+            object-fit: cover;
+            transition: all 0.3s ease;
+        }
+
+        .author-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
+        }
+
+        .author-info {
+            flex: 1;
+        }
+
+        .author-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.25rem;
+            font-size: 1.125rem;
+        }
+
+        .post-time {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .post-content {
+            padding: 1.5rem;
+        }
+
+        .post-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+
+        .post-text {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .post-image-container {
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s ease;
+        }
+
+        .post-image-container:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .post-image {
+            width: 100%;
+            height: auto;
+            max-height: 400px;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .post-actions {
+            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1rem;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-button:hover {
+            background: var(--hover-bg);
+            color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .action-button.liked {
+            color: #E11D48;
+        }
+
+        .action-button svg {
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .action-button:hover svg {
+            transform: scale(1.1);
+        }
+
+        /* Loading State */
+        .loading-container {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 3rem;
+        }
+
+        .loading-container.show {
+            display: flex;
+        }
+
+        .loader {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--hover-bg);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 120px;
+            right: 2rem;
+            background: var(--success);
+            color: var(--white);
+            padding: 1rem 1.5rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 2001;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .success-message.show {
+            transform: translateX(0);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 1rem;
+                margin-top: 80px;
+            }
+
+            .header-nav {
+                display: none;
+            }
+
+            .modal-body {
+                padding: 1.5rem;
+            }
+
+            .modal-footer {
+                padding: 1rem 1.5rem;
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .post-actions {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .action-button {
+                flex: 1;
+                justify-content: center;
+                min-width: 0;
+            }
+
+            .action-button span {
+                display: none;
+            }
+
+            .brand-text {
+                display: none;
+            }
+
+            .header-content {
+                padding: 0 1rem;
+            }
+
+            .post-creation-modal {
+                width: 95%;
+                max-height: 95vh;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .post-header {
+                padding: 1rem;
+            }
+
+            .post-content {
+                padding: 1rem;
+            }
+
+            .post-title {
+                font-size: 1.25rem;
+            }
+
+            .modal-header {
+                padding: 1rem;
+            }
+
+            .compact-content {
+                padding: 1rem;
+            }
+
+            .user-avatar {
+                width: 44px;
+                height: 44px;
+            }
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--card-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-orb"></div>
+        <div class="floating-orb"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Compact Post Creator -->
+        <div class="post-creator-compact" id="postCreatorCompact">
+            <div class="compact-content">
+                <img src="/default-avatar.jpg" class="user-avatar" id="currentUserAvatar" alt="Your profile">
+                <div class="post-prompt">What's on your mind today?</div>
             </div>
-        </form>
-    <% } %>
-    
-    <main>
-        <% for(let uploadPost of newUploadPost) { %>
-            <article class="content-card mb-6">
+        </div>
+
+        <!-- Posts Feed -->
+        <div class="posts-feed" id="postsFeed">
+            <!-- Loading State -->
+            <div class="loading-container" id="loadingContainer">
+                <div class="loader"></div>
+            </div>
+
+            <!-- Sample Post -->
+            <article class="post-card">
                 <div class="post-header">
-                    <a href="/community/<%= community.id %>/<%= uploadPost.user.id %>/showProfile" class="profile-link">
-                        <img src="<%= uploadPost.user.image.url %>" class="profile-img" alt="<%= uploadPost.user.name %>'s profile">
+                    <a href="/profile/user123" class="post-author">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face" class="author-avatar" alt="John Doe">
+                        <div class="author-info">
+                            <h3 class="author-name">John Doe</h3>
+                            <p class="post-time">2 hours ago</p>
+                        </div>
                     </a>
-                    <div class="user-info">
-                        <h3 class="username"><%= uploadPost.user.name %></h3>
-                        <p class="post-time">
-                            <!-- Add time formatting if available -->
-                            <%= new Date().toLocaleDateString() %>
-                        </p>
+                </div>
+                
+                <div class="post-content">
+                    <h2 class="post-title">Building the Future of Web Development</h2>
+                    <p class="post-text">
+                        Just finished working on an amazing project that combines modern web technologies with innovative design patterns. The possibilities are endless when you embrace new frameworks and methodologies!
+                    </p>
+                    
+                    <div class="post-image-container">
+                        <img src="https://images.unsplash.com/photo-1517180102446-f3ece451e9d8?w=800&h=400&fit=crop" alt="Web development workspace" class="post-image">
                     </div>
                 </div>
                 
-                <div class="post-body">
-                    <h2 class="post-title"><%= uploadPost.title %></h2>
-                    <div class="post-content"><%= uploadPost.content %></div>
-                    
-                    <% if(uploadPost.image && uploadPost.image.url) { %>
-                        <div class="post-image-container">
-                            <a href="<%= uploadPost.image.url %>" target="_blank">
-                                <img src="<%= uploadPost.image.url %>" alt="Post image" class="post-image">
-                            </a>
-                        </div>
-                    <% } %>
-                </div>
-                
-                <div class="interaction-bar">
-                    <button class="interaction-button like-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                <div class="post-actions">
+                    <button class="action-button" data-action="like">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
                         </svg>
                         <span>Like</span>
                     </button>
                     
-                    <button class="interaction-button comment-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M14 1a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H4.414A2 2 0 0 0 3 11.586l-2 2V2a1 1 0 0 1 1-1h12zM2 0a2 2 0 0 0-2 2v12.793a.5.5 0 0 0 .854.353l2.853-2.853A1 1 0 0 1 4.414 12H14a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                            <path d="M3 3.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5zM3 6a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9A.5.5 0 0 1 3 6zm0 2.5a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5z"/>
+                    <button class="action-button" data-action="comment">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
                         </svg>
                         <span>Comment</span>
                     </button>
                     
-                    <button class="interaction-button share-button">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                            <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zM11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.499 2.499 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5zm-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3z"/>
+                    <button class="action-button" data-action="share">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path>
                         </svg>
                         <span>Share</span>
                     </button>
                 </div>
             </article>
-        <% } %>
-    </main>
-</div>
+        </div>
+    </div>
 
-<script>
-    // Client-side JavaScript can be added here for enhanced interactivity
-    document.addEventListener('DOMContentLoaded', function() {
-        // File input preview functionality
-        const fileInput = document.getElementById('file-upload');
-        if (fileInput) {
-            fileInput.addEventListener('change', function() {
-                const fileName = this.files[0]?.name;
-                if (fileName) {
-                    // You could add code here to show the selected filename
-                    const label = this.nextElementSibling;
-                    label.textContent = fileName.length > 20 ? 
-                        fileName.substring(0, 17) + '...' : fileName;
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="post-creation-modal">
+            <div class="modal-header">
+                <div class="modal-title">
+                    <img src="/default-avatar.jpg" class="user-avatar" alt="Your profile" style="width: 40px; height: 40px;">
+                    Create New Post
+                </div>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            
+            <form action="/community/COMMUNITY_ID/main" method="post" enctype="multipart/form-data" id="postForm">
+                <div class="modal-body">
+                    <div class="input-group">
+                        <input 
+                            type="text" 
+                            name="upload[title]" 
+                            placeholder="What's the title of your post?" 
+                            class="form-input" 
+                            id="postTitle"
+                            required
+                        >
+                    </div>
+                    
+                    <div class="input-group">
+                        <textarea 
+                            name="upload[content]" 
+                            placeholder="Share your thoughts, ideas, or experiences with the community..." 
+                            class="form-input form-textarea" 
+                            id="postContent"
+                            required
+                        ></textarea>
+                    </div>
+                    
+                    <div class="input-group">
+                        <div class="file-upload-section" id="fileUploadSection">
+                            <input type="file" name="upload[image]" id="fileUpload" class="file-input" accept="image/*" required>
+                            <div class="upload-icon">📷</div>
+                            <div class="upload-text">Click to upload or drag and drop</div>
+                            <div class="upload-subtext">PNG, JPG, GIF up to 5MB</div>
+                        </div>
+                        <div class="file-preview" id="filePreview">
+                            <div class="file-info">
+                                <div class="file-name" id="fileName"></div>
+                                <div class="file-size" id="fileSize"></div>
+                            </div>
+                            <button type="button" class="file-remove" id="fileRemove">×</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="publishBtn">
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        Publish Post
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Message -->
+    <div class="success-message" id="successMessage">
+        <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Post published successfully!
+    </div>
+
+    <script>
+        class CommunityPosts {
+            constructor() {
+                this.modal = document.getElementById('modalOverlay');
+                this.postCreatorCompact = document.getElementById('postCreatorCompact');
+                this.form = document.getElementById('postForm');
+                this.fileUpload = document.getElementById('fileUpload');
+                this.fileUploadSection = document.getElementById('fileUploadSection');
+                this.filePreview = document.getElementById('filePreview');
+                this.selectedFile = null;
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                // Open modal when clicking compact post creator
+                this.postCreatorCompact.addEventListener('click', this.openModal.bind(this));
+
+                // Close modal events
+                document.getElementById('modalClose').addEventListener('click', this.closeModal.bind(this));
+                document.getElementById('cancelBtn').addEventListener('click', this.closeModal.bind(this));
+                this.modal.addEventListener('click', this.handleOverlayClick.bind(this));
+
+                // File upload events
+                this.fileUpload.addEventListener('change', this.handleFileSelect.bind(this));
+                this.fileUploadSection.addEventListener('dragover', this.handleDragOver.bind(this));
+                this.fileUploadSection.addEventListener('dragleave', this.handleDragLeave.bind(this));
+                this.fileUploadSection.addEventListener('drop', this.handleFileDrop.bind(this));
+                document.getElementById('fileRemove').addEventListener('click', this.removeFile.bind(this));
+
+                // Form submission
+                this.form.addEventListener('submit', this.handleSubmit.bind(this));
+
+                // Header scroll effect
+                window.addEventListener('scroll', this.handleScroll.bind(this));
+
+                // Action buttons
+                document.querySelectorAll('.action-button').forEach(button => {
+                    button.addEventListener('click', this.handleActionClick.bind(this));
+                });
+
+                // Escape key to close modal
+                document.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape' && this.modal.classList.contains('show')) {
+                        this.closeModal();
+                    }
+                });
+            }
+
+            openModal() {
+                this.modal.classList.add('show');
+                document.body.style.overflow = 'hidden';
+                
+                // Focus on title input
+                setTimeout(() => {
+                    document.getElementById('postTitle').focus();
+                }, 300);
+            }
+
+            closeModal() {
+                this.modal.classList.remove('show');
+                document.body.style.overflow = 'auto';
+                this.resetForm();
+            }
+
+            handleOverlayClick(event) {
+                if (event.target === this.modal) {
+                    this.closeModal();
                 }
-            });
+            }
+
+            resetForm() {
+                this.form.reset();
+                this.removeFile();
+                document.getElementById('postTitle').value = '';
+                document.getElementById('postContent').value = '';
+            }
+
+            handleFileSelect(event) {
+                const file = event.target.files[0];
+                if (file) {
+                    this.processFile(file);
+                }
+            }
+
+            handleDragOver(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.fileUploadSection.classList.add('dragover');
+            }
+
+            handleDragLeave(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.fileUploadSection.classList.remove('dragover');
+            }
+
+            handleFileDrop(event) {
+                event.preventDefault();
+                event.stopPropagation();
+                this.fileUploadSection.classList.remove('dragover');
+
+                const files = event.dataTransfer.files;
+                if (files.length > 0) {
+                    this.processFile(files[0]);
+                }
+            }
+
+            processFile(file) {
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    this.showError('Please select an image file');
+                    return;
+                }
+
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    this.showError('File size must be less than 5MB');
+                    return;
+                }
+
+                this.selectedFile = file;
+                this.showFilePreview(file);
+
+                // Update the file input
+                const dt = new DataTransfer();
+                dt.items.add(file);
+                this.fileUpload.files = dt.files;
+            }
+
+            showFilePreview(file) {
+                document.getElementById('fileName').textContent = file.name;
+                document.getElementById('fileSize').textContent = this.formatFileSize(file.size);
+                this.filePreview.classList.add('show');
+                this.fileUploadSection.style.display = 'none';
+            }
+
+            removeFile() {
+                this.selectedFile = null;
+                this.filePreview.classList.remove('show');
+                this.fileUploadSection.style.display = 'block';
+                this.fileUpload.value = '';
+            }
+
+            formatFileSize(bytes) {
+                if (bytes === 0) return '0 Bytes';
+                const k = 1024;
+                const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+                const i = Math.floor(Math.log(bytes) / Math.log(k));
+                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+            }
+
+            async handleSubmit(event) {
+                event.preventDefault();
+
+                const title = document.getElementById('postTitle').value.trim();
+                const content = document.getElementById('postContent').value.trim();
+
+                if (!title || !content || !this.selectedFile) {
+                    this.showError('Please fill in all fields and select an image');
+                    return;
+                }
+
+                // Show loading state
+                this.setLoadingState(true);
+
+                try {
+                    // Create FormData for submission
+                    const formData = new FormData(this.form);
+
+                    // Submit form (uncomment for actual submission)
+                    // const response = await fetch(this.form.action, {
+                    //     method: 'POST',
+                    //     body: formData,
+                    //     credentials: 'include'
+                    // });
+
+                    // if (!response.ok) {
+                    //     throw new Error('Failed to create post');
+                    // }
+
+                    // Simulate API call for demo
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+
+                    // Show success message
+                    this.showSuccess();
+
+                    // Close modal and refresh page
+                    setTimeout(() => {
+                        this.closeModal();
+                        // For actual implementation, reload or update posts
+                        // window.location.reload();
+                    }, 1500);
+
+                } catch (error) {
+                    console.error('Error creating post:', error);
+                    this.showError('Failed to create post. Please try again.');
+                } finally {
+                    this.setLoadingState(false);
+                }
+            }
+
+            setLoadingState(loading) {
+                const publishBtn = document.getElementById('publishBtn');
+                const cancelBtn = document.getElementById('cancelBtn');
+                
+                if (loading) {
+                    publishBtn.disabled = true;
+                    publishBtn.innerHTML = `
+                        <div class="loader" style="width: 20px; height: 20px; margin: 0;"></div>
+                        Publishing...
+                    `;
+                    cancelBtn.disabled = true;
+                } else {
+                    publishBtn.disabled = false;
+                    publishBtn.innerHTML = `
+                        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"></path>
+                        </svg>
+                        Publish Post
+                    `;
+                    cancelBtn.disabled = false;
+                }
+            }
+
+            showSuccess() {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.classList.add('show');
+                
+                setTimeout(() => {
+                    successMessage.classList.remove('show');
+                }, 3000);
+            }
+
+            showError(message) {
+                // Simple alert for now - you could create a more sophisticated error display
+                alert(message);
+            }
+
+            handleScroll() {
+                const header = document.getElementById('header');
+                if (window.scrollY > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            }
+
+            handleActionClick(event) {
+                const button = event.currentTarget;
+                const action = button.getAttribute('data-action');
+                
+                switch (action) {
+                    case 'like':
+                        this.toggleLike(button);
+                        break;
+                    case 'comment':
+                        this.handleComment(button);
+                        break;
+                    case 'share':
+                        this.handleShare(button);
+                        break;
+                }
+            }
+
+            toggleLike(button) {
+                button.classList.toggle('liked');
+                
+                // Animate the like button
+                const svg = button.querySelector('svg');
+                svg.style.transform = 'scale(1.3)';
+                setTimeout(() => {
+                    svg.style.transform = 'scale(1)';
+                }, 200);
+
+                // In a real app, you would make an API call here
+                console.log('Like toggled');
+            }
+
+            handleComment(button) {
+                // In a real app, this would open a comment modal or navigate to post detail
+                console.log('Comment clicked');
+            }
+
+            handleShare(button) {
+                // In a real app, this would open a share modal
+                if (navigator.share) {
+                    navigator.share({
+                        title: 'Check out this post',
+                        url: window.location.href
+                    });
+                } else {
+                    // Fallback - copy to clipboard
+                    navigator.clipboard.writeText(window.location.href);
+                    this.showSuccess();
+                }
+            }
         }
-        
-        // Add event listeners for interaction buttons if needed
-    });
-</script>
+
+        // Initialize the community posts functionality
+        document.addEventListener('DOMContentLoaded', () => {
+            new CommunityPosts();
+
+            // Simulate loading posts
+            setTimeout(() => {
+                document.getElementById('loadingContainer').classList.remove('show');
+            }, 1000);
+        });
+
+        // Add staggered animation to posts
+        const posts = document.querySelectorAll('.post-card');
+        posts.forEach((post, index) => {
+            post.style.animationDelay = `${index * 0.1}s`;
+        });
+    </script>
+</body>
