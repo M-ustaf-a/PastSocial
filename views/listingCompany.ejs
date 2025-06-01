@@ -38,10 +38,11 @@
 
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, var(--dark) 0%, #2d1810 100%);
             color: var(--text-dark);
             line-height: 1.6;
             overflow-x: hidden;
+            background: linear-gradient(135deg, var(--dark) 0%, #2d1810 100%);
+
         }
 
         /* Animated Background Pattern */
@@ -1206,7 +1207,7 @@
         <nav class="breadcrumb-nav">
             <div class="breadcrumb-container">
                 <div class="breadcrumb">
-                    <a href="#" class="breadcrumb-link">Virtuhub</a>
+                    <a href="#" class="breadcrumb-link">VirtuHub</a>
                     <svg class="breadcrumb-separator" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9,18 15,12 9,6"/>
                     </svg>
@@ -1239,9 +1240,11 @@
                     Explore our curated collection of innovative companies and industry leaders that drive excellence in our community ecosystem.
                 </p>
                 <div class="hero-cta">
-                    <button class="cta-primary" onclick="showAddCompanyForm()">
-                        Add Your Company
-                    </button>
+                    <form action="/community/<%=community._id%>/listingCompany" method="get" style="display: inline;">
+                        <button type="submit" class="cta-primary">
+                            Add Your Company
+                        </button>
+                    </form>
                     <button class="cta-secondary" onclick="scrollToCompanies()">
                         Browse All
                     </button>
@@ -1298,79 +1301,60 @@
                     </div>
                 </div>
 
-                <div class="companies-grid" id="companiesGrid">
-                    <!-- Companies will be rendered here -->
-                </div>
-            </div>
-        </section>
-    </div>
-
-    <script>
-        // Sample company data - make it globally accessible
-        window.companies = [
-            {
-                id: 1,
-                name: "TechFlow Solutions",
-                description: "Leading provider of innovative cloud infrastructure solutions, helping businesses scale their operations with cutting-edge technology.",
-                category: "Technology",
-                employees: "500+",
-                founded: "2018",
-                rating: "4.8"
-            },
-            {
-                id: 2,
-                name: "GreenEnergy Corp",
-                description: "Pioneering sustainable energy solutions for the future. We're committed to creating a cleaner world through renewable energy technologies.",
-                category: "Energy",
-                employees: "250+",
-                founded: "2015",
-                rating: "4.9"
-            },
-            {
-                id: 3,
-                name: "DataWise Analytics",
-                description: "Transforming raw data into actionable insights. Our advanced analytics platform helps organizations make data-driven decisions.",
-                category: "Analytics",
-                employees: "150+",
-                founded: "2020",
-                rating: "4.7"
-            },
-            {
-                id: 4,
-                name: "HealthTech Innovations",
-                description: "Revolutionizing healthcare through technology. We develop cutting-edge medical devices and digital health solutions.",
-                category: "Healthcare",
-                employees: "300+",
-                founded: "2017",
-                rating: "4.8"
-            },
-            {
-                id: 5,
-                name: "EduLearn Platform",
-                description: "Democratizing education through innovative e-learning solutions. Our platform connects learners worldwide.",
-                category: "Education",
-                employees: "120+",
-                founded: "2019",
-                rating: "4.6"
-            },
-            {
-                id: 6,
-                name: "SecureNet Systems",
-                description: "Protecting digital assets with next-generation cybersecurity solutions. We provide comprehensive security services.",
-                category: "Security",
-                employees: "200+",
-                founded: "2016",
-                rating: "4.9"
-            }
-        ];
-
-        // Render companies
-        function renderCompanies() {
-            const grid = document.getElementById('companiesGrid');
-            const companies = window.companies || [];
-            
-            if (companies.length === 0) {
-                grid.innerHTML = `
+                <% if(companies && companies.length > 0) { %>
+                    <div class="companies-grid" id="companiesGrid">
+                        <% for(let company of companies) { %>
+                            <div class="company-card" onclick="viewCompany('<%= company._id %>')">
+                                <div class="card-header">
+                                    <% if(company.image && company.image.url) { %>
+                                        <img src="<%= company.image.url %>" alt="<%= company.name %>" style="width: 100%; height: 100%; object-fit: cover;">
+                                    <% } else { %>
+                                        <div class="company-logo">
+                                            <%= company.name ? company.name.charAt(0).toUpperCase() : 'C' %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="card-content">
+                                    <div class="company-meta">
+                                        <h3 class="company-name"><%= company.name || 'Company Name' %></h3>
+                                        <span class="company-category"><%= company.category || 'General' %></span>
+                                    </div>
+                                    <p class="company-description"><%= company.description || 'No description available.' %></p>
+                                    <div class="company-stats">
+                                        <div class="stat-badge">
+                                            <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                                <circle cx="12" cy="7" r="4"/>
+                                            </svg>
+                                            <span><%= company.employees || 'Not specified' %></span>
+                                        </div>
+                                        <div class="stat-badge">
+                                            <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                                <circle cx="12" cy="10" r="3"/>
+                                            </svg>
+                                            <span><%= company.location || 'Global' %></span>
+                                        </div>
+                                        <div class="stat-badge">
+                                            <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                                            </svg>
+                                            <span>Featured</span>
+                                        </div>
+                                    </div>
+                                    <div class="card-actions">
+                                        <button class="action-btn primary" onclick="event.stopPropagation(); viewCompany('<%= company._id %>')">
+                                            View Details
+                                        </button>
+                                        <button class="action-btn" onclick="event.stopPropagation(); contactCompany('<%= company._id %>')">
+                                            Contact
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } else { %>
                     <div class="empty-state">
                         <div class="empty-illustration">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -1382,67 +1366,42 @@
                         <p class="empty-description">
                             Start building your showcase by adding your first featured company to enhance your community presence.
                         </p>
-                        <button class="cta-primary" onclick="showAddCompanyForm()">
-                            Add First Company
-                        </button>
+                        <form action="/community/<%=community._id%>/listingCompany" method="get">
+                            <button type="submit" class="cta-primary">
+                                Add First Company
+                            </button>
+                        </form>
                     </div>
-                `;
-                return;
-            }
+                <% } %>
+            </div>
+        </section>
+    </div>
 
-            grid.innerHTML = companies.map(company => `
-                <div class="company-card" onclick="viewCompany(${company.id})">
-                    <div class="card-header">
-                        <div class="company-logo">
-                            ${company.name.charAt(0)}
-                        </div>
-                    </div>
-                    <div class="card-content">
-                        <div class="company-meta">
-                            <h3 class="company-name">${company.name}</h3>
-                            <span class="company-category">${company.category}</span>
-                        </div>
-                        <p class="company-description">${company.description}</p>
-                        <div class="company-stats">
-                            <div class="stat-badge">
-                                <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                                    <circle cx="12" cy="7" r="4"/>
-                                </svg>
-                                <span>${company.employees}</span>
-                            </div>
-                            <div class="stat-badge">
-                                <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                                    <line x1="16" y1="2" x2="16" y2="6"/>
-                                    <line x1="8" y1="2" x2="8" y2="6"/>
-                                    <line x1="3" y1="10" x2="21" y2="10"/>
-                                </svg>
-                                <span>Since ${company.founded}</span>
-                            </div>
-                            <div class="stat-badge">
-                                <svg class="stat-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
-                                </svg>
-                                <span>${company.rating}</span>
-                            </div>
-                        </div>
-                        <div class="card-actions">
-                            <button class="action-btn primary" onclick="event.stopPropagation(); viewCompany(${company.id})">
-                                View Details
-                            </button>
-                            <button class="action-btn" onclick="event.stopPropagation(); contactCompany(${company.id})">
-                                Contact
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+    <script>
+        // Company actions
+        function viewCompany(id) {
+            console.log('Viewing company:', id);
+            // Navigate to company details page
+            window.location.href = `/community/<%=community._id%>/company/${id}`;
         }
 
-        // View switching functionality
+        function contactCompany(id) {
+            console.log('Contacting company:', id);
+            // Implement contact functionality
+            alert('Contact functionality coming soon!');
+        }
+
+        function scrollToCompanies() {
+            document.getElementById('companies').scrollIntoView({ 
+                behavior: 'smooth' 
+            });
+        }
+
+        // View switching functionality (only if companies exist)
         function switchView(viewType) {
             const grid = document.getElementById('companiesGrid');
+            if (!grid) return;
+            
             const toggleBtns = document.querySelectorAll('.toggle-btn');
             
             toggleBtns.forEach(btn => btn.classList.remove('active'));
@@ -1453,28 +1412,6 @@
             } else {
                 grid.classList.remove('list-view');
             }
-        }
-
-        // Company actions
-        function viewCompany(id) {
-            console.log('Viewing company:', id);
-            // Implement navigation to company details
-        }
-
-        function contactCompany(id) {
-            console.log('Contacting company:', id);
-            // Implement contact functionality
-        }
-
-        function showAddCompanyForm() {
-            console.log('Opening add company form');
-            // Implement add company form
-        }
-
-        function scrollToCompanies() {
-            document.getElementById('companies').scrollIntoView({ 
-                behavior: 'smooth' 
-            });
         }
 
         // Stats counter animation
@@ -1539,8 +1476,13 @@
             });
         }
 
-        // Search functionality
+        // Search functionality for existing companies
         function setupSearch() {
+            const grid = document.getElementById('companiesGrid');
+            if (!grid || grid.querySelector('.empty-state')) {
+                return; // Don't add search if no companies exist
+            }
+
             const searchInput = document.createElement('input');
             searchInput.type = 'text';
             searchInput.placeholder = 'Search companies...';
@@ -1570,25 +1512,44 @@
                 filterCompanies(e.target.value);
             });
             
-            // Add search to page actions instead of nav actions
+            // Add search to page actions
             const pageActions = document.querySelector('.page-actions');
-            pageActions.insertBefore(searchInput, pageActions.firstChild);
+            if (pageActions) {
+                pageActions.insertBefore(searchInput, pageActions.firstChild);
+            }
         }
 
         // Filter companies based on search
         function filterCompanies(searchTerm) {
-            const companies = window.companies || [];
-            const filteredCompanies = companies.filter(company => 
-                company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                company.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                company.category.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+            const companyCards = document.querySelectorAll('.company-card');
+            let visibleCount = 0;
             
+            companyCards.forEach(card => {
+                const name = card.querySelector('.company-name')?.textContent.toLowerCase() || '';
+                const description = card.querySelector('.company-description')?.textContent.toLowerCase() || '';
+                const category = card.querySelector('.company-category')?.textContent.toLowerCase() || '';
+                
+                const matches = name.includes(searchTerm.toLowerCase()) ||
+                               description.includes(searchTerm.toLowerCase()) ||
+                               category.includes(searchTerm.toLowerCase());
+                
+                if (matches || searchTerm.trim() === '') {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show no results message if needed
             const grid = document.getElementById('companiesGrid');
+            let noResultsMsg = grid.querySelector('.no-results');
             
-            if (filteredCompanies.length === 0 && searchTerm.trim() !== '') {
-                grid.innerHTML = `
-                    <div class="empty-state">
+            if (visibleCount === 0 && searchTerm.trim() !== '') {
+                if (!noResultsMsg) {
+                    noResultsMsg = document.createElement('div');
+                    noResultsMsg.className = 'no-results empty-state';
+                    noResultsMsg.innerHTML = `
                         <div class="empty-illustration">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"/>
@@ -1597,16 +1558,14 @@
                         </div>
                         <h3 class="empty-title">No Results Found</h3>
                         <p class="empty-description">
-                            Try adjusting your search terms or browse all companies below.
+                            Try adjusting your search terms or browse all companies.
                         </p>
-                    </div>
-                `;
-            } else {
-                // Re-render with filtered companies
-                const originalCompanies = window.companies;
-                window.companies = filteredCompanies;
-                renderCompanies();
-                window.companies = originalCompanies;
+                    `;
+                    grid.appendChild(noResultsMsg);
+                }
+                noResultsMsg.style.display = 'block';
+            } else if (noResultsMsg) {
+                noResultsMsg.style.display = 'none';
             }
         }
 
@@ -1634,75 +1593,32 @@
             });
         }
 
-        // Mobile menu toggle functionality
-        function toggleMobileMenu() {
-            const overlay = document.querySelector('.mobile-menu-overlay');
-            const btn = document.querySelector('.mobile-menu-btn');
+        // Update stats based on actual data
+        function updateStats() {
+            const companies = document.querySelectorAll('.company-card');
+            const companyCount = companies.length;
             
-            if (!overlay) {
-                createMobileMenu();
-            }
+            // Update the stats dynamically
+            const statNumbers = document.querySelectorAll('.stat-number');
+            if (statNumbers[0]) statNumbers[0].setAttribute('data-count', companyCount);
             
-            const mobileOverlay = document.querySelector('.mobile-menu-overlay');
-            const mobileBtn = document.querySelector('.mobile-menu-btn');
-            
-            mobileOverlay.classList.toggle('active');
-            mobileBtn.classList.toggle('active');
-        }
-
-        // Create mobile menu
-        function createMobileMenu() {
-            const overlay = document.createElement('div');
-            overlay.className = 'mobile-menu-overlay';
-            overlay.innerHTML = `
-                <ul class="mobile-nav-menu">
-                    <li class="mobile-nav-item">
-                        <a href="#" class="mobile-nav-link">Dashboard</a>
-                    </li>
-                    <li class="mobile-nav-item">
-                        <a href="#" class="mobile-nav-link">Communities</a>
-                    </li>
-                    <li class="mobile-nav-item">
-                        <a href="#" class="mobile-nav-link active">Companies</a>
-                    </li>
-                    <li class="mobile-nav-item">
-                        <a href="#" class="mobile-nav-link">Events</a>
-                    </li>
-                    <li class="mobile-nav-item">
-                        <a href="#" class="mobile-nav-link">Profile</a>
-                    </li>
-                </ul>
-            `;
-            
-            document.body.appendChild(overlay);
-            
-            // Close menu when clicking outside
-            overlay.addEventListener('click', (e) => {
-                if (e.target === overlay) {
-                    toggleMobileMenu();
-                }
+            // Count unique categories
+            const categories = new Set();
+            companies.forEach(card => {
+                const category = card.querySelector('.company-category')?.textContent;
+                if (category) categories.add(category);
             });
-        }
-
-        // Enhanced responsive behavior
-        function handleResize() {
-            const mobileOverlay = document.querySelector('.mobile-menu-overlay');
-            if (window.innerWidth > 992 && mobileOverlay) {
-                mobileOverlay.classList.remove('active');
-                document.querySelector('.mobile-menu-btn').classList.remove('active');
-            }
+            
+            if (statNumbers[1]) statNumbers[1].setAttribute('data-count', categories.size);
         }
 
         // Initialize everything
         document.addEventListener('DOMContentLoaded', () => {
-            renderCompanies();
+            updateStats();
             setupAnimations();
             setupScrollEffects();
             setupSearch();
             setupKeyboardShortcuts();
-            
-            // Add resize listener for responsive behavior
-            window.addEventListener('resize', handleResize);
             
             // Add loading state simulation
             setTimeout(() => {
