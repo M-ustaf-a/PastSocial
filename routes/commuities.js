@@ -246,104 +246,64 @@ Community Platform Team`,
 );
 
 // Show New Post Form for a Specific Community
-router.get("/community/:communityId/posts/new", async (req, res) => {
-    const { communityId } = req.params;
-    try {
-      // Find the specific community to pass to the view
-      const currentCommunity = await Community.findById(communityId);
-      res.render("new-community-post.ejs", { community: currentCommunity });
-    } catch (error) {
-      console.error("Error loading new post form:", error);
-      res.status(500).send("An error occurred");
-    }
-});
+// router.get("/community/:communityId/posts/new", async (req, res) => {
+//     const { communityId } = req.params;
+//     try {
+//       // Find the specific community to pass to the view
+//       const currentCommunity = await Community.findById(communityId);
+//       res.render("new-community-post.ejs", { community: currentCommunity });
+//     } catch (error) {
+//       console.error("Error loading new post form:", error);
+//       res.status(500).send("An error occurred");
+//     }
+// });
 
-router.get("/community/:communityId/posts/:postId", async (req, res) => {
-  const { communityId, postId } = req.params;
-  console.log(postId);
-  try {
-    const community = await Community.findById(communityId);
-    const post = await Post.findById(postId);
-
-    if (!post || !community) {
-      return res.status(404).send("Post or Community not found");
-    }
-
-    res.render("show.ejs", { post, community });
-  } catch (error) {
-    console.error("Error fetching post details:", error);
-    res.status(500).send("An error occurred");
-  }
-});
 
 // Create New Post(video) for a Specific Community
-router.post(
-  "/community/:communityId/posts",
-  upload.fields([
-    { name: "post[image]", maxCount: 10 },
-    { name: "post[video]", maxCount: 1 },
-  ]),
-  async (req, res) => {
-    const { communityId } = req.params;
-    try {
-      const newPost = new Post(req.body.post);
+// router.post(
+//   "/community/:communityId/posts",
+//   upload.fields([
+//     { name: "post[image]", maxCount: 10 },
+//     { name: "post[video]", maxCount: 1 },
+//   ]),
+//   async (req, res) => {
+//     const { communityId } = req.params;
+//     try {
+//       const newPost = new Post(req.body.post);
 
-      // Set the community for this post
-      newPost.community = communityId;
+//       // Set the community for this post
+//       newPost.community = communityId;
 
-      // Process image uploads
-      if (req.files["post[image]"]) {
-        const imageUrls = req.files["post[image]"].map((file) => file.path);
-        const imageFilenames = req.files["post[image]"].map(
-          (file) => file.filename
-        );
+//       // Process image uploads
+//       if (req.files["post[image]"]) {
+//         const imageUrls = req.files["post[image]"].map((file) => file.path);
+//         const imageFilenames = req.files["post[image]"].map(
+//           (file) => file.filename
+//         );
 
-        newPost.image = {
-          url: imageUrls,
-          filename: imageFilenames,
-        };
-      }
+//         newPost.image = {
+//           url: imageUrls,
+//           filename: imageFilenames,
+//         };
+//       }
 
-      // Process video upload
-      if (req.files["post[video]"]) {
-        const videoFile = req.files["post[video]"][0];
-        newPost.video = {
-          url: videoFile.path,
-          filename: videoFile.filename,
-        };
-      }
+//       // Process video upload
+//       if (req.files["post[video]"]) {
+//         const videoFile = req.files["post[video]"][0];
+//         newPost.video = {
+//           url: videoFile.path,
+//           filename: videoFile.filename,
+//         };
+//       }
 
-      await newPost.save();
-      res.redirect(`/community/${communityId}/video`);
-    } catch (error) {
-      console.error("Post creation error:", error);
-      res.redirect(`/community/${communityId}/posts/new`);
-    }
-  }
-);
-
-// community post suggestion route
-router.post(
-  "/community/:communityId/posts/:postId/suggestion",
-  async (req, res) => {
-    const { communityId, postId } = req.params;
-    const { username1, suggestion } = req.body;
-    try {
-      const post = await Post.findById(postId);
-      if (!post) return res.status(404).send("Post not found");
-
-      post.suggestions.push({ username1, suggestion });
-      await post.save();
-
-      req.flash("success", "Suggestion added successfully!");
-      res.redirect(`/community/${communityId}/posts/${postId}`);
-    } catch (error) {
-      console.error("Suggestion error:", error);
-      req.flash("error", "Failed to add suggestion");
-      res.redirect(`/community/${communityId}/posts/${postId}`);
-    }
-  }
-);
+//       await newPost.save();
+//       res.redirect(`/community/${communityId}/video`);
+//     } catch (error) {
+//       console.error("Post creation error:", error);
+//       res.redirect(`/community/${communityId}/posts/new`);
+//     }
+//   }
+// );
 
 // community main page Get route
 router.get("/community/:communityId/main", async (req, res) => {
@@ -719,11 +679,11 @@ router.post(
       const { communityId } = req.params;
       const community = await Community.findById(communityId);
 
-      // 1️⃣ If your form ever posted a nested object directly, use it:
+      // 1️ If your form ever posted a nested object directly, use it:
       let companyData = req.body.CompanyListing || {};
       
    
-      // 2️⃣ Otherwise, reconstruct from the flat keys
+      // 2️ Otherwise, reconstruct from the flat keys
       if (!req.body.CompanyListing) {
         companyData = {};
         for (let key in req.body) {
@@ -734,18 +694,18 @@ router.post(
         }
       }
 
-      // 3️⃣ Convert checkbox strings ("on"/undefined) to real booleans
+      // 3️ Convert checkbox strings ("on"/undefined) to real booleans
       companyData.termsAgreed   = !!req.body["CompanyListing[termsAgreed]"];
       companyData.dataConsent   = !!req.body["CompanyListing[dataConsent]"];
       // marketingConsent is optional
       companyData.marketingConsent = !!req.body["CompanyListing[marketingConsent]"];
 
-      // 4️⃣ Convert foundedYear to Number
+      // 4️ Convert foundedYear to Number
       if (companyData.foundedYear) {
         companyData.foundedYear = Number(companyData.foundedYear);
       }
 
-      // 5️⃣ Attach file info if present
+      // 5️ Attach file info if present
       if (req.files["CompanyListing[logo]"]) {
         const file = req.files["CompanyListing[logo]"][0];
         companyData.logo = { url: file.path, filename: file.filename };
@@ -755,7 +715,7 @@ router.post(
         companyData.verification = { url: file.path, filename: file.filename };
       }
 
-      // 6️⃣ Build & save the Mongoose document
+      // 6️ Build & save the Mongoose document
       const newCompany = new CompanyListing({
         ...companyData,
         communityId

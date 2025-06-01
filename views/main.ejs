@@ -952,22 +952,23 @@
                             </a>
                         </div>
                     </header>
-                    
-                    <div class="post-card__content">
-                        <h2 class="post-card__title"><%= uploadPost.title %></h2>
-                        <p class="post-card__text"><%= uploadPost.content %></p>
-                        
-                        <% if (uploadPost.image && uploadPost.image.url) { %>
-                        <div class="post-card__image-container">
-                            <img 
-                                src="<%= uploadPost.image.url %>" 
-                                alt="<%= uploadPost.title %>" 
-                                class="post-card__image"
-                                loading="lazy"
-                            >
+                    <a href="#">
+                        <div class="post-card__content">
+                            <h2 class="post-card__title"><%= uploadPost.title %></h2>
+                            <p class="post-card__text"><%= uploadPost.content %></p>
+                            
+                            <% if (uploadPost.image && uploadPost.image.url) { %>
+                            <div class="post-card__image-container">
+                                <img 
+                                    src="<%= uploadPost.image.url %>" 
+                                    alt="<%= uploadPost.title %>" 
+                                    class="post-card__image"
+                                    loading="lazy"
+                                >
+                            </div>
+                            <% } %>
                         </div>
-                        <% } %>
-                    </div>
+                    </a>
                     
                     <footer class="post-card__actions">
                         <button class="post-action" data-action="like" data-post-id="<%= uploadPost._id %>" aria-label="Like this post">
