@@ -1,40 +1,57 @@
+<%- layout('/layouts/boilerplate.ejs') %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus Elite - Premium Virtual Asset Marketplace</title>
+    <title>VirtuMart Pro - Professional Virtual Asset Marketplace</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
         
         :root {
             --primary: #A82400;
-            --primary-dark: #8A1E00;
-            --secondary: #D63A0D;
-            --accent: #FFEBCD;
-            --dark: #1a0f0a;
-            --light: #FFEBCD;
-            --gray: #64748b;
-            --cream: #FFF8DC;
+            --white: #ffffff;
             
-            /* Extended palette */
-            --bg-primary: var(--dark);
-            --bg-secondary: #2a1f1a;
-            --bg-elevated: #3a2f2a;
-            --surface: rgba(255, 235, 205, 0.05);
-            --surface-elevated: rgba(255, 235, 205, 0.08);
-            --surface-glass: rgba(255, 235, 205, 0.02);
-            --text-primary: var(--light);
-            --text-secondary: rgba(255, 235, 205, 0.8);
-            --text-tertiary: rgba(255, 235, 205, 0.6);
-            --text-muted: var(--gray);
-            --border: rgba(255, 235, 205, 0.12);
-            --border-elevated: rgba(255, 235, 205, 0.16);
-            --shadow: rgba(0, 0, 0, 0.2);
-            --shadow-elevated: rgba(0, 0, 0, 0.4);
-            --gradient-primary: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
-            --gradient-accent: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            --gradient-surface: linear-gradient(135deg, var(--surface) 0%, var(--surface-elevated) 100%);
+            /* Professional color derivatives */
+            --primary-dark: #8B1E00;
+            --primary-light: #C72E00;
+            --primary-rgb: 168, 36, 0;
+            
+            /* Background system */
+            --bg-primary: var(--white);
+            --bg-secondary: #fafafa;
+            --bg-elevated: #ffffff;
+            --bg-accent: var(--primary);
+            
+            /* Surface system */
+            --surface: rgba(var(--primary-rgb), 0.03);
+            --surface-hover: rgba(var(--primary-rgb), 0.06);
+            --surface-active: rgba(var(--primary-rgb), 0.08);
+            
+            /* Text system */
+            --text-primary: #1a1a1a;
+            --text-secondary: #6b7280;
+            --text-tertiary: #9ca3af;
+            --text-inverse: var(--white);
+            --text-accent: var(--primary);
+            
+            /* Border system */
+            --border-light: #f3f4f6;
+            --border-default: #e5e7eb;
+            --border-strong: #d1d5db;
+            --border-accent: var(--primary);
+            
+            /* Shadow system */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-accent: 0 4px 14px 0 rgba(var(--primary-rgb), 0.25);
+            --shadow-accent-lg: 0 10px 25px 0 rgba(var(--primary-rgb), 0.3);
+            
+            /* Professional gradients */
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --gradient-surface: linear-gradient(to bottom, var(--white), var(--bg-secondary));
         }
 
         * {
@@ -45,33 +62,33 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: var(--gradient-primary);
+            background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.6;
-            min-height: 100vh;
-            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Advanced Navigation */
-        .navigation {
+        /* Professional Navigation */
+        .navbar {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(26, 15, 10, 0.9);
-            backdrop-filter: blur(24px) saturate(1.8);
-            border-bottom: 1px solid var(--border);
-            z-index: 2000;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px) saturate(1.8);
+            border-bottom: 1px solid var(--border-light);
+            z-index: 1000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .navigation.scrolled {
-            background: rgba(26, 15, 10, 0.95);
-            box-shadow: 0 8px 32px var(--shadow-elevated);
+        .navbar.scrolled {
+            background: rgba(255, 255, 255, 0.98);
+            box-shadow: var(--shadow-md);
         }
 
-        .nav-container {
-            max-width: 1600px;
+        .navbar-container {
+            max-width: 1400px;
             margin: 0 auto;
             padding: 1rem 2rem;
             display: flex;
@@ -85,45 +102,28 @@
             gap: 12px;
             text-decoration: none;
             color: var(--text-primary);
-            font-weight: 800;
+            font-weight: 700;
             font-size: 1.5rem;
-            letter-spacing: -0.02em;
+            letter-spacing: -0.025em;
         }
 
-        .brand-icon {
-            width: 36px;
-            height: 36px;
-            background: var(--gradient-accent);
-            border-radius: 10px;
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
-            font-size: 1.2rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 4px 16px rgba(168, 36, 0, 0.3);
-        }
-
-        .brand-icon::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 235, 205, 0.3), transparent);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+            color: var(--white);
+            font-size: 1.25rem;
+            font-weight: 700;
+            box-shadow: var(--shadow-accent);
         }
 
         .nav-menu {
             display: flex;
-            gap: 2.5rem;
+            gap: 2rem;
             align-items: center;
         }
 
@@ -133,30 +133,28 @@
             font-weight: 500;
             font-size: 0.95rem;
             position: relative;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            padding: 0.5rem 0;
+            transition: all 0.2s ease;
+            padding: 0.75rem 0;
         }
 
-        .nav-link::before {
+        .nav-link::after {
             content: '';
             position: absolute;
             bottom: 0;
-            left: 50%;
+            left: 0;
             width: 0;
             height: 2px;
-            background: var(--gradient-accent);
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            transform: translateX(-50%);
-            border-radius: 2px;
+            background: var(--primary);
+            transition: width 0.3s ease;
         }
 
         .nav-link:hover,
         .nav-link.active {
-            color: var(--text-primary);
+            color: var(--text-accent);
         }
 
-        .nav-link:hover::before,
-        .nav-link.active::before {
+        .nav-link:hover::after,
+        .nav-link.active::after {
             width: 100%;
         }
 
@@ -166,172 +164,159 @@
             align-items: center;
         }
 
-        .search-container {
+        .search-box {
             position: relative;
-            width: 320px;
+            width: 300px;
         }
 
         .search-input {
             width: 100%;
-            padding: 12px 48px 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            background: var(--surface-elevated);
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-default);
+            border-radius: 10px;
+            background: var(--bg-primary);
             color: var(--text-primary);
             font-size: 0.9rem;
             outline: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(12px);
-        }
-
-        .search-input::placeholder {
-            color: var(--text-tertiary);
-        }
-
-        .search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.2);
-            background: var(--surface);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 6px;
             transition: all 0.2s ease;
         }
 
-        .search-btn:hover {
+        .search-input:focus {
+            border-color: var(--border-accent);
+            box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            font-size: 1rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: var(--shadow-accent);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-accent-lg);
+        }
+
+        .btn-secondary {
+            background: var(--bg-primary);
             color: var(--text-primary);
+            border: 1px solid var(--border-default);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--border-accent);
             background: var(--surface);
         }
 
-        .cart-button {
+        .cart-btn {
             position: relative;
-            background: var(--gradient-accent);
-            border: none;
-            border-radius: 12px;
-            padding: 12px 16px;
-            color: var(--accent);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 16px rgba(168, 36, 0, 0.3);
-        }
-
-        .cart-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(168, 36, 0, 0.4);
         }
 
         .cart-badge {
             position: absolute;
-            top: -6px;
-            right: -6px;
-            background: #ef4444;
-            color: white;
+            top: -8px;
+            right: -8px;
+            background: var(--primary);
+            color: var(--white);
             border-radius: 50%;
             width: 20px;
             height: 20px;
-            font-size: 11px;
+            font-size: 0.75rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 2px solid var(--bg-primary);
+            border: 2px solid var(--white);
         }
 
         /* Hero Section */
         .hero {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
+            padding: 5rem 2rem 6rem;
+            background: var(--gradient-surface);
             position: relative;
             overflow: hidden;
-            background: var(--gradient-primary);
         }
 
         .hero::before {
             content: '';
             position: absolute;
             top: 0;
-            left: 0;
             right: 0;
-            bottom: 0;
-            background: 
-                radial-gradient(circle at 20% 30%, rgba(168, 36, 0, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 70%, rgba(214, 58, 13, 0.1) 0%, transparent 50%);
-            animation: float 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(-20px, -10px) scale(1.02); }
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.05) 0%, transparent 70%);
+            z-index: 1;
         }
 
         .hero-container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 0 2rem;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 4rem;
             align-items: center;
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         .hero-content {
-            animation: slideInLeft 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
-        @keyframes slideInLeft {
-            0% { opacity: 0; transform: translateX(-60px); }
-            100% { opacity: 1; transform: translateX(0); }
+            max-width: 600px;
         }
 
         .hero-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 8px 16px;
+            gap: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border-light);
+            border-radius: 100px;
+            padding: 0.5rem 1rem;
             font-size: 0.85rem;
-            font-weight: 500;
-            color: var(--text-secondary);
+            color: var(--text-accent);
             margin-bottom: 2rem;
-            backdrop-filter: blur(12px);
+            font-weight: 500;
         }
 
         .hero-title {
-            font-size: clamp(3rem, 6vw, 4.5rem);
-            font-weight: 900;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
             line-height: 1.1;
             margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--text-primary), var(--accent));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            letter-spacing: -0.02em;
+            color: var(--text-primary);
+            letter-spacing: -0.025em;
+        }
+
+        .hero-title .accent {
+            color: var(--text-accent);
         }
 
         .hero-subtitle {
-            font-size: 1.25rem;
+            font-size: 1.2rem;
             color: var(--text-secondary);
             margin-bottom: 2.5rem;
-            max-width: 500px;
             line-height: 1.6;
         }
 
@@ -341,51 +326,13 @@
             margin-bottom: 3rem;
         }
 
-        .btn {
-            padding: 14px 28px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            border: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background: var(--gradient-accent);
-            color: var(--accent);
-            box-shadow: 0 4px 16px rgba(168, 36, 0, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 32px rgba(168, 36, 0, 0.4);
-        }
-
-        .btn-secondary {
-            background: var(--surface-elevated);
-            color: var(--text-primary);
-            border: 1px solid var(--border);
-            backdrop-filter: blur(12px);
-        }
-
-        .btn-secondary:hover {
-            background: var(--surface);
-            transform: translateY(-2px);
-            border-color: var(--border-elevated);
-        }
-
         .hero-stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 2rem;
         }
 
-        .stat-item {
+        .stat {
             text-align: left;
         }
 
@@ -394,73 +341,64 @@
             font-weight: 800;
             color: var(--text-primary);
             line-height: 1;
+            margin-bottom: 0.25rem;
         }
 
         .stat-label {
             font-size: 0.9rem;
             color: var(--text-secondary);
-            margin-top: 4px;
         }
 
         .hero-visual {
             position: relative;
-            animation: slideInRight 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        @keyframes slideInRight {
-            0% { opacity: 0; transform: translateX(60px); }
-            100% { opacity: 1; transform: translateX(0); }
-        }
-
-        .hero-mockup {
+        .hero-image {
             width: 100%;
-            height: 600px;
-            background: var(--surface-elevated);
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            backdrop-filter: blur(24px);
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 32px 64px var(--shadow-elevated);
-        }
-
-        .mockup-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            padding: 2rem;
-            height: 100%;
-        }
-
-        .mockup-item {
-            background: var(--gradient-accent);
-            border-radius: 16px;
+            height: 500px;
+            background: var(--white);
+            border-radius: 20px;
+            border: 1px solid var(--border-light);
+            box-shadow: var(--shadow-xl);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: var(--accent);
-            font-size: 2rem;
             position: relative;
             overflow: hidden;
-            animation: float 3s ease-in-out infinite;
-            box-shadow: 0 8px 24px rgba(168, 36, 0, 0.2);
         }
 
-        .mockup-item:nth-child(2) { animation-delay: 0.5s; }
-        .mockup-item:nth-child(3) { animation-delay: 1s; }
-        .mockup-item:nth-child(4) { animation-delay: 1.5s; }
-        .mockup-item:nth-child(5) { animation-delay: 2s; }
-        .mockup-item:nth-child(6) { animation-delay: 2.5s; }
+        .product-showcase {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            width: 80%;
+            height: 80%;
+        }
 
-        /* Categories Section */
-        .categories-section {
-            padding: 8rem 2rem;
-            position: relative;
-            background: var(--bg-secondary);
+        .showcase-item {
+            background: var(--gradient-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 2rem;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.3s ease;
+        }
+
+        .showcase-item:hover {
+            transform: scale(1.05);
+        }
+
+        /* Professional Categories */
+        .categories {
+            padding: 6rem 2rem;
+            background: var(--bg-primary);
         }
 
         .section-container {
-            max-width: 1600px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -469,33 +407,25 @@
             margin-bottom: 4rem;
         }
 
-        .section-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 6px 16px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-            backdrop-filter: blur(12px);
+        .section-subtitle {
+            color: var(--text-accent);
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.1em;
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
         }
 
         .section-title {
-            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-size: clamp(2rem, 4vw, 3rem);
             font-weight: 800;
-            margin-bottom: 1rem;
             color: var(--text-primary);
-            letter-spacing: -0.02em;
+            margin-bottom: 1rem;
+            letter-spacing: -0.025em;
         }
 
-        .section-subtitle {
-            font-size: 1.2rem;
+        .section-description {
+            font-size: 1.1rem;
             color: var(--text-secondary);
             max-width: 600px;
             margin: 0 auto;
@@ -503,20 +433,19 @@
 
         .categories-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
         }
 
         .category-card {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 2.5rem;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(16px);
         }
 
         .category-card::before {
@@ -526,8 +455,8 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(168, 36, 0, 0.1), transparent);
-            transition: left 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            background: linear-gradient(90deg, transparent, var(--surface), transparent);
+            transition: left 0.5s ease;
         }
 
         .category-card:hover::before {
@@ -535,202 +464,172 @@
         }
 
         .category-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 24px 48px var(--shadow-elevated);
-            border-color: var(--primary);
-            background: var(--surface);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--border-accent);
         }
 
         .category-icon {
-            width: 64px;
-            height: 64px;
-            background: var(--gradient-accent);
-            border-radius: 16px;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-primary);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: var(--accent);
+            font-size: 1.5rem;
+            color: var(--white);
             margin-bottom: 1.5rem;
-            transition: all 0.3s ease;
-            box-shadow: 0 8px 24px rgba(168, 36, 0, 0.2);
-        }
-
-        .category-card:hover .category-icon {
-            transform: scale(1.1) rotate(5deg);
+            box-shadow: var(--shadow-accent);
         }
 
         .category-title {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
             color: var(--text-primary);
+            margin-bottom: 0.5rem;
         }
 
         .category-description {
             color: var(--text-secondary);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             line-height: 1.5;
         }
 
-        .category-stats {
+        .category-meta {
             display: flex;
             justify-content: space-between;
+            align-items: center;
             font-size: 0.85rem;
             color: var(--text-tertiary);
         }
 
         /* Products Section */
-        .products-section {
-            padding: 8rem 2rem;
-            background: var(--bg-primary);
+        .products {
+            padding: 6rem 2rem;
+            background: var(--bg-secondary);
         }
 
-        .products-filter {
+        .products-header {
             display: flex;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 4rem;
-            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
         }
 
-        .filter-chip {
-            padding: 10px 20px;
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            border-radius: 24px;
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            background: var(--bg-elevated);
+            padding: 0.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+        }
+
+        .filter-tab {
+            padding: 0.6rem 1.2rem;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
             color: var(--text-secondary);
-            cursor: pointer;
             font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
             font-size: 0.9rem;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
         }
 
-        .filter-chip:hover,
-        .filter-chip.active {
-            background: var(--gradient-accent);
-            color: var(--accent);
-            border-color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(168, 36, 0, 0.3);
+        .filter-tab.active,
+        .filter-tab:hover {
+            background: var(--gradient-primary);
+            color: var(--white);
+            box-shadow: var(--shadow-sm);
         }
 
         .products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 2rem;
         }
 
         .product-card {
-            background: var(--surface-elevated);
-            border: 1px solid var(--border);
-            border-radius: 24px;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            position: relative;
-            backdrop-filter: blur(20px);
+            transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .product-card:hover {
-            transform: translateY(-12px);
-            box-shadow: 0 32px 64px var(--shadow-elevated);
-            border-color: var(--primary);
-            background: var(--surface);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--border-accent);
         }
 
         .product-image {
-            height: 240px;
-            background: var(--gradient-accent);
+            height: 200px;
+            background: var(--gradient-primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4rem;
-            color: var(--accent);
+            font-size: 3rem;
+            color: var(--white);
             position: relative;
-            overflow: hidden;
         }
 
-        .product-image::before {
-            content: '';
+        .product-badge {
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255, 235, 205, 0.1) 25%, transparent 25%, transparent 75%, rgba(255, 235, 205, 0.1) 75%);
-            background-size: 32px 32px;
-            animation: slide 4s linear infinite;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 100px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
-        @keyframes slide {
-            0% { transform: translateX(-32px); }
-            100% { transform: translateX(32px); }
+        .badge-legendary {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: var(--white);
+        }
+
+        .badge-epic {
+            background: linear-gradient(135deg, #a855f7, #9333ea);
+            color: var(--white);
+        }
+
+        .badge-rare {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: var(--white);
         }
 
         .product-info {
-            padding: 2rem;
-        }
-
-        .product-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 1rem;
+            padding: 1.5rem;
         }
 
         .product-category {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-tertiary);
             text-transform: uppercase;
             font-weight: 600;
-            letter-spacing: 1px;
-        }
-
-        .rarity-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .rarity-common { 
-            background: rgba(34, 197, 94, 0.2); 
-            color: #22c55e;
-            border: 1px solid rgba(34, 197, 94, 0.3);
-        }
-        .rarity-rare { 
-            background: rgba(59, 130, 246, 0.2); 
-            color: #3b82f6;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-        .rarity-epic { 
-            background: rgba(147, 51, 234, 0.2); 
-            color: #9333ea;
-            border: 1px solid rgba(147, 51, 234, 0.3);
-        }
-        .rarity-legendary { 
-            background: rgba(251, 191, 36, 0.2); 
-            color: #fbbf24;
-            border: 1px solid rgba(251, 191, 36, 0.3);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
         }
 
         .product-title {
-            font-size: 1.4rem;
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 0.5rem;
             color: var(--text-primary);
+            margin-bottom: 0.75rem;
             line-height: 1.3;
         }
 
         .product-description {
             color: var(--text-secondary);
-            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
             line-height: 1.5;
-            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
         }
 
         .product-footer {
@@ -746,15 +645,15 @@
         }
 
         .price-current {
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             font-weight: 800;
             color: var(--text-primary);
         }
 
         .price-original {
-            font-size: 1rem;
-            text-decoration: line-through;
+            font-size: 0.9rem;
             color: var(--text-tertiary);
+            text-decoration: line-through;
         }
 
         .product-actions {
@@ -763,78 +662,60 @@
         }
 
         .btn-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--surface);
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            border: 1px solid var(--border-default);
+            background: var(--bg-primary);
             color: var(--text-secondary);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(8px);
+            transition: all 0.2s ease;
         }
 
         .btn-icon:hover {
-            background: var(--primary);
-            color: var(--accent);
-            border-color: var(--primary);
-            transform: translateY(-2px);
+            border-color: var(--border-accent);
+            color: var(--text-accent);
+            background: var(--surface);
         }
 
-        .btn-add-cart {
-            background: var(--gradient-accent);
-            color: var(--accent);
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            box-shadow: 0 4px 16px rgba(168, 36, 0, 0.2);
-        }
-
-        .btn-add-cart:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(168, 36, 0, 0.4);
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
         }
 
         /* Floating Elements */
-        .floating-nav {
+        .floating-action {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
-            z-index: 1500;
+            z-index: 900;
         }
 
         .fab {
             width: 56px;
             height: 56px;
-            border-radius: 16px;
-            background: var(--gradient-accent);
-            color: var(--accent);
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            color: var(--white);
             border: none;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 8px 24px rgba(168, 36, 0, 0.4);
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            backdrop-filter: blur(16px);
+            font-size: 1.25rem;
+            box-shadow: var(--shadow-accent-lg);
+            transition: all 0.3s ease;
         }
 
         .fab:hover {
-            transform: translateY(-4px) scale(1.05);
-            box-shadow: 0 12px 32px rgba(168, 36, 0, 0.5);
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px 0 rgba(var(--primary-rgb), 0.4);
         }
 
         /* Responsive Design */
@@ -849,36 +730,43 @@
                 display: none;
             }
             
-            .search-container {
+            .search-box {
                 width: 250px;
             }
         }
 
         @media (max-width: 768px) {
-            .nav-container {
+            .navbar-container {
                 padding: 1rem;
             }
             
-            .search-container {
+            .search-box {
                 display: none;
             }
             
             .hero {
-                min-height: 80vh;
+                padding: 6rem 1rem 4rem;
             }
             
-            .categories-section,
-            .products-section {
+            .categories,
+            .products {
                 padding: 4rem 1rem;
-            }
-            
-            .products-grid {
-                grid-template-columns: 1fr;
             }
             
             .hero-actions {
                 flex-direction: column;
                 align-items: center;
+            }
+            
+            .products-header {
+                flex-direction: column;
+                gap: 2rem;
+                align-items: stretch;
+            }
+            
+            .filter-tabs {
+                justify-content: center;
+                flex-wrap: wrap;
             }
         }
 
@@ -887,13 +775,13 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 300px;
+            height: 200px;
         }
 
-        .spinner {
-            width: 48px;
-            height: 48px;
-            border: 3px solid var(--border);
+        .loader {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-light);
             border-left: 3px solid var(--primary);
             border-radius: 50%;
             animation: spin 1s linear infinite;
@@ -905,102 +793,115 @@
         }
 
         /* Animations */
-        .animate-in {
+        .fade-in {
             opacity: 0;
             transform: translateY(30px);
-            animation: slideInUp 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+            animation: fadeInUp 0.6s ease forwards;
         }
 
-        @keyframes slideInUp {
+        @keyframes fadeInUp {
             to {
                 opacity: 1;
                 transform: translateY(0);
             }
         }
+
+        .slide-in {
+            opacity: 0;
+            transform: translateX(-30px);
+            animation: slideInLeft 0.6s ease forwards;
+        }
+
+        @keyframes slideInLeft {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Advanced Navigation -->
-    <nav class="navigation" id="navigation">
-        <div class="nav-container">
+    <!-- Professional Navigation -->
+    <!-- <nav class="navbar" id="navbar">
+        <div class="navbar-container">
             <a href="/" class="brand">
-                <div class="brand-icon">◆</div>
-                <span>Nexus Elite</span>
+                <div class="brand-logo">VM</div>
+                <span>VirtuMart Pro</span>
             </a>
             
             <div class="nav-menu">
                 <a href="#" class="nav-link active">Marketplace</a>
+                <a href="#" class="nav-link">Categories</a>
                 <a href="#" class="nav-link">Collections</a>
                 <a href="#" class="nav-link">Creators</a>
-                <a href="#" class="nav-link">Analytics</a>
-                <a href="#" class="nav-link">Community</a>
+                <a href="#" class="nav-link">Enterprise</a>
             </div>
             
             <div class="nav-actions">
-                <div class="search-container">
-                    <input type="text" class="search-input" placeholder="Search premium virtual assets...">
-                    <button class="search-btn">🔍</button>
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="search-input" placeholder="Search professional virtual assets...">
                 </div>
-                <button class="cart-button" onclick="toggleCart()">
+                <button class="btn btn-primary cart-btn" onclick="toggleCart()">
                     <span>Cart</span>
                     <div class="cart-badge">3</div>
                 </button>
             </div>
         </div>
-    </nav>
+    </nav> -->
 
     <!-- Hero Section -->
     <section class="hero">
         <div class="hero-container">
-            <div class="hero-content">
+            <div class="hero-content slide-in">
                 <div class="hero-badge">
                     <span>🚀</span>
-                    <span>Premium Virtual Marketplace</span>
+                    <span>Professional Marketplace</span>
                 </div>
                 
                 <h1 class="hero-title">
-                    Exclusive Digital Assets for Elite Metaverse
+                    Enterprise-Grade <span class="accent">Virtual Assets</span> for Professionals
                 </h1>
                 
                 <p class="hero-subtitle">
-                    Discover the most coveted virtual items, premium tools, and legendary collectibles crafted by renowned creators for discerning virtual world enthusiasts.
+                    Access premium virtual tools, enterprise solutions, and professional-grade digital assets designed for business applications and advanced virtual environments.
                 </p>
                 
                 <div class="hero-actions">
                     <a href="#products" class="btn btn-primary">
-                        <span>Explore Elite Collection</span>
+                        <span>Explore Marketplace</span>
                         <span>→</span>
                     </a>
-                    <a href="#creators" class="btn btn-secondary">
-                        <span>Become Creator</span>
+                    <a href="#enterprise" class="btn btn-secondary">
+                        <span>Enterprise Solutions</span>
                     </a>
                 </div>
                 
                 <div class="hero-stats">
-                    <div class="stat-item">
-                        <div class="stat-number">25K+</div>
-                        <div class="stat-label">Elite Assets</div>
+                    <div class="stat">
+                        <div class="stat-number">50K+</div>
+                        <div class="stat-label">Professional Assets</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">750+</div>
-                        <div class="stat-label">Master Creators</div>
+                    <div class="stat">
+                        <div class="stat-number">1,200+</div>
+                        <div class="stat-label">Verified Creators</div>
                     </div>
-                    <div class="stat-item">
-                        <div class="stat-number">100M+</div>
-                        <div class="stat-label">Total Value</div>
+                    <div class="stat">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">Uptime SLA</div>
                     </div>
                 </div>
             </div>
             
-            <div class="hero-visual">
-                <div class="hero-mockup">
-                    <div class="mockup-grid">
-                        <div class="mockup-item">📱</div>
-                        <div class="mockup-item">⚔️</div>
-                        <div class="mockup-item">👑</div>
-                        <div class="mockup-item">🏎️</div>
-                        <div class="mockup-item">🏰</div>
-                        <div class="mockup-item">💎</div>
+            <div class="hero-visual fade-in">
+                <div class="hero-image">
+                    <div class="product-showcase">
+                        <div class="showcase-item">💼</div>
+                        <div class="showcase-item">🔧</div>
+                        <div class="showcase-item">🏢</div>
+                        <div class="showcase-item">📊</div>
+                        <div class="showcase-item">⚙️</div>
+                        <div class="showcase-item">🎯</div>
                     </div>
                 </div>
             </div>
@@ -1008,77 +909,74 @@
     </section>
 
     <!-- Categories Section -->
-    <section class="categories-section" id="categories">
+    <section class="categories" id="categories">
         <div class="section-container">
             <div class="section-header">
-                <div class="section-badge">
-                    <span>🏆</span>
-                    <span>Premium Categories</span>
-                </div>
-                <h2 class="section-title">Curated Collections</h2>
-                <p class="section-subtitle">
-                    Explore our handpicked categories of premium virtual assets, each verified for quality and exclusivity
+                <div class="section-subtitle">Professional Categories</div>
+                <h2 class="section-title">Business-Ready Solutions</h2>
+                <p class="section-description">
+                    Discover our comprehensive range of professional virtual assets, enterprise tools, and business solutions designed for modern organizations.
                 </p>
             </div>
             
             <div class="categories-grid">
-                <div class="category-card animate-in" onclick="filterProducts('devices')">
-                    <div class="category-icon">📱</div>
-                    <h3 class="category-title">Elite Devices</h3>
-                    <p class="category-description">Cutting-edge virtual smartphones, tablets, and next-gen gadgets with premium features</p>
-                    <div class="category-stats">
-                        <span>850+ Items</span>
-                        <span>★ 4.9 Rating</span>
+                <div class="category-card fade-in" onclick="filterProducts('business')">
+                    <div class="category-icon">💼</div>
+                    <h3 class="category-title">Business Tools</h3>
+                    <p class="category-description">Professional productivity software, project management tools, and enterprise applications for virtual workspaces.</p>
+                    <div class="category-meta">
+                        <span>2,400+ Items</span>
+                        <span>Enterprise Ready</span>
                     </div>
                 </div>
                 
-                <div class="category-card animate-in" onclick="filterProducts('tools')">
+                <div class="category-card fade-in" onclick="filterProducts('development')">
                     <div class="category-icon">🔧</div>
-                    <h3 class="category-title">Professional Tools</h3>
-                    <p class="category-description">Advanced utilities, construction tools, and professional-grade applications</p>
-                    <div class="category-stats">
-                        <span>620+ Items</span>
-                        <span>★ 4.8 Rating</span>
+                    <h3 class="category-title">Development Platforms</h3>
+                    <p class="category-description">Advanced development environments, coding tools, and professional IDEs for virtual development.</p>
+                    <div class="category-meta">
+                        <span>1,800+ Items</span>
+                        <span>Developer Focused</span>
                     </div>
                 </div>
                 
-                <div class="category-card animate-in" onclick="filterProducts('accessories')">
-                    <div class="category-icon">👑</div>
-                    <h3 class="category-title">Luxury Accessories</h3>
-                    <p class="category-description">Exclusive wearables, jewelry, and decorative items for distinguished avatars</p>
-                    <div class="category-stats">
-                        <span>1.2K+ Items</span>
-                        <span>★ 4.9 Rating</span>
+                <div class="category-card fade-in" onclick="filterProducts('infrastructure')">
+                    <div class="category-icon">🏢</div>
+                    <h3 class="category-title">Virtual Infrastructure</h3>
+                    <p class="category-description">Scalable virtual buildings, data centers, and enterprise-grade infrastructure components.</p>
+                    <div class="category-meta">
+                        <span>950+ Items</span>
+                        <span>Scalable Solutions</span>
                     </div>
                 </div>
                 
-                <div class="category-card animate-in" onclick="filterProducts('vehicles')">
-                    <div class="category-icon">🚗</div>
-                    <h3 class="category-title">Supercars & Vehicles</h3>
-                    <p class="category-description">Exotic cars, luxury yachts, private jets, and exclusive transportation</p>
-                    <div class="category-stats">
-                        <span>380+ Items</span>
-                        <span>★ 4.9 Rating</span>
+                <div class="category-card fade-in" onclick="filterProducts('analytics')">
+                    <div class="category-icon">📊</div>
+                    <h3 class="category-title">Analytics & Insights</h3>
+                    <p class="category-description">Business intelligence tools, data visualization platforms, and analytics dashboards.</p>
+                    <div class="category-meta">
+                        <span>1,200+ Items</span>
+                        <span>Data Driven</span>
                     </div>
                 </div>
                 
-                <div class="category-card animate-in" onclick="filterProducts('properties')">
-                    <div class="category-icon">🏠</div>
-                    <h3 class="category-title">Premium Properties</h3>
-                    <p class="category-description">Luxury mansions, penthouse suites, and exclusive virtual real estate</p>
-                    <div class="category-stats">
-                        <span>150+ Items</span>
-                        <span>★ 4.9 Rating</span>
+                <div class="category-card fade-in" onclick="filterProducts('automation')">
+                    <div class="category-icon">⚙️</div>
+                    <h3 class="category-title">Process Automation</h3>
+                    <p class="category-description">Workflow automation tools, robotic process automation, and efficiency optimization systems.</p>
+                    <div class="category-meta">
+                        <span>800+ Items</span>
+                        <span>Automation Ready</span>
                     </div>
                 </div>
                 
-                <div class="category-card animate-in" onclick="filterProducts('collectibles')">
-                    <div class="category-icon">💎</div>
-                    <h3 class="category-title">Rare Collectibles</h3>
-                    <p class="category-description">One-of-a-kind artifacts, legendary items, and limited edition treasures</p>
-                    <div class="category-stats">
-                        <span>95+ Items</span>
-                        <span>★ 5.0 Rating</span>
+                <div class="category-card fade-in" onclick="filterProducts('security')">
+                    <div class="category-icon">🛡️</div>
+                    <h3 class="category-title">Security Solutions</h3>
+                    <p class="category-description">Enterprise security tools, encryption systems, and cybersecurity frameworks for virtual environments.</p>
+                    <div class="category-meta">
+                        <span>600+ Items</span>
+                        <span>Security First</span>
                     </div>
                 </div>
             </div>
@@ -1086,25 +984,21 @@
     </section>
 
     <!-- Products Section -->
-    <section class="products-section" id="products">
+    <section class="products" id="products">
         <div class="section-container">
-            <div class="section-header">
-                <div class="section-badge">
-                    <span>⭐</span>
-                    <span>Featured Collection</span>
+            <div class="products-header">
+                <div>
+                    <div class="section-subtitle">Featured Products</div>
+                    <h2 class="section-title">Professional Virtual Assets</h2>
                 </div>
-                <h2 class="section-title">Premium Virtual Assets</h2>
-                <p class="section-subtitle">
-                    Handpicked selection of the finest virtual items from master creators worldwide
-                </p>
-            </div>
-            
-            <div class="products-filter">
-                <button class="filter-chip active" onclick="filterProducts('all')">All Items</button>
-                <button class="filter-chip" onclick="filterProducts('trending')">Trending</button>
-                <button class="filter-chip" onclick="filterProducts('new')">New Arrivals</button>
-                <button class="filter-chip" onclick="filterProducts('sale')">Limited Offers</button>
-                <button class="filter-chip" onclick="filterProducts('legendary')">Legendary</button>
+                
+                <div class="filter-tabs">
+                    <button class="filter-tab active" onclick="filterProducts('all')">All Products</button>
+                    <button class="filter-tab" onclick="filterProducts('trending')">Trending</button>
+                    <button class="filter-tab" onclick="filterProducts('enterprise')">Enterprise</button>
+                    <button class="filter-tab" onclick="filterProducts('new')">New Arrivals</button>
+                    <button class="filter-tab" onclick="filterProducts('featured')">Featured</button>
+                </div>
             </div>
 
             <div class="products-grid" id="productsGrid">
@@ -1113,153 +1007,153 @@
         </div>
     </section>
 
-    <!-- Floating Navigation -->
-    <div class="floating-nav">
+    <!-- Floating Action Buttons -->
+    <div class="floating-action">
         <button class="fab" onclick="scrollToTop()" title="Back to top">↑</button>
+        <button class="fab" onclick="openSupport()" title="Support">💬</button>
         <button class="fab" onclick="toggleWishlist()" title="Wishlist">♡</button>
-        <button class="fab" onclick="openChat()" title="Support">💬</button>
     </div>
 
     <script>
-        // Premium product data
+        // Professional product data
         const products = [
             {
                 id: 1,
-                title: "QuantumPhone Elite X1",
-                category: "devices",
-                description: "Revolutionary virtual smartphone with holographic interface, AI consciousness, and interdimensional connectivity",
-                price: 2499,
-                originalPrice: 3299,
-                rarity: "legendary",
-                icon: "📱",
-                tags: ["trending", "new", "premium"],
+                title: "Enterprise Communication Hub",
+                category: "business",
+                description: "Comprehensive virtual communication platform with video conferencing, collaboration tools, and enterprise-grade security features.",
+                price: 4999,
+                originalPrice: 6999,
+                rarity: "enterprise",
+                icon: "💼",
+                tags: ["trending", "enterprise", "featured"],
                 rating: 4.9,
-                reviews: 847
+                reviews: 1247
             },
             {
                 id: 2,
-                title: "Cosmic Builder Pro",
-                category: "tools",
-                description: "Master-grade construction tool with reality manipulation capabilities and infinite material synthesis",
-                price: 1899,
+                title: "Professional Development Suite",
+                category: "development",
+                description: "Complete integrated development environment with advanced debugging, version control, and team collaboration capabilities.",
+                price: 3499,
                 originalPrice: null,
-                rarity: "epic",
-                icon: "🔨",
-                tags: ["trending", "professional"],
+                rarity: "professional",
+                icon: "🔧",
+                tags: ["trending", "new"],
                 rating: 4.8,
-                reviews: 623
+                reviews: 892
             },
             {
                 id: 3,
-                title: "Dragon Emperor Crown",
-                category: "accessories",
-                description: "Legendary headpiece with mystical aura effects, status enhancement, and divine protection buffs",
-                price: 8999,
-                originalPrice: 12999,
-                rarity: "legendary",
-                icon: "👑",
-                tags: ["sale", "collectible", "legendary"],
-                rating: 5.0,
-                reviews: 234
+                title: "Virtual Data Center Complex",
+                category: "infrastructure",
+                description: "Scalable virtual data center with cloud integration, load balancing, and enterprise-grade redundancy systems.",
+                price: 15999,
+                originalPrice: 19999,
+                rarity: "enterprise",
+                icon: "🏢",
+                tags: ["enterprise", "featured"],
+                rating: 4.9,
+                reviews: 456
             },
             {
                 id: 4,
-                title: "Hyperion Speedster",
-                category: "vehicles",
-                description: "Quantum-powered supercar with time dilation effects, plasma trails, and dimension-hopping capability",
-                price: 15999,
+                title: "Advanced Analytics Platform",
+                category: "analytics",
+                description: "Real-time business intelligence platform with machine learning capabilities and predictive analytics engine.",
+                price: 7999,
                 originalPrice: null,
-                rarity: "legendary",
-                icon: "🏎️",
-                tags: ["new", "trending", "exclusive"],
-                rating: 4.9,
-                reviews: 156
+                rarity: "professional",
+                icon: "📊",
+                tags: ["new", "trending"],
+                rating: 4.7,
+                reviews: 634
             },
             {
                 id: 5,
-                title: "Celestial Sky Palace",
-                category: "properties",
-                description: "Floating luxury mansion in the stratosphere with panoramic universe views and anti-gravity gardens",
-                price: 49999,
-                originalPrice: 65999,
-                rarity: "legendary",
-                icon: "🏰",
-                tags: ["sale", "premium", "exclusive"],
-                rating: 5.0,
-                reviews: 89
-            },
-            {
-                id: 6,
-                title: "Void Reaper Blade",
-                category: "collectibles",
-                description: "Mythical weapon forged from dark matter with reality-cutting edge and soul-binding enchantments",
-                price: 12499,
-                originalPrice: null,
-                rarity: "legendary",
-                icon: "⚔️",
-                tags: ["collectible", "legendary", "rare"],
-                rating: 4.9,
-                reviews: 445
-            },
-            {
-                id: 7,
-                title: "Neural Nexus Interface",
-                category: "devices",
-                description: "Direct brain-computer link with thought-speed processing and consciousness expansion protocols",
-                price: 7999,
-                originalPrice: 9999,
-                rarity: "epic",
-                icon: "🧠",
-                tags: ["new", "sale", "advanced"],
+                title: "Workflow Automation Engine",
+                category: "automation",
+                description: "Intelligent process automation system with AI-driven workflow optimization and cross-platform integration.",
+                price: 5999,
+                originalPrice: 7999,
+                rarity: "enterprise",
+                icon: "⚙️",
+                tags: ["featured", "automation"],
                 rating: 4.8,
-                reviews: 298
-            },
-            {
-                id: 8,
-                title: "Dimensional Walker Boots",
-                category: "accessories",
-                description: "Multi-dimensional footwear enabling reality-shifting, time manipulation, and space-time navigation",
-                price: 4999,
-                originalPrice: null,
-                rarity: "epic",
-                icon: "👢",
-                tags: ["trending", "utility"],
-                rating: 4.7,
                 reviews: 521
             },
             {
-                id: 9,
-                title: "Plasma Forge Workshop",
-                category: "tools",
-                description: "Industrial-grade creation station with matter compilation and molecular restructuring capabilities",
-                price: 25999,
-                originalPrice: 32999,
-                rarity: "legendary",
-                icon: "⚒️",
-                tags: ["professional", "sale", "industrial"],
+                id: 6,
+                title: "Enterprise Security Framework",
+                category: "security",
+                description: "Comprehensive cybersecurity solution with threat detection, incident response, and compliance management tools.",
+                price: 12999,
+                originalPrice: null,
+                rarity: "enterprise",
+                icon: "🛡️",
+                tags: ["security", "enterprise"],
                 rating: 4.9,
-                reviews: 167
+                reviews: 389
+            },
+            {
+                id: 7,
+                title: "Virtual Meeting Arena",
+                category: "business",
+                description: "Immersive virtual conference space with interactive presentations, networking zones, and event management tools.",
+                price: 2999,
+                originalPrice: 3999,
+                rarity: "professional",
+                icon: "🎯",
+                tags: ["new", "trending"],
+                rating: 4.6,
+                reviews: 743
+            },
+            {
+                id: 8,
+                title: "Cloud Integration Platform",
+                category: "development",
+                description: "Multi-cloud integration platform with API management, microservices architecture, and serverless computing support.",
+                price: 8999,
+                originalPrice: null,
+                rarity: "enterprise",
+                icon: "☁️",
+                tags: ["enterprise", "featured"],
+                rating: 4.8,
+                reviews: 312
+            },
+            {
+                id: 9,
+                title: "Professional Training Simulator",
+                category: "business",
+                description: "Virtual reality training platform with scenario modeling, skill assessment, and performance analytics for enterprise use.",
+                price: 6999,
+                originalPrice: 8999,
+                rarity: "professional",
+                icon: "🎓",
+                tags: ["training", "new"],
+                rating: 4.7,
+                reviews: 567
             },
             {
                 id: 10,
-                title: "Infinity Gem Collection",
-                category: "collectibles",
-                description: "Complete set of reality-altering gems with universe-shaping powers and cosmic energy resonance",
-                price: 99999,
+                title: "Enterprise Resource Planner",
+                category: "business",
+                description: "Comprehensive ERP system with financial management, supply chain optimization, and human resources integration.",
+                price: 18999,
                 originalPrice: null,
-                rarity: "legendary",
-                icon: "💎",
-                tags: ["collectible", "legendary", "ultimate"],
-                rating: 5.0,
-                reviews: 42
+                rarity: "enterprise",
+                icon: "📈",
+                tags: ["enterprise", "featured"],
+                rating: 4.9,
+                reviews: 234
             }
         ];
 
         let currentFilter = 'all';
-        let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+        let cart = JSON.parse(localStorage.getItem('virtumart_cart') || '[]');
+        let wishlist = JSON.parse(localStorage.getItem('virtumart_wishlist') || '[]');
 
-        // Initialize the page
+        // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
             displayProducts(products);
             updateCartCount();
@@ -1271,9 +1165,9 @@
         function filterProducts(filter) {
             currentFilter = filter;
             
-            // Update active filter chip
-            document.querySelectorAll('.filter-chip').forEach(chip => {
-                chip.classList.remove('active');
+            // Update active filter tab
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
             });
             event.target.classList.add('active');
 
@@ -1294,20 +1188,18 @@
         function displayProducts(productsToShow) {
             const grid = document.getElementById('productsGrid');
             
-            // Show loading
-            grid.innerHTML = '<div class="loading"><div class="spinner"></div></div>';
+            // Show loading state
+            grid.innerHTML = '<div class="loading"><div class="loader"></div></div>';
             
             setTimeout(() => {
                 grid.innerHTML = productsToShow.map((product, index) => `
-                    <div class="product-card animate-in" onclick="viewProduct(${product.id})" style="animation-delay: ${index * 100}ms">
+                    <div class="product-card fade-in" onclick="viewProduct(${product.id})" style="animation-delay: ${index * 100}ms">
                         <div class="product-image">
                             ${product.icon}
+                            <div class="product-badge badge-${product.rarity}">${product.rarity}</div>
                         </div>
                         <div class="product-info">
-                            <div class="product-header">
-                                <div class="product-category">${product.category}</div>
-                                <span class="rarity-badge rarity-${product.rarity}">${product.rarity}</span>
-                            </div>
+                            <div class="product-category">${product.category}</div>
                             <h3 class="product-title">${product.title}</h3>
                             <p class="product-description">${product.description}</p>
                             <div class="product-footer">
@@ -1319,7 +1211,7 @@
                                     <button class="btn-icon" onclick="toggleWishlistItem(${product.id}, event)" title="Add to wishlist">
                                         ${wishlist.includes(product.id) ? '♥' : '♡'}
                                     </button>
-                                    <button class="btn-add-cart" onclick="addToCart(${product.id}, event)">
+                                    <button class="btn btn-primary btn-small" onclick="addToCart(${product.id}, event)">
                                         Add to Cart
                                     </button>
                                 </div>
@@ -1327,33 +1219,33 @@
                         </div>
                     </div>
                 `).join('');
-            }, 500);
+            }, 600);
         }
 
-        // Add to cart
+        // Add to cart functionality
         function addToCart(productId, event) {
             event.stopPropagation();
             const product = products.find(p => p.id === productId);
             
             if (!cart.find(item => item.id === productId)) {
                 cart.push(product);
-                localStorage.setItem('cart', JSON.stringify(cart));
+                localStorage.setItem('virtumart_cart', JSON.stringify(cart));
                 updateCartCount();
                 
-                // Show feedback
+                // Show success feedback
                 const button = event.target;
                 const originalText = button.innerHTML;
-                button.innerHTML = '✓ Added!';
-                button.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                button.innerHTML = '✓ Added';
+                button.style.background = 'linear-gradient(135deg, #10b981, #059669)';
                 
                 setTimeout(() => {
                     button.innerHTML = originalText;
-                    button.style.background = 'var(--gradient-accent)';
+                    button.style.background = 'var(--gradient-primary)';
                 }, 2000);
                 
-                showNotification('Item added to cart!', 'success');
+                showNotification('Product added to cart successfully!', 'success');
             } else {
-                showNotification('Item already in cart!', 'info');
+                showNotification('Product is already in your cart!', 'warning');
             }
         }
 
@@ -1374,61 +1266,92 @@
                 showNotification('Added to wishlist!', 'success');
             }
             
-            localStorage.setItem('wishlist', JSON.stringify(wishlist));
+            localStorage.setItem('virtumart_wishlist', JSON.stringify(wishlist));
         }
 
-        // Update cart count
+        // Update cart count display
         function updateCartCount() {
             const cartBadge = document.querySelector('.cart-badge');
             if (cartBadge) {
                 cartBadge.textContent = cart.length;
-                if (cart.length === 0) {
-                    cartBadge.style.display = 'none';
-                } else {
-                    cartBadge.style.display = 'flex';
-                }
+                cartBadge.style.display = cart.length === 0 ? 'none' : 'flex';
             }
         }
 
-        // View product details
+        // View product details modal
         function viewProduct(productId) {
             const product = products.find(p => p.id === productId);
-            const modal = `
-                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 2rem;" onclick="this.remove()">
-                    <div style="background: var(--bg-secondary); border-radius: 24px; padding: 2rem; max-width: 600px; width: 100%; border: 1px solid var(--border);" onclick="event.stopPropagation()">
-                        <h2 style="color: var(--text-primary); margin-bottom: 1rem;">${product.title}</h2>
-                        <div style="font-size: 4rem; text-align: center; margin: 2rem 0;">${product.icon}</div>
-                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">${product.description}</p>
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                            <span style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">${product.price.toLocaleString()}</span>
-                            <span class="rarity-badge rarity-${product.rarity}">${product.rarity}</span>
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                backdrop-filter: blur(8px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: var(--bg-elevated); border-radius: 20px; padding: 2rem; max-width: 600px; width: 100%; border: 1px solid var(--border-light); box-shadow: var(--shadow-xl);" onclick="event.stopPropagation()">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+                        <h2 style="color: var(--text-primary); font-size: 1.5rem; font-weight: 700;">${product.title}</h2>
+                        <button onclick="this.closest('[style*=\"fixed\"]').remove()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-tertiary); cursor: pointer;">×</button>
+                    </div>
+                    <div style="text-align: center; margin: 2rem 0;">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">${product.icon}</div>
+                        <span class="product-badge badge-${product.rarity}" style="display: inline-block;">${product.rarity}</span>
+                    </div>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.6;">${product.description}</p>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding: 1rem; background: var(--surface); border-radius: 12px;">
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 800; color: var(--text-primary);">${product.price.toLocaleString()}</div>
+                            ${product.originalPrice ? `<div style="font-size: 1rem; color: var(--text-tertiary); text-decoration: line-through;">${product.originalPrice.toLocaleString()}</div>` : ''}
                         </div>
-                        <div style="display: flex; gap: 1rem;">
-                            <button class="btn btn-primary" onclick="addToCart(${product.id}, event); this.closest('[onclick]').remove()" style="flex: 1;">Add to Cart</button>
-                            <button class="btn btn-secondary" onclick="this.closest('[onclick]').remove()">Close</button>
+                        <div style="text-align: right;">
+                            <div style="color: var(--text-secondary); font-size: 0.9rem;">⭐ ${product.rating} (${product.reviews} reviews)</div>
+                            <div style="color: var(--text-tertiary); font-size: 0.8rem; text-transform: uppercase;">${product.category}</div>
                         </div>
+                    </div>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn btn-primary" onclick="addToCart(${product.id}, event); this.closest('[style*=\"fixed\"]').remove()" style="flex: 1;">Add to Cart</button>
+                        <button class="btn btn-secondary" onclick="this.closest('[style*=\"fixed\"]').remove()">Close</button>
                     </div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', modal);
+            
+            modal.onclick = () => modal.remove();
+            document.body.appendChild(modal);
         }
 
-        // Show notification
+        // Show notification system
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
+            const bgColor = {
+                success: 'linear-gradient(135deg, #10b981, #059669)',
+                warning: 'linear-gradient(135deg, #f59e0b, #d97706)',
+                error: 'linear-gradient(135deg, #ef4444, #dc2626)',
+                info: 'var(--gradient-primary)'
+            };
+            
             notification.style.cssText = `
                 position: fixed;
                 top: 2rem;
                 right: 2rem;
-                background: var(--surface-elevated);
-                color: var(--text-primary);
+                background: ${bgColor[type]};
+                color: var(--white);
                 padding: 1rem 1.5rem;
                 border-radius: 12px;
-                border: 1px solid var(--border);
-                backdrop-filter: blur(16px);
-                z-index: 4000;
+                box-shadow: var(--shadow-lg);
+                z-index: 3000;
+                font-weight: 500;
                 animation: slideInRight 0.3s ease;
-                box-shadow: 0 8px 32px var(--shadow-elevated);
+                max-width: 300px;
             `;
             notification.textContent = message;
             
@@ -1437,64 +1360,94 @@
             setTimeout(() => {
                 notification.style.animation = 'slideOutRight 0.3s ease forwards';
                 setTimeout(() => notification.remove(), 300);
-            }, 3000);
+            }, 4000);
         }
 
-        // Toggle cart
+        // Toggle cart modal
         function toggleCart() {
             if (cart.length === 0) {
-                showNotification('Your cart is empty', 'info');
+                showNotification('Your cart is empty. Start shopping!', 'info');
                 return;
             }
             
             const total = cart.reduce((sum, item) => sum + item.price, 0);
-            const cartModal = `
-                <div style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 2rem;" onclick="this.remove()">
-                    <div style="background: var(--bg-secondary); border-radius: 24px; padding: 2rem; max-width: 600px; width: 100%; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border);" onclick="event.stopPropagation()">
-                        <h2 style="color: var(--text-primary); margin-bottom: 2rem;">Shopping Cart (${cart.length} items)</h2>
-                        ${cart.map(item => `
-                            <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--surface); border-radius: 12px; margin-bottom: 1rem;">
-                                <div style="font-size: 2rem;">${item.icon}</div>
-                                <div style="flex: 1;">
-                                    <h4 style="color: var(--text-primary);">${item.title}</h4>
-                                    <p style="color: var(--text-secondary); font-size: 0.9rem;">${item.category}</p>
-                                </div>
-                                <div style="color: var(--text-primary); font-weight: 700;">${item.price.toLocaleString()}</div>
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 2000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 2rem;
+                backdrop-filter: blur(8px);
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: var(--bg-elevated); border-radius: 20px; padding: 2rem; max-width: 700px; width: 100%; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border-light); box-shadow: var(--shadow-xl);" onclick="event.stopPropagation()">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border-light);">
+                        <h2 style="color: var(--text-primary); font-size: 1.5rem; font-weight: 700;">Shopping Cart (${cart.length} items)</h2>
+                        <button onclick="this.closest('[style*=\"fixed\"]').remove()" style="background: none; border: none; font-size: 1.5rem; color: var(--text-tertiary); cursor: pointer;">×</button>
+                    </div>
+                    ${cart.map(item => `
+                        <div style="display: flex; align-items: center; gap: 1rem; padding: 1rem; background: var(--surface); border-radius: 12px; margin-bottom: 1rem;">
+                            <div style="font-size: 2.5rem; width: 60px; text-align: center;">${item.icon}</div>
+                            <div style="flex: 1;">
+                                <h4 style="color: var(--text-primary); font-weight: 600; margin-bottom: 0.25rem;">${item.title}</h4>
+                                <p style="color: var(--text-secondary); font-size: 0.9rem; text-transform: capitalize;">${item.category} • ${item.rarity}</p>
                             </div>
-                        `).join('')}
-                        <div style="border-top: 1px solid var(--border); padding-top: 1rem; margin-top: 1rem;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-                                <span style="font-size: 1.5rem; font-weight: 800; color: var(--text-primary);">Total: ${total.toLocaleString()}</span>
+                            <div style="text-align: right;">
+                                <div style="color: var(--text-primary); font-weight: 700; font-size: 1.1rem;">${item.price.toLocaleString()}</div>
+                                <button onclick="removeFromCart(${item.id}); this.closest('[style*=\"fixed\"]').remove(); toggleCart();" style="color: var(--text-tertiary); background: none; border: none; cursor: pointer; font-size: 0.8rem; margin-top: 0.25rem;">Remove</button>
                             </div>
-                            <div style="display: flex; gap: 1rem;">
-                                <button class="btn btn-primary" style="flex: 1;" onclick="checkout()">Checkout</button>
-                                <button class="btn btn-secondary" onclick="this.closest('[onclick]').remove()">Continue Shopping</button>
-                            </div>
+                        </div>
+                    `).join('')}
+                    <div style="border-top: 1px solid var(--border-light); padding-top: 1.5rem; margin-top: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                            <span style="font-size: 1.25rem; font-weight: 600; color: var(--text-primary);">Total Amount:</span>
+                            <span style="font-size: 2rem; font-weight: 800; color: var(--text-accent);">${total.toLocaleString()}</span>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="proceedToCheckout()">Proceed to Checkout</button>
+                            <button class="btn btn-secondary" onclick="this.closest('[style*=\"fixed\"]').remove()">Continue Shopping</button>
                         </div>
                     </div>
                 </div>
             `;
-            document.body.insertAdjacentHTML('beforeend', cartModal);
+            
+            modal.onclick = () => modal.remove();
+            document.body.appendChild(modal);
         }
 
-        // Checkout
-        function checkout() {
+        // Remove from cart
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            localStorage.setItem('virtumart_cart', JSON.stringify(cart));
+            updateCartCount();
+            showNotification('Product removed from cart', 'info');
+        }
+
+        // Proceed to checkout
+        function proceedToCheckout() {
             showNotification('Redirecting to secure checkout...', 'success');
             setTimeout(() => {
-                showNotification('Checkout feature coming soon!', 'info');
-            }, 1500);
+                showNotification('Checkout system will be available soon!', 'info');
+            }, 2000);
         }
 
-        // Toggle wishlist
+        // Toggle wishlist modal
         function toggleWishlist() {
             const wishlistItems = products.filter(p => wishlist.includes(p.id));
             
             if (wishlistItems.length === 0) {
-                showNotification('Your wishlist is empty', 'info');
+                showNotification('Your wishlist is empty. Add some favorites!', 'info');
                 return;
             }
             
-            // Similar modal structure as cart but for wishlist items
             showNotification(`You have ${wishlistItems.length} items in your wishlist`, 'info');
         }
 
@@ -1503,20 +1456,20 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Open chat
-        function openChat() {
-            showNotification('Support chat coming soon!', 'info');
+        // Open support
+        function openSupport() {
+            showNotification('Support chat will be available soon!', 'info');
         }
 
         // Initialize scroll effects
         function initializeScrollEffects() {
-            const navigation = document.getElementById('navigation');
+            const navbar = document.getElementById('navbar');
             
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 100) {
-                    navigation.classList.add('scrolled');
+                    navbar.classList.add('scrolled');
                 } else {
-                    navigation.classList.remove('scrolled');
+                    navbar.classList.remove('scrolled');
                 }
             });
         }
@@ -1529,14 +1482,17 @@
                         entry.target.style.animationPlayState = 'running';
                     }
                 });
-            }, { threshold: 0.1 });
+            }, { 
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            });
 
-            document.querySelectorAll('.animate-in').forEach(el => {
+            document.querySelectorAll('.fade-in, .slide-in').forEach(el => {
                 observer.observe(el);
             });
         }
 
-        // Add CSS animations
+        // Add CSS animations for notifications
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideInRight {
