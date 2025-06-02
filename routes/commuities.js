@@ -473,7 +473,7 @@ router.get("/community/:communityId/link", async (req, res) => {
 });
 
 // community video page Get route
-router.get("/community/:communityId/video", async (req, res) => {
+router.get("/community/:communityId/virtualstore", async (req, res) => {
   try {
     const { communityId } = req.params;
 
@@ -511,7 +511,7 @@ router.get("/community/:communityId/video", async (req, res) => {
 
     console.log("User Found:", currUser);
 
-    res.render("video.ejs", {
+    res.render("virtualStore.ejs", {
       community: currentCommunity,
       videos: communityPosts,
       currUser,
