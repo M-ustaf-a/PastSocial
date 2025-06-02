@@ -524,6 +524,15 @@ router.get("/community/:communityId/video", async (req, res) => {
   }
 });
 
+
+//Virtualworld Get route
+router.get("/community/:communityId/virtualworld", async(req,res)=>{
+  const {communityId} = req.params;
+  const community = await Community.findById(communityId);
+  console.log(community);
+  res.render("virtualWorld.ejs", {community});
+})
+
 // community meeting Get route
 router.get("/community/:communityId/meeting", async (req, res) => {
   try {
