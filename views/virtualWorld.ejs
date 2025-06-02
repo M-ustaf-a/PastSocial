@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enter the Virtual Realm - Coming Soon</title>
+    <title>Metaverse Chronicles - Coming Soon</title>
     <style>
         * {
             margin: 0;
@@ -12,955 +12,467 @@
         }
 
         body {
-            font-family: 'Courier New', monospace;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0033 25%, #000066 50%, #330066 75%, #000000 100%);
+            min-height: 100vh;
             overflow-x: hidden;
-            background: #000;
-            color: #fff;
-            cursor: none;
+            position: relative;
         }
 
-        /* Custom Cursor */
-        .cursor {
+        /* Animated background particles */
+        .particles {
             position: fixed;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #00ffff;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            transition: all 0.1s ease;
-            mix-blend-mode: difference;
-        }
-
-        .cursor::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 4px;
-            height: 4px;
-            background: #00ffff;
-            border-radius: 50%;
-            box-shadow: 0 0 10px #00ffff;
-        }
-
-        /* Real World Section - Enhanced */
-        .real-world {
-            height: 100vh;
-            background: linear-gradient(45deg, #0a0a0a 0%, #1a1a2e 25%, #16213e 50%, #0f3460 75%, #533483 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .real-world::before {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            background: 
-                radial-gradient(circle at 25% 25%, rgba(0,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(255,0,255,0.1) 0%, transparent 50%);
-            animation: reality-shift 8s ease-in-out infinite;
-        }
-
-        @keyframes reality-shift {
-            0%, 100% { transform: rotate(0deg) scale(1); }
-            50% { transform: rotate(180deg) scale(1.1); }
-        }
-
-        .neural-network {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .neural-node {
-            position: absolute;
-            width: 4px;
-            height: 4px;
-            background: rgba(0,255,255,0.8);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0,255,255,0.5);
-            animation: neural-pulse 3s ease-in-out infinite;
-        }
-
-        @keyframes neural-pulse {
-            0%, 100% { 
-                transform: scale(1);
-                opacity: 0.8;
-            }
-            50% { 
-                transform: scale(1.5);
-                opacity: 1;
-            }
-        }
-
-        .neural-connection {
-            position: absolute;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(0,255,255,0.3), transparent);
-            animation: data-flow 4s linear infinite;
-        }
-
-        @keyframes data-flow {
-            0% { transform: scaleX(0); }
-            50% { transform: scaleX(1); }
-            100% { transform: scaleX(0); }
-        }
-
-        .portal-container {
-            text-align: center;
-            z-index: 10;
-            animation: hologram-float 4s ease-in-out infinite;
-        }
-
-        @keyframes hologram-float {
-            0%, 100% { transform: translateY(0) rotateY(0deg); }
-            25% { transform: translateY(-10px) rotateY(5deg); }
-            50% { transform: translateY(-20px) rotateY(0deg); }
-            75% { transform: translateY(-10px) rotateY(-5deg); }
-        }
-
-        .portal {
-            width: 350px;
-            height: 350px;
-            margin: 0 auto 30px;
-            position: relative;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            perspective: 1000px;
-        }
-
-        .portal:hover {
-            transform: scale(1.15) rotateZ(5deg);
-        }
-
-        .portal-ring {
-            position: absolute;
-            border: 3px solid;
-            border-radius: 50%;
-            animation: portal-spin 6s linear infinite;
-        }
-
-        .portal-ring:nth-child(1) {
-            width: 100%;
-            height: 100%;
             top: 0;
             left: 0;
-            border-color: #00ffff;
-            box-shadow: 0 0 30px rgba(0,255,255,0.5), inset 0 0 30px rgba(0,255,255,0.2);
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .portal-ring:nth-child(2) {
-            width: 75%;
-            height: 75%;
-            top: 12.5%;
-            left: 12.5%;
-            border-color: #ff00ff;
-            box-shadow: 0 0 20px rgba(255,0,255,0.5), inset 0 0 20px rgba(255,0,255,0.2);
-            animation-direction: reverse;
-        }
-
-        .portal-ring:nth-child(3) {
-            width: 50%;
-            height: 50%;
-            top: 25%;
-            left: 25%;
-            border-color: #00ff00;
-            box-shadow: 0 0 15px rgba(0,255,0,0.5), inset 0 0 15px rgba(0,255,0,0.2);
-        }
-
-        @keyframes portal-spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .portal-center {
+        .particle {
             position: absolute;
-            width: 25%;
-            height: 25%;
-            top: 37.5%;
-            left: 37.5%;
-            background: 
-                radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(0,255,255,0.8) 30%, rgba(255,0,255,0.6) 60%, transparent 100%);
+            width: 2px;
+            height: 2px;
+            background: #00ffff;
             border-radius: 50%;
-            animation: portal-energy 2s ease-in-out infinite;
-            filter: blur(1px);
+            animation: float 6s infinite linear;
+            opacity: 0.7;
         }
 
-        @keyframes portal-energy {
-            0%, 100% { 
-                opacity: 0.7;
-                transform: scale(1);
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
             }
-            50% { 
+            10% {
                 opacity: 1;
-                transform: scale(1.2);
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) rotate(360deg);
+                opacity: 0;
             }
         }
 
-        h1 {
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            text-shadow: 
-                0 0 10px rgba(0,255,255,0.8),
-                0 0 20px rgba(0,255,255,0.6),
-                0 0 30px rgba(0,255,255,0.4);
-            background: linear-gradient(45deg, #00ffff, #ffffff, #ff00ff);
+        /* Grid overlay */
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 2;
+            animation: gridPulse 4s ease-in-out infinite;
+        }
+
+        @keyframes gridPulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.1; }
+        }
+
+        /* Main container */
+        .container {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            text-align: center;
+        }
+
+        /* Logo/Title */
+        .logo {
+            font-size: 4rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ffff, #ff00ff, #ffff00, #00ffff);
+            background-size: 300% 300%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: title-glitch 4s ease-in-out infinite;
+            background-clip: text;
+            animation: gradientShift 3s ease-in-out infinite;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 30px rgba(0, 255, 255, 0.5);
+        }
+        .vr-image{
+            padding: 45px;
         }
 
-        @keyframes title-glitch {
-            0%, 100% { filter: hue-rotate(0deg); }
-            25% { filter: hue-rotate(90deg) brightness(1.2); }
-            50% { filter: hue-rotate(180deg) contrast(1.3); }
-            75% { filter: hue-rotate(270deg) brightness(0.9); }
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         .subtitle {
-            font-size: 1.6em;
-            opacity: 0.9;
-            margin-bottom: 40px;
+            font-size: 1.5rem;
             color: #00ffff;
-            text-shadow: 0 0 15px rgba(0,255,255,0.5);
-            animation: text-flicker 3s ease-in-out infinite;
+            margin-bottom: 3rem;
+            opacity: 0.8;
+            animation: pulse 2s ease-in-out infinite;
         }
 
-        @keyframes text-flicker {
-            0%, 100% { opacity: 0.9; }
-            50% { opacity: 0.7; }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
         }
 
-        .enter-btn {
-            padding: 18px 45px;
-            font-size: 1.3em;
-            background: linear-gradient(45deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2));
-            border: 2px solid #00ffff;
-            color: #fff;
-            cursor: pointer;
-            border-radius: 50px;
-            transition: all 0.3s ease;
+        /* Coming Soon text */
+        .coming-soon {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #ffffff;
+            margin-bottom: 2rem;
             text-transform: uppercase;
-            letter-spacing: 3px;
-            font-family: 'Courier New', monospace;
+            letter-spacing: 0.2em;
             position: relative;
-            overflow: hidden;
+            animation: glow 2s ease-in-out infinite alternate;
         }
 
-        .enter-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: left 0.5s;
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 20px #00ffff, 0 0 30px #00ffff, 0 0 40px #00ffff;
+            }
+            to {
+                text-shadow: 0 0 30px #ff00ff, 0 0 40px #ff00ff, 0 0 50px #ff00ff;
+            }
         }
 
-        .enter-btn:hover::before {
-            left: 100%;
-        }
-
-        .enter-btn:hover {
-            background: linear-gradient(45deg, rgba(0,255,255,0.4), rgba(255,0,255,0.4));
-            transform: scale(1.08);
-            box-shadow: 
-                0 0 25px rgba(0,255,255,0.6),
-                0 0 50px rgba(255,0,255,0.4);
-            border-color: #ff00ff;
-        }
-
-        /* Virtual World Section - Massively Enhanced */
-        .virtual-world {
-            min-height: 100vh;
-            background: 
-                radial-gradient(circle at 30% 20%, rgba(0,20,40,0.8) 0%, transparent 50%),
-                radial-gradient(circle at 70% 80%, rgba(40,0,40,0.6) 0%, transparent 50%),
-                linear-gradient(135deg, #000510 0%, #0a0a23 25%, #1a0033 50%, #000000 100%);
+        /* Holographic display */
+        .holo-display {
+            width: 300px;
+            height: 200px;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            background: rgba(0, 255, 255, 0.1);
             position: relative;
+            margin: 2rem 0;
+            animation: holoBorder 3s linear infinite;
+        }
+
+        @keyframes holoBorder {
+            0% { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
+            25% { border-color: #ff00ff; box-shadow: 0 0 20px #ff00ff; }
+            50% { border-color: #ffff00; box-shadow: 0 0 20px #ffff00; }
+            75% { border-color: #00ff00; box-shadow: 0 0 20px #00ff00; }
+            100% { border-color: #00ffff; box-shadow: 0 0 20px #00ffff; }
+        }
+
+        .holo-content {
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
-        }
-
-        .virtual-world::before {
-            content: '';
-            position: absolute;
-            width: 100%;
             height: 100%;
-            background: 
-                radial-gradient(circle at 15% 85%, rgba(0,255,255,0.15) 0%, transparent 40%),
-                radial-gradient(circle at 85% 15%, rgba(255,0,255,0.15) 0%, transparent 40%),
-                radial-gradient(circle at 50% 50%, rgba(0,255,0,0.08) 0%, transparent 60%);
-            animation: virtual-aurora 12s ease-in-out infinite;
+            font-size: 1.2rem;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
         }
 
-        @keyframes virtual-aurora {
-            0%, 100% {
-                transform: rotate(0deg) scale(1);
-                opacity: 0.8;
-            }
-            33% {
-                transform: rotate(120deg) scale(1.2);
-                opacity: 0.6;
-            }
-            66% {
-                transform: rotate(240deg) scale(1.1);
-                opacity: 0.9;
-            }
-        }
-
-        .holographic-grid {
-            position: absolute;
-            width: 120%;
-            height: 120%;
-            background: 
-                linear-gradient(0deg, transparent 24%, rgba(0,255,255,0.05) 25%, rgba(0,255,255,0.05) 26%, transparent 27%, transparent 74%, rgba(0,255,255,0.05) 75%, rgba(0,255,255,0.05) 76%, transparent 77%),
-                linear-gradient(90deg, transparent 24%, rgba(255,0,255,0.05) 25%, rgba(255,0,255,0.05) 26%, transparent 27%, transparent 74%, rgba(255,0,255,0.05) 75%, rgba(255,0,255,0.05) 76%, transparent 77%);
-            background-size: 100px 100px;
-            animation: grid-flow 15s linear infinite;
-            transform: perspective(1000px) rotateX(60deg);
-        }
-
-        @keyframes grid-flow {
-            0% { transform: perspective(1000px) rotateX(60deg) translateZ(0); }
-            100% { transform: perspective(1000px) rotateX(60deg) translateZ(100px); }
-        }
-
-        .data-stream {
-            position: absolute;
-            color: #00ff88;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            animation: stream-fall linear infinite;
-            opacity: 0.8;
-            text-shadow: 0 0 10px currentColor;
-            writing-mode: vertical-rl;
-            letter-spacing: 2px;
-        }
-
-        @keyframes stream-fall {
-            0% {
-                transform: translateY(-100vh);
-                opacity: 0;
-            }
-            10% {
-                opacity: 0.8;
-            }
-            90% {
-                opacity: 0.8;
-            }
-            100% {
-                transform: translateY(100vh);
-                opacity: 0;
-            }
-        }
-
-        .virtual-content {
-            text-align: center;
-            z-index: 10;
-            max-width: 900px;
-            padding: 50px;
-            background: rgba(0,0,0,0.3);
-            border-radius: 20px;
-            border: 1px solid rgba(0,255,255,0.2);
-            backdrop-filter: blur(10px);
-            box-shadow: 
-                0 0 50px rgba(0,255,255,0.1),
-                inset 0 0 50px rgba(255,0,255,0.05);
-        }
-
-        .virtual-title {
-            font-size: 4.5em;
-            margin-bottom: 30px;
-            background: linear-gradient(45deg, #00ff00, #00ffff, #ff00ff, #ffff00);
-            background-size: 400% 400%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: hologram-text 4s ease-in-out infinite;
-            text-shadow: 0 0 30px rgba(0,255,255,0.5);
-            position: relative;
-        }
-
-        .virtual-title::after {
-            content: attr(data-text);
-            position: absolute;
-            left: 2px;
-            top: 2px;
-            background: linear-gradient(45deg, #ff0080, #0080ff);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            z-index: -1;
-            opacity: 0.3;
-        }
-
-        @keyframes hologram-text {
-            0%, 100% { 
-                background-position: 0% 50%;
-                filter: hue-rotate(0deg);
-            }
-            50% { 
-                background-position: 100% 50%;
-                filter: hue-rotate(180deg);
-            }
-        }
-
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 25px;
-            margin: 50px 0;
-        }
-
-        .feature {
-            background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1));
-            padding: 35px;
-            border-radius: 15px;
-            border: 1px solid rgba(0,255,255,0.3);
-            transition: all 0.4s ease;
+        /* CTA Button */
+        .notify-btn {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #000;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: all 0.3s ease;
+            margin-top: 2rem;
             position: relative;
             overflow: hidden;
-            backdrop-filter: blur(5px);
         }
 
-        .feature::before {
+        .notify-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.6);
+        }
+
+        .notify-btn:before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
-            transition: left 0.6s;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
         }
 
-        .feature:hover::before {
+        .notify-btn:hover:before {
             left: 100%;
         }
 
-        .feature:hover {
-            background: linear-gradient(135deg, rgba(0,255,255,0.2), rgba(255,0,255,0.2));
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 
-                0 15px 35px rgba(0,255,255,0.3),
-                0 5px 15px rgba(255,0,255,0.2);
-            border-color: #ff00ff;
+        /* Social links */
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 3rem;
         }
 
-        .feature-icon {
-            font-size: 3.5em;
-            margin-bottom: 20px;
-            text-shadow: 0 0 20px currentColor;
-            animation: icon-glow 3s ease-in-out infinite;
-        }
-
-        @keyframes icon-glow {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-        }
-
-        .feature h3 {
+        .social-link {
+            width: 50px;
+            height: 50px;
+            border: 2px solid #00ffff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: #00ffff;
-            margin-bottom: 15px;
-            font-size: 1.3em;
-            text-shadow: 0 0 10px rgba(0,255,255,0.5);
+            text-decoration: none;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            background: rgba(0, 255, 255, 0.1);
         }
 
-        .feature p {
-            opacity: 0.9;
-            line-height: 1.6;
+        .social-link:hover {
+            transform: scale(1.1) rotate(360deg);
+            border-color: #ff00ff;
+            color: #ff00ff;
+            background: rgba(255, 0, 255, 0.1);
         }
 
-        .coming-soon {
-            margin-top: 60px;
-            padding: 25px 60px;
-            background: linear-gradient(45deg, #ff00ff, #00ffff, #ff00ff);
-            background-size: 200% 200%;
-            border-radius: 50px;
-            display: inline-block;
-            font-size: 1.6em;
-            font-weight: bold;
-            letter-spacing: 4px;
-            animation: coming-soon-pulse 3s ease-in-out infinite;
-            text-transform: uppercase;
-            position: relative;
-            overflow: hidden;
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .coming-soon {
+                font-size: 2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .holo-display {
+                width: 250px;
+                height: 150px;
+            }
+            
+            .social-links {
+                gap: 1rem;
+            }
         }
 
-        @keyframes coming-soon-pulse {
+        /* VR/AR icons */
+        .vr-icon {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(0, 255, 255, 0.3);
+            animation: floatIcon 8s ease-in-out infinite;
+        }
+
+        .vr-icon:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .vr-icon:nth-child(2) {
+            top: 30%;
+            right: 15%;
+            animation-delay: 2s;
+        }
+
+        .vr-icon:nth-child(3) {
+            bottom: 25%;
+            left: 20%;
+            animation-delay: 4s;
+        }
+
+        .vr-icon:nth-child(4) {
+            bottom: 35%;
+            right: 10%;
+            animation-delay: 6s;
+        }
+
+        @keyframes floatIcon {
             0%, 100% {
-                background-position: 0% 50%;
-                box-shadow: 
-                    0 0 30px rgba(255,0,255,0.6),
-                    0 0 60px rgba(0,255,255,0.4);
-                transform: scale(1);
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0.3;
             }
             50% {
-                background-position: 100% 50%;
-                box-shadow: 
-                    0 0 40px rgba(0,255,255,0.8),
-                    0 0 80px rgba(255,0,255,0.6);
-                transform: scale(1.05);
-            }
-        }
-
-        .floating-elements {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-        }
-
-        .floating-element {
-            position: absolute;
-            border-radius: 50%;
-            animation: float-around 20s linear infinite;
-        }
-
-        @keyframes float-around {
-            0% {
-                transform: translateY(100vh) translateX(0) rotate(0deg);
-                opacity: 0;
-            }
-            10% {
-                opacity: 1;
-            }
-            90% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-100vh) translateX(200px) rotate(360deg);
-                opacity: 0;
-            }
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            animation: indicator-pulse 2s infinite;
-            color: #00ffff;
-            text-shadow: 0 0 15px rgba(0,255,255,0.8);
-        }
-
-        @keyframes indicator-pulse {
-            0%, 100% { 
-                transform: translateX(-50%) translateY(0) scale(1);
+                transform: translateY(-20px) rotate(180deg);
                 opacity: 0.7;
-            }
-            50% { 
-                transform: translateX(-50%) translateY(10px) scale(1.1);
-                opacity: 1;
-            }
-        }
-
-        .scroll-indicator::after {
-            content: '▼ ENTER THE MATRIX ▼';
-            font-size: 1.2em;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            h1, .virtual-title {
-                font-size: 2.5em;
-            }
-            .subtitle {
-                font-size: 1.3em;
-            }
-            .portal {
-                width: 250px;
-                height: 250px;
-            }
-            .feature-grid {
-                grid-template-columns: 1fr;
-            }
-            .virtual-content {
-                padding: 30px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Custom Cursor -->
-    <div class="cursor"></div>
-
-    <!-- Real World Section -->
-    <section class="real-world" id="real-world">
-        <div class="neural-network" id="neural-network"></div>
-        <div class="portal-container">
-            <h1>Enter the Virtual Realm</h1>
-            <p class="subtitle">Where Reality Dissolves Into Pure Data</p>
-            <div class="portal" onclick="scrollToVirtual()">
-                <div class="portal-ring"></div>
-                <div class="portal-ring"></div>
-                <div class="portal-ring"></div>
-                <div class="portal-center"></div>
-            </div>
-            <button class="enter-btn" onclick="scrollToVirtual()">
-                <span>Initialize Matrix</span>
-            </button>
-        </div>
-        <div class="scroll-indicator"></div>
-    </section>
-
-    <!-- Virtual World Section -->
-    <section class="virtual-world" id="virtual-world">
-        <div class="holographic-grid"></div>
-        <div class="floating-elements" id="floating-elements"></div>
-        <div class="virtual-content">
-            <h2 class="virtual-title" data-text="WELCOME TO THE NEXUS">WELCOME TO THE NEXUS</h2>
-            <p style="font-size: 1.4em; margin-bottom: 40px; opacity: 0.9; color: #00ffff; text-shadow: 0 0 10px rgba(0,255,255,0.5);">
-                Where consciousness transcends physical boundaries and minds merge with infinite possibility
-            </p>
-            
-            <div class="feature-grid">
-                <div class="feature">
-                    <div class="feature-icon">🌐</div>
-                    <h3>Neural Network</h3>
-                    <p>Connect your consciousness to a global mesh of interconnected minds across dimensions</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🤖</div>
-                    <h3>Digital Genesis</h3>
-                    <p>Craft your perfect digital avatar with quantum-level customization and neural mapping</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">🚀</div>
-                    <h3>Infinite Realms</h3>
-                    <p>Explore procedurally generated universes that adapt to your thoughts and desires</p>
-                </div>
-                <div class="feature">
-                    <div class="feature-icon">⚡</div>
-                    <h3>Quantum Presence</h3>
-                    <p>Experience true telepresence with neural-haptic feedback and thought-responsive environments</p>
+    <!-- Animated particles -->
+    <div class="particles" id="particles"></div>
+    
+    <!-- Grid overlay -->
+    <div class="grid-overlay"></div>
+    
+    <!-- Floating VR/AR icons -->
+    <div class="vr-icon">🥽</div>
+    <div class="vr-icon">🌐</div>
+    <div class="vr-icon">👾</div>
+    <div class="vr-icon">🚀</div>
+    
+    <div class="container">
+        <h1 class="logo">METAVERSE CHRONICLES</h1>
+        <p class="subtitle">Enter the Digital Dimension</p>
+        
+        <div class="coming-soon">Coming Soon</div>
+        
+        <div class="holo-display">
+            <div class="vr-image">
+                <img src="/vr2.png" alt="" height="100px" width="100px">
+                <div class="holo-content">
+                    <span id="countdown">Loading Reality...</span>
                 </div>
             </div>
-            
-            <div class="coming-soon">MATRIX INITIALIZING</div>
-            
-            <p style="margin-top: 40px; opacity: 0.8; font-size: 1.2em; color: #ff00ff; text-shadow: 0 0 8px rgba(255,0,255,0.5);">
-                Join the neural collective and become part of the next evolution of human experience
-            </p>
         </div>
-    </section>
+        <button class="notify-btn" onclick="notifyMe()">
+            Get Notified
+        </button>
+    
+        
+        <div class="social-links">
+            <a href="#" class="social-link">📱</a>
+            <a href="#" class="social-link">🌍</a>
+            <a href="#" class="social-link">📧</a>
+            <a href="#" class="social-link">🎮</a>
+        </div>
+    </div>
 
     <script>
-        // Custom cursor
-        const cursor = document.querySelector('.cursor');
-        document.addEventListener('mousemove', (e) => {
-            cursor.style.left = e.clientX + 'px';
-            cursor.style.top = e.clientY + 'px';
-        });
-
-        document.addEventListener('mousedown', () => {
-            cursor.style.transform = 'scale(0.8)';
-            cursor.style.borderColor = '#ff00ff';
-        });
-
-        document.addEventListener('mouseup', () => {
-            cursor.style.transform = 'scale(1)';
-            cursor.style.borderColor = '#00ffff';
-        });
-
-        // Smooth scroll to virtual world
-        function scrollToVirtual() {
-            document.getElementById('virtual-world').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Create neural network
-        function createNeuralNetwork() {
-            const network = document.getElementById('neural-network');
-            const nodes = [];
-            
-            // Create nodes
-            for (let i = 0; i < 25; i++) {
-                const node = document.createElement('div');
-                node.className = 'neural-node';
-                node.style.left = Math.random() * 100 + '%';
-                node.style.top = Math.random() * 100 + '%';
-                node.style.animationDelay = Math.random() * 3 + 's';
-                network.appendChild(node);
-                nodes.push(node);
-            }
-            
-            // Create connections
-            for (let i = 0; i < nodes.length; i++) {
-                for (let j = i + 1; j < nodes.length; j++) {
-                    if (Math.random() < 0.3) {
-                        const connection = document.createElement('div');
-                        connection.className = 'neural-connection';
-                        
-                        const rect1 = nodes[i].getBoundingClientRect();
-                        const rect2 = nodes[j].getBoundingClientRect();
-                        
-                        const distance = Math.sqrt(
-                            Math.pow(rect2.left - rect1.left, 2) + 
-                            Math.pow(rect2.top - rect1.top, 2)
-                        );
-                        
-                        const angle = Math.atan2(rect2.top - rect1.top, rect2.left - rect1.left);
-                        
-                        connection.style.width = distance + 'px';
-                        connection.style.left = parseFloat(nodes[i].style.left) + '%';
-                        connection.style.top = parseFloat(nodes[i].style.top) + '%';
-                        connection.style.transform = `rotate(${angle}rad)`;
-                        connection.style.animationDelay = Math.random() * 4 + 's';
-                        
-                        network.appendChild(connection);
-                    }
-                }
-            }
-        }
-
-        // Create data streams
-        function createDataStreams() {
-            const virtualWorld = document.getElementById('virtual-world');
-            const characters = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
-            const binaryChars = '01';
-            
-            for (let i = 0; i < 40; i++) {
-                const stream = document.createElement('div');
-                stream.className = 'data-stream';
-                stream.style.left = Math.random() * 100 + '%';
-                stream.style.animationDuration = (Math.random() * 4 + 3) + 's';
-                stream.style.animationDelay = Math.random() * 3 + 's';
-                
-                const colors = ['#00ff88', '#00ffff', '#ff00ff', '#00ff00', '#ffff00'];
-                stream.style.color = colors[Math.floor(Math.random() * colors.length)];
-                
-                let text = '';
-                const charSet = Math.random() < 0.7 ? binaryChars : characters;
-                for (let j = 0; j < 15; j++) {
-                    text += charSet[Math.floor(Math.random() * charSet.length)] + '\n';
-                }
-                stream.textContent = text;
-                
-                virtualWorld.appendChild(stream);
-            }
-        }
-
-        // Create floating elements
-        function createFloatingElements() {
-            const container = document.getElementById('floating-elements');
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
             
             for (let i = 0; i < 50; i++) {
-                const element = document.createElement('div');
-                element.className = 'floating-element';
-                
-                const size = Math.random() * 6 + 2;
-                element.style.width = size + 'px';
-                element.style.height = size + 'px';
-                element.style.left = Math.random() * 100 + '%';
-                
-                const colors = ['#00ffff', '#ff00ff', '#00ff00', '#ffff00'];
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                element.style.background = color;
-                element.style.boxShadow = `0 0 ${size * 2}px ${color}`;
-                
-                element.style.animationDuration = (15 + Math.random() * 20) + 's';
-                element.style.animationDelay = Math.random() * 10 + 's';
-                
-                container.appendChild(element);
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                particlesContainer.appendChild(particle);
             }
         }
 
-        // Glitch effect for titles
-        function addGlitchEffect() {
-            const title = document.querySelector('.virtual-title');
-            setInterval(() => {
-                if (Math.random() < 0.1) {
-                    title.style.textShadow = `
-                        ${Math.random() * 10 - 5}px 0 #ff00ff,
-                        ${Math.random() * 10 - 5}px 0 #00ffff
-                    `;
-                    setTimeout(() => {
-                        title.style.textShadow = '0 0 30px rgba(0,255,255,0.5)';
-                    }, 100);
-                }
-            }, 2000);
+        // Countdown or status messages
+        const messages = [
+            "Reality Initializing...",
+            "Loading Dimensions...",
+            "Syncing Universes...",
+            "Almost There...",
+            "Prepare for Launch!"
+        ];
+
+        let messageIndex = 0;
+        function updateMessage() {
+            const countdownElement = document.getElementById('countdown');
+            countdownElement.textContent = messages[messageIndex];
+            messageIndex = (messageIndex + 1) % messages.length;
         }
 
-        // Advanced parallax effect
-        document.addEventListener('mousemove', (e) => {
-            const x = (e.clientX / window.innerWidth - 0.5) * 2;
-            const y = (e.clientY / window.innerHeight - 0.5) * 2;
-            
-            const portal = document.querySelector('.portal');
-            const virtualContent = document.querySelector('.virtual-content');
-            const neuralNodes = document.querySelectorAll('.neural-node');
-            
-            if (portal) {
-                portal.style.transform = `translate(${x * 15}px, ${y * 15}px) rotateY(${x * 5}deg) rotateX(${y * 5}deg)`;
-            }
-            
-            if (virtualContent) {
-                virtualContent.style.transform = `translateZ(${x * 20}px) rotateY(${x * 2}deg)`;
-            }
-            
-            neuralNodes.forEach((node, index) => {
-                const intensity = (index % 3 + 1) * 5;
-                node.style.transform = `translate(${x * intensity}px, ${y * intensity}px)`;
-            });
-        });
+        // Notification function
+        function notifyMe() {
+            alert('🚀 Awesome! You\'ll be the first to know when we launch into the metaverse!');
+        }
 
-        // Interactive hover effects for features
-        document.querySelectorAll('.feature').forEach(feature => {
-            feature.addEventListener('mouseenter', () => {
-                feature.style.animation = 'none';
-                feature.style.transform = 'translateY(-12px) scale(1.05) rotateY(5deg)';
-            });
+        // Interactive cursor trail
+        let mouseTrail = [];
+        document.addEventListener('mousemove', function(e) {
+            mouseTrail.push({x: e.clientX, y: e.clientY, time: Date.now()});
             
-            feature.addEventListener('mouseleave', () => {
-                feature.style.transform = 'translateY(0) scale(1) rotateY(0deg)';
-            });
-        });
-
-        // Portal activation effect
-        document.querySelector('.portal').addEventListener('click', function() {
-            this.style.animation = 'portal-activate 1s ease-out';
+            // Create trail effect
+            const trail = document.createElement('div');
+            trail.style.position = 'fixed';
+            trail.style.left = e.clientX + 'px';
+            trail.style.top = e.clientY + 'px';
+            trail.style.width = '4px';
+            trail.style.height = '4px';
+            trail.style.background = '#00ffff';
+            trail.style.borderRadius = '50%';
+            trail.style.pointerEvents = 'none';
+            trail.style.zIndex = '5';
+            trail.style.animation = 'fadeOut 1s forwards';
+            document.body.appendChild(trail);
+            
             setTimeout(() => {
-                this.style.animation = '';
+                if (trail.parentNode) {
+                    trail.parentNode.removeChild(trail);
+                }
             }, 1000);
+            
+            // Clean up old trail points
+            mouseTrail = mouseTrail.filter(point => Date.now() - point.time < 1000);
         });
 
-        // Add portal activation keyframes
-        const portalStyle = document.createElement('style');
-        portalStyle.textContent = `
-            @keyframes portal-activate {
-                0% { transform: scale(1) rotateZ(0deg); }
-                25% { transform: scale(1.3) rotateZ(90deg); filter: brightness(2); }
-                50% { transform: scale(0.8) rotateZ(180deg); filter: hue-rotate(180deg); }
-                75% { transform: scale(1.2) rotateZ(270deg); filter: brightness(1.5); }
-                100% { transform: scale(1) rotateZ(360deg); filter: none; }
+        // Add fadeOut animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeOut {
+                0% { opacity: 1; transform: scale(1); }
+                100% { opacity: 0; transform: scale(0); }
             }
         `;
-        document.head.appendChild(portalStyle);
+        document.head.appendChild(style);
 
-        // Random digital artifacts
-        function createDigitalArtifacts() {
-            setInterval(() => {
-                if (Math.random() < 0.3) {
-                    const artifact = document.createElement('div');
-                    artifact.style.position = 'fixed';
-                    artifact.style.left = Math.random() * 100 + '%';
-                    artifact.style.top = Math.random() * 100 + '%';
-                    artifact.style.width = Math.random() * 50 + 20 + 'px';
-                    artifact.style.height = '2px';
-                    artifact.style.background = Math.random() < 0.5 ? '#00ffff' : '#ff00ff';
-                    artifact.style.opacity = '0.8';
-                    artifact.style.pointerEvents = 'none';
-                    artifact.style.zIndex = '1000';
-                    artifact.style.animation = 'artifact-glitch 0.5s ease-out forwards';
-                    
-                    document.body.appendChild(artifact);
-                    
-                    setTimeout(() => {
-                        artifact.remove();
-                    }, 500);
+        // Initialize everything
+        createParticles();
+        setInterval(updateMessage, 2000);
+        
+        // Add some interactive sound effects (visual feedback)
+        document.addEventListener('click', function(e) {
+            const ripple = document.createElement('div');
+            ripple.style.position = 'fixed';
+            ripple.style.left = e.clientX + 'px';
+            ripple.style.top = e.clientY + 'px';
+            ripple.style.width = '0px';
+            ripple.style.height = '0px';
+            ripple.style.border = '2px solid #ff00ff';
+            ripple.style.borderRadius = '50%';
+            ripple.style.pointerEvents = 'none';
+            ripple.style.zIndex = '20';
+            ripple.style.animation = 'ripple 0.6s ease-out forwards';
+            document.body.appendChild(ripple);
+            
+            setTimeout(() => {
+                if (ripple.parentNode) {
+                    ripple.parentNode.removeChild(ripple);
                 }
-            }, 3000);
-        }
+            }, 600);
+        });
 
-        // Add artifact animation
-        const artifactStyle = document.createElement('style');
-        artifactStyle.textContent = `
-            @keyframes artifact-glitch {
-                0% { opacity: 0.8; transform: scaleX(1); }
-                25% { opacity: 1; transform: scaleX(0.5); }
-                50% { opacity: 0.6; transform: scaleX(1.5); }
-                75% { opacity: 0.9; transform: scaleX(0.3); }
-                100% { opacity: 0; transform: scaleX(0); }
+        // Add ripple animation
+        const rippleStyle = document.createElement('style');
+        rippleStyle.textContent = `
+            @keyframes ripple {
+                0% { 
+                    width: 0px; 
+                    height: 0px; 
+                    opacity: 1; 
+                    transform: translate(-50%, -50%);
+                }
+                100% { 
+                    width: 100px; 
+                    height: 100px; 
+                    opacity: 0; 
+                    transform: translate(-50%, -50%);
+                }
             }
         `;
-        document.head.appendChild(artifactStyle);
-
-        // Breathing effect for the virtual world
-        function addBreathingEffect() {
-            const virtualWorld = document.querySelector('.virtual-world');
-            setInterval(() => {
-                virtualWorld.style.filter = `brightness(${1 + Math.sin(Date.now() * 0.001) * 0.1})`;
-            }, 50);
-        }
-
-        // Initialize everything when page loads
-        window.addEventListener('load', () => {
-            createNeuralNetwork();
-            createDataStreams();
-            createFloatingElements();
-            addGlitchEffect();
-            createDigitalArtifacts();
-            addBreathingEffect();
-            
-            // Entrance animation
-            setTimeout(() => {
-                document.querySelector('.portal-container').style.opacity = '1';
-                document.querySelector('.portal-container').style.transform = 'translateY(0)';
-            }, 500);
-        });
-
-        // Screen shake effect on portal click
-        function screenShake() {
-            document.body.style.animation = 'screen-shake 0.5s ease-out';
-            setTimeout(() => {
-                document.body.style.animation = '';
-            }, 500);
-        }
-
-        const shakeStyle = document.createElement('style');
-        shakeStyle.textContent = `
-            @keyframes screen-shake {
-                0%, 100% { transform: translateX(0); }
-                10% { transform: translateX(-5px); }
-                20% { transform: translateX(5px); }
-                30% { transform: translateX(-3px); }
-                40% { transform: translateX(3px); }
-                50% { transform: translateX(-2px); }
-                60% { transform: translateX(2px); }
-                70% { transform: translateX(-1px); }
-                80% { transform: translateX(1px); }
-                90% { transform: translateX(0); }
-            }
-        `;
-        document.head.appendChild(shakeStyle);
-
-        // Add screen shake to portal click
-        document.querySelector('.portal').addEventListener('click', screenShake);
-
-        // Keyboard interactions
-        document.addEventListener('keydown', (e) => {
-            if (e.code === 'Space') {
-                e.preventDefault();
-                scrollToVirtual();
-            }
-            if (e.code === 'Enter') {
-                e.preventDefault();
-                screenShake();
-            }
-        });
-
-        // Enhanced scroll indicator
-        window.addEventListener('scroll', () => {
-            const scrollIndicator = document.querySelector('.scroll-indicator');
-            const scrollPercent = window.pageYOffset / (document.documentElement.scrollHeight - window.innerHeight);
-            
-            if (scrollPercent > 0.1) {
-                scrollIndicator.style.opacity = '0';
-            } else {
-                scrollIndicator.style.opacity = '0.7';
-            }
-        });
+        document.head.appendChild(rippleStyle);
     </script>
 </body>
 </html>
