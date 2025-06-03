@@ -5,6 +5,7 @@ const multer = require("multer");
 const { storage } = require("../../cloudConfig");
 const Community = require("../../models/community");
 const Group = require("../../models/group");
+const CommunityUser = require("../../models/communityUser")
 
 // Multer config for image/video filtering
 const upload = multer({
@@ -49,8 +50,13 @@ router.get("/community/:communityId/group", async (req, res) => {
       console.log("No matching user for this community");
       return res.redirect(`/community/${communityId}/login`);
     }
+    const currUser = await CommunityUser.findById(sessionUser.id);
 
-    res.render("./discussionRoom/group.ejs", { community, communityId, groups});
+    if(!currUser){
+      res.status(404).send("User is not found");
+    }
+
+    res.render("./discussionRoom/group.ejs", { community, communityId, groups, currUser});
   } catch (error) {
     console.error("Error fetching group page:", error);
     res.status(500).send("An error occurred while fetching the group page.");
