@@ -81,10 +81,18 @@
         border-bottom: 1px solid var(--gray-200);
         padding: 2rem 0;
         margin-bottom: 0;
-        position: sticky;
+        position: fixed; /* Changed from sticky to fixed */
         top: 0;
+        left: 0;
+        right: 0;
         z-index: 100;
         box-shadow: var(--shadow-sm);
+        transform: translateY(0); /* Initially visible */
+        transition: transform 0.3s ease; /* Smooth slide animation */
+    }
+
+    .page-header.hidden {
+        transform: translateY(-100%); /* Slide up out of view */
     }
 
     .header-content {
@@ -92,6 +100,7 @@
         justify-content: space-between;
         align-items: flex-start;
         gap: 2rem;
+        padding-top: 6rem;
     }
 
     .header-left {
@@ -201,6 +210,7 @@
         grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
         gap: 1.5rem;
         margin-bottom: 2rem;
+        padding-top: 3rem;
     }
 
     .stat-card {
@@ -214,13 +224,6 @@
     .stat-card:hover {
         border-color: var(--gray-300);
         box-shadow: var(--shadow-sm);
-    }
-
-    .stat-header {
-        display: flex;
-        justify-content: between;
-        align-items: center;
-        margin-bottom: 1rem;
     }
 
     .stat-icon {
@@ -264,6 +267,7 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 1.5rem;
+        margin-top: 4rem;
     }
 
     .section-title {
@@ -592,7 +596,7 @@
 
     @media (max-width: 768px) {
         .container {
-            padding: 0 1rem;
+            padding: 4rem 1rem;
         }
         
         .header-content {
@@ -608,7 +612,8 @@
         
         .stats-grid {
             grid-template-columns: repeat(2, 1fr);
-            margin-top: 1.5rem !important;
+            margin-top: 1.5rem;
+            padding-top: 1rem;
         }
         
         .think-tanks-grid {
@@ -718,7 +723,7 @@
 
         <div class="container">
             <!-- Statistics Cards -->
-            <div class="stats-grid" style="margin-top: 2rem;">
+            <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-icon">
                         <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1052,6 +1057,23 @@
             setTimeout(() => {
                 document.body.style.opacity = '1';
             }, 100);
+
+            // Scroll direction detection for header
+            let lastScrollTop = 0;
+            window.addEventListener('scroll', () => {
+                const header = document.querySelector('.page-header');
+                const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                if (currentScrollTop > lastScrollTop) {
+                    // Scrolling down
+                    header.classList.add('hidden');
+                } else {
+                    // Scrolling up
+                    header.classList.remove('hidden');
+                }
+
+                lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+            });
         });
 
         // Add initial loading state
