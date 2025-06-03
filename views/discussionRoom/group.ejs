@@ -1,274 +1,1061 @@
 <%layout('/layouts/boilerplate.ejs')%>
-<body>
-    <style>
-        :root {
-            --primary: #A82400;
-            --secondary: #d26041;
-            --background: #FFF8F0;
+
+<style>
+    :root {
+        --primary-color: #A82400;
+        --primary-dark: #8A1E00;
+        --secondary-color: #D63A0D;
+        --accent-color: #FFEBCD;
+        --bg-color: #FFEBCD;
+        --card-bg: #FFF5E6;
+        --hover-bg: #FFE4CC;
+        --text-primary: #A82400;
+        --text-secondary: #6B4423;
+        --text-dark: #3A2317;
+        --white: #FFFFFF;
+        --gray-50: #FAFAFA;
+        --gray-100: #F5F5F5;
+        --gray-200: #E5E5E5;
+        --gray-300: #D4D4D4;
+        --gray-600: #525252;
+        --gray-800: #262626;
+        --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        --radius-sm: 4px;
+        --radius-md: 6px;
+        --radius-lg: 8px;
+        --radius-xl: 12px;
+        --radius-2xl: 16px;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: var(--gray-50);
+        color: var(--gray-800);
+        line-height: 1.5;
+        font-weight: 400;
+        letter-spacing: -0.01em;
+    }
+
+    /* Typography System */
+    .text-xs { font-size: 0.75rem; line-height: 1rem; }
+    .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+    .text-base { font-size: 1rem; line-height: 1.5rem; }
+    .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+    .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
+    .text-5xl { font-size: 3rem; line-height: 1; }
+
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+    .font-extrabold { font-weight: 800; }
+
+    /* Layout Container */
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 2rem;
+    }
+
+    .page-wrapper {
+        min-height: 100vh;
+        background: var(--gray-50);
+        padding-top: 0;
+    }
+
+    /* Page Header */
+    .page-header {
+        background: var(--white);
+        border-bottom: 1px solid var(--gray-200);
+        padding: 2rem 0;
+        margin-bottom: 0;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 2rem;
+    }
+
+    .header-left {
+        flex: 1;
+    }
+
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .breadcrumb-item {
+        color: var(--gray-600);
+        font-size: 0.875rem;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .breadcrumb-item:hover {
+        color: var(--primary-color);
+    }
+
+    .breadcrumb-separator {
+        color: var(--gray-300);
+        font-size: 0.875rem;
+    }
+
+    .page-title {
+        font-size: 2.25rem;
+        font-weight: 800;
+        color: var(--gray-800);
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.025em;
+    }
+
+    .page-subtitle {
+        font-size: 1.125rem;
+        color: var(--gray-600);
+        line-height: 1.6;
+        max-width: 600px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: var(--white);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 600;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-md);
+        color: var(--white);
+        text-decoration: none;
+    }
+
+    .btn-secondary {
+        background: var(--white);
+        color: var(--gray-600);
+        border: 1px solid var(--gray-300);
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-md);
+        font-weight: 500;
+        font-size: 0.875rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+        background: var(--gray-50);
+        border-color: var(--gray-400);
+        color: var(--gray-800);
+        text-decoration: none;
+    }
+
+    .btn-icon {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stat-card {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+        border-color: var(--gray-300);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .stat-header {
+        display: flex;
+        justify-content: between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .stat-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--gray-100);
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .stat-icon svg {
+        width: 20px;
+        height: 20px;
+        color: var(--primary-color);
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: var(--gray-600);
+        font-weight: 500;
+    }
+
+    /* Main Content */
+    .main-content {
+        padding-bottom: 4rem;
+        margin-top: 2rem;
+    }
+
+    .content-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-800);
+    }
+
+    .view-controls {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .view-toggle {
+        display: flex;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-md);
+        overflow: hidden;
+    }
+
+    .view-btn {
+        background: var(--white);
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .view-btn.active {
+        background: var(--primary-color);
+        color: var(--white);
+    }
+
+    .view-btn:not(.active):hover {
+        background: var(--gray-50);
+    }
+
+    .view-btn svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    /* Think Tank Grid */
+    .think-tanks-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .think-tank-card {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-2xl);
+        overflow: hidden;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .think-tank-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--gray-300);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .card-image {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        background: var(--gray-100);
+    }
+
+    .card-content {
+        padding: 1.5rem;
+    }
+
+    .card-header {
+        margin-bottom: 1rem;
+    }
+
+    .card-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 0.5rem;
+        line-height: 1.4;
+    }
+
+    .card-meta {
+        display: flex;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-badge {
+        background: var(--primary-color);
+        color: var(--white);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.025em;
+    }
+
+    .category-badge {
+        background: var(--gray-100);
+        color: var(--gray-700);
+        padding: 0.25rem 0.75rem;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 500;
+    }
+
+    .card-description {
+        color: var(--gray-600);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 1rem;
+        border-top: 1px solid var(--gray-200);
+    }
+
+    .participants {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--gray-600);
+        font-size: 0.875rem;
+    }
+
+    .participants svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .created-date {
+        color: var(--gray-500);
+        font-size: 0.75rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-2xl);
+        grid-column: 1 / -1;
+    }
+
+    .empty-icon {
+        width: 64px;
+        height: 64px;
+        background: var(--gray-100);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+    }
+
+    .empty-icon svg {
+        width: 24px;
+        height: 24px;
+        color: var(--gray-400);
+    }
+
+    .empty-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--gray-800);
+        margin-bottom: 0.5rem;
+    }
+
+    .empty-description {
+        color: var(--gray-600);
+        margin-bottom: 2rem;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        line-height: 1.6;
+    }
+
+    /* Search and Filter */
+    .search-filter-bar {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        align-items: center;
+    }
+
+    .search-input {
+        flex: 1;
+        max-width: 400px;
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
+    }
+
+    .filter-select {
+        padding: 0.75rem 1rem;
+        border: 1px solid var(--gray-300);
+        border-radius: var(--radius-md);
+        font-size: 0.875rem;
+        background: var(--white);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(168, 36, 0, 0.1);
+    }
+
+    /* List View */
+    .think-tanks-list {
+        display: none;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .think-tanks-list.active {
+        display: flex;
+    }
+
+    .think-tanks-grid.list-view {
+        display: none;
+    }
+
+    .list-item {
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        display: flex;
+        gap: 1.5rem;
+        align-items: center;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .list-item:hover {
+        border-color: var(--gray-300);
+        box-shadow: var(--shadow-sm);
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .list-image {
+        width: 80px;
+        height: 80px;
+        border-radius: var(--radius-lg);
+        object-fit: cover;
+        flex-shrink: 0;
+        background: var(--gray-100);
+    }
+
+    .list-content {
+        flex: 1;
+    }
+
+    .list-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin-bottom: 0.25rem;
+    }
+
+    .list-description {
+        color: var(--gray-600);
+        font-size: 0.875rem;
+        line-height: 1.5;
+        margin-bottom: 0.5rem;
+    }
+
+    .list-meta {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        font-size: 0.75rem;
+        color: var(--gray-500);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+        .container {
+            padding: 0 1.5rem;
         }
         
-        body {
-            background-color: #fdf2e9;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        .think-tanks-grid {
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
         }
         
-        .page-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
+        .page-header {
+            padding: 1.5rem 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            padding: 0 1rem;
         }
         
-        .header-banner {
-            background-color: var(--background);
-            padding: 1.5rem;
-            border-bottom: 3px solid var(--primary);
-            border-radius: 12px 12px 0 0;
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 12px rgba(168, 36, 0, 0.1);
+        .header-content {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        .header-actions {
+            width: 100%;
+            justify-content: flex-start;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            margin-top: 1.5rem !important;
+        }
+        
+        .think-tanks-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .content-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .search-filter-bar {
+            flex-direction: column;
+            align-items: stretch;
         }
         
         .page-title {
-            color: var(--primary);
-            font-size: 2rem;
-            font-weight: 600;
-            margin: 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            position: relative;
+            font-size: 1.875rem;
         }
         
-        .page-title::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 80px;
-            height: 4px;
-            background-color: var(--secondary);
-            border-radius: 2px;
+        .list-item {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
         }
         
-        .create-button {
-            background-color: var(--primary);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 3px 8px rgba(168, 36, 0, 0.3);
-            transition: all 0.3s ease;
-        }
-        
-        .create-button:hover {
-            transform: rotate(90deg);
-            background-color: var(--secondary);
-        }
-        
-        .create-button img {
-            filter: brightness(10);
-        }
-        
-        .groups-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-            gap: 2rem;
-        }
-        
-        .group-card {
-            background: linear-gradient(135deg, var(--background) 0%, #ffe6d5 100%);
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(210, 96, 65, 0.15);
-            transition: transform 0.3s ease;
-            position: relative;
-        }
-        
-        .group-card:hover {
-            transform: translateY(-8px);
-        }
-        
-        .group-card:hover::before {
-            opacity: 1;
-        }
-        
-        .group-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        
-        .group-inner {
-            display: flex;
-            height: 250px;
-        }
-        
-        .group-details {
-            flex: 1;
-            padding: 1.5rem;
-            position: relative;
-        }
-        
-        .group-name {
-            color: var(--primary);
-            font-size: 1.5rem;
-            font-weight: 400;
-            margin-top: 0;
-            margin-bottom: 1rem;
-        }
-        
-        .description-container {
-            position: relative;
-            height: 130px;
-            margin-top: 1rem;
-            overflow: hidden;
-        }
-        
-        .description {
-            color: var(--secondary);
-            line-height: 1.7;
-            font-size: 1rem;
-            height: 100%;
-            overflow-y: auto;
-            padding-right: 10px;
-            position: relative;
-        }
-        
-        .description::-webkit-scrollbar {
-            width: 4px;
-        }
-        
-        .description::-webkit-scrollbar-thumb {
-            background-color: var(--secondary);
-            border-radius: 10px;
-        }
-        
-        .description-container::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 30px;
-            background: linear-gradient(to top, rgba(255, 248, 240, 1), rgba(255, 248, 240, 0));
-            pointer-events: none;
-        }
-        
-        .group-image-container {
-            width: 40%;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .group-image {
+        .list-image {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
+            height: 160px;
         }
         
-        .group-card:hover .group-image {
-            transform: scale(1.05);
+        .page-header {
+            padding: 1.25rem 0;
         }
         
-        .no-groups {
-            grid-column: 1 / -1;
-            text-align: center;
-            color: var(--secondary);
-            padding: 4rem 2rem;
-            font-size: 1.2rem;
-            background-color: var(--background);
-            border-radius: 16px;
-            border: 2px dashed var(--secondary);
+        .main-content {
+            margin-top: 1.5rem;
         }
-        
-        .empty-state-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
-        
-        @media (max-width: 992px) {
-            .groups-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .group-inner {
-                flex-direction: column-reverse;
-                height: auto;
-            }
-            
-            .group-image-container {
-                width: 100%;
-                height: 180px;
-            }
-            
-            .description-container {
-                height: 100px;
-            }
-            
-            .header-banner {
-                flex-direction: column;
-                gap: 1rem;
-                text-align: center;
-            }
-            
-            .page-title::after {
-                left: 50%;
-                transform: translateX(-50%);
-            }
-        }
-    </style>
+    }
 
-    <div class="page-container">
-        <div class="header-banner">
-            <h1 class="page-title">Think Tank</h1>
-            <a href="/community/<%= community._id %>/groupForm" class="create-button" title="Create New Group">
-                <img src="/groupCreate.png" alt="Create Group" height="24px" width="24px">
-            </a>
-        </div>
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+            margin-top: 1rem !important;
+        }
+        
+        .page-header {
+            padding: 1rem 0;
+        }
+        
+        .card-content {
+            padding: 1rem;
+        }
+        
+        .main-content {
+            margin-top: 1rem;
+        }
+        
+        .header-actions {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .btn-primary,
+        .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
 
-        <div class="groups-grid">
-            <% if(groups && groups.length > 0) { %>
-                <% for(let group of groups) { %>
-                    <a href="/community/<%= community._id %>/groupchat" style="text-decoration: none;">
-                        <div class="group-card">
-                            <div class="group-inner">
-                                <div class="group-details">
-                                    <h2 class="group-name"><%= group.projectName %></h2>
-                                    <div class="description-container">
-                                        <p class="description"><%= group.projectDescription %></p>
+<body>
+    <div class="page-wrapper">
+        <!-- Page Header -->
+        <header class="page-header">
+            <div class="container">
+                <div class="header-content">
+                    <div class="header-left">
+                        <nav class="breadcrumb">
+                            <a href="/community/<%= community._id %>" class="breadcrumb-item">Community</a>
+                            <span class="breadcrumb-separator">•</span>
+                            <span class="breadcrumb-item">Think Tank</span>
+                        </nav>
+                        <h1 class="page-title">Think Tank</h1>
+                        <p class="page-subtitle">
+                            Collaborative innovation spaces where experts and thought leaders come together to tackle complex challenges and drive breakthrough solutions.
+                        </p>
+                    </div>
+                    <div class="header-actions">
+                        <a href="/community/<%= community._id %>/groupForm" class="btn-primary">
+                            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                            </svg>
+                            Create Think Tank
+                        </a>
+                        <button class="btn-secondary">
+                            <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                            </svg>
+                            Filter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="container">
+            <!-- Statistics Cards -->
+            <div class="stats-grid" style="margin-top: 2rem;">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value"><%= groups ? groups.length : 0 %></div>
+                    <div class="stat-label">Active Think Tanks</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">324</div>
+                    <div class="stat-label">Total Members</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">47</div>
+                    <div class="stat-label">Completed Projects</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                        </svg>
+                    </div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Industry Sectors</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="content-header">
+                    <h2 class="section-title">All Think Tanks</h2>
+                    <div class="view-controls">
+                        <div class="view-toggle">
+                            <button class="view-btn active" onclick="switchView('grid')">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                            </button>
+                            <button class="view-btn" onclick="switchView('list')">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search and Filter Bar -->
+                <div class="search-filter-bar">
+                    <input type="text" placeholder="Search think tanks..." class="search-input" id="searchInput">
+                    <select class="filter-select" id="categoryFilter">
+                        <option value="">All Categories</option>
+                        <option value="technology">Technology</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="sustainability">Sustainability</option>
+                        <option value="finance">Finance</option>
+                        <option value="education">Education</option>
+                    </select>
+                </div>
+
+                <!-- Grid View -->
+                <div class="think-tanks-grid" id="gridView">
+                    <% if(groups && groups.length > 0) { %>
+                        <% for(let group of groups) { %>
+                            <a href="/community/<%= community._id %>/groupchat" class="think-tank-card">
+                                <img 
+                                    src="<%= group.image.url %>" 
+                                    alt="<%= group.projectName %>" 
+                                    class="card-image"
+                                    onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=400&h=200&fit=crop'; this.onerror='';"
+                                >
+                                <div class="card-content">
+                                    <div class="card-header">
+                                        <h3 class="card-title"><%= group.projectName %></h3>
+                                        <div class="card-meta">
+                                            <span class="status-badge">Active</span>
+                                            <span class="category-badge">Innovation</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <p class="card-description">
+                                        <%= group.projectDescription %>
+                                    </p>
+                                    
+                                    <div class="card-footer">
+                                        <div class="participants">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                            </svg>
+                                            <span>8 members</span>
+                                        </div>
+                                        <div class="created-date">
+                                            Created 2 weeks ago
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="group-image-container">
-                                    <img 
-                                        src="<%= group.image.url %>" 
-                                        alt="<%= group.projectName %>" 
-                                        class="group-image"
-                                        onerror="this.src='/default-group-image.png'; this.onerror='';"
-                                    >
-                                </div>
+                            </a>
+                        <% } %>
+                    <% } else { %>
+                        <div class="empty-state">
+                            <div class="empty-icon">
+                                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                </svg>
                             </div>
+                            <h3 class="empty-title">No Think Tanks Available</h3>
+                            <p class="empty-description">
+                                Be the first to create a collaborative think tank and start driving innovation in your field. Bring together the brightest minds to solve complex challenges.
+                            </p>
+                            <a href="/community/<%= community._id %>/groupForm" class="btn-primary">
+                                <svg class="btn-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                                </svg>
+                                Create Your First Think Tank
+                            </a>
                         </div>
-                    </a>
-                <% } %>
-            <% } else { %>
-                <div class="no-groups">
-                    <div class="empty-state-icon">📋</div>
-                    <p>No think tanks available yet. Create your first one!</p>
+                    <% } %>
                 </div>
-            <% } %>
+
+                <!-- List View -->
+                <div class="think-tanks-list" id="listView">
+                    <% if(groups && groups.length > 0) { %>
+                        <% for(let group of groups) { %>
+                            <a href="/community/<%= community._id %>/groupchat" class="list-item">
+                                <img 
+                                    src="<%= group.image.url %>" 
+                                    alt="<%= group.projectName %>" 
+                                    class="list-image"
+                                    onerror="this.src='https://images.unsplash.com/photo-1552664730-d307ca884978?w=80&h=80&fit=crop'; this.onerror='';"
+                                >
+                                <div class="list-content">
+                                    <h3 class="list-title"><%= group.projectName %></h3>
+                                    <p class="list-description"><%= group.projectDescription %></p>
+                                    <div class="list-meta">
+                                        <span>8 members</span>
+                                        <span>•</span>
+                                        <span>Active</span>
+                                        <span>•</span>
+                                        <span>Created 2 weeks ago</span>
+                                    </div>
+                                </div>
+                            </a>
+                        <% } %>
+                    <% } %>
+                </div>
+            </main>
         </div>
     </div>
+
+    <script>
+        // View switching functionality
+        function switchView(viewType) {
+            const gridView = document.getElementById('gridView');
+            const listView = document.getElementById('listView');
+            const gridBtn = document.querySelector('.view-btn:first-child');
+            const listBtn = document.querySelector('.view-btn:last-child');
+            
+            if (viewType === 'grid') {
+                gridView.style.display = 'grid';
+                listView.classList.remove('active');
+                gridBtn.classList.add('active');
+                listBtn.classList.remove('active');
+            } else {
+                gridView.style.display = 'none';
+                listView.classList.add('active');
+                listBtn.classList.add('active');
+                gridBtn.classList.remove('active');
+            }
+        }
+
+        // Search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            
+            if (!searchInput) return;
+            
+            searchInput.addEventListener('input', filterThinkTanks);
+            if (categoryFilter) {
+                categoryFilter.addEventListener('change', filterThinkTanks);
+            }
+        }
+
+        function filterThinkTanks() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter');
+            const selectedCategory = categoryFilter ? categoryFilter.value.toLowerCase() : '';
+            
+            const cards = document.querySelectorAll('.think-tank-card, .list-item');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.card-title, .list-title').textContent.toLowerCase();
+                const description = card.querySelector('.card-description, .list-description').textContent.toLowerCase();
+                
+                const matchesSearch = title.includes(searchTerm) || description.includes(searchTerm);
+                const matchesCategory = !selectedCategory || true; // Add category matching logic here
+                
+                if (matchesSearch && matchesCategory) {
+                    card.style.display = '';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Show/hide empty state
+            const visibleCards = document.querySelectorAll('.think-tank-card:not([style*="display: none"]), .list-item:not([style*="display: none"])');
+            const emptyState = document.querySelector('.empty-state');
+            
+            if (visibleCards.length === 0 && (searchTerm || selectedCategory)) {
+                // Create temporary "no results" message
+                showNoResults();
+            } else {
+                hideNoResults();
+            }
+        }
+
+        function showNoResults() {
+            let noResults = document.querySelector('.no-results-state');
+            if (!noResults) {
+                noResults = document.createElement('div');
+                noResults.className = 'empty-state no-results-state';
+                noResults.innerHTML = `
+                    <div class="empty-icon">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <h3 class="empty-title">No Results Found</h3>
+                    <p class="empty-description">
+                        Try adjusting your search terms or filters to find what you're looking for.
+                    </p>
+                `;
+                document.getElementById('gridView').appendChild(noResults);
+            }
+            noResults.style.display = 'block';
+        }
+
+        function hideNoResults() {
+            const noResults = document.querySelector('.no-results-state');
+            if (noResults) {
+                noResults.style.display = 'none';
+            }
+        }
+
+        // Keyboard shortcuts
+        function setupKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + K for search focus
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput) {
+                        searchInput.focus();
+                    }
+                }
+                
+                // Escape to clear search
+                if (e.key === 'Escape') {
+                    const searchInput = document.getElementById('searchInput');
+                    if (searchInput && searchInput === document.activeElement) {
+                        searchInput.value = '';
+                        filterThinkTanks();
+                        searchInput.blur();
+                    }
+                }
+            });
+        }
+
+        // Animation on scroll
+        function setupScrollAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe cards for animation
+            document.querySelectorAll('.think-tank-card, .stat-card').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(el);
+            });
+        }
+
+        // Enhanced hover effects
+        function setupHoverEffects() {
+            const cards = document.querySelectorAll('.think-tank-card, .list-item');
+            
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', () => {
+                    card.style.transform = 'translateY(-4px)';
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    card.style.transform = 'translateY(0)';
+                });
+            });
+        }
+
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            setupSearch();
+            setupKeyboardShortcuts();
+            setupScrollAnimations();
+            setupHoverEffects();
+            
+            // Add smooth loading
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Add initial loading state
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.3s ease';
+    </script>
 </body>
