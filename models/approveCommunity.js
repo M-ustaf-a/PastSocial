@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -6,21 +6,47 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    age: {
+        type: Number,
+        required: true,
+    },
     email: {
+        type: String,
+        required: true,
+    },
+    phone: {
+        type: String, // Changed from Number to String
+    },
+    profilePhoto: {
+        url: String,
+        filename: String,
+    },
+    bio: {
+        type: String,
+        // Remove required: true if it's optional
+    },
+    occupation: {
         type: String,
         required: true,
     },
     company: {
         type: String,
-        required: true,
+        // Remove required: true if it's optional
     },
-    role: {
-        type: String,
-        required: true,
+    desiredRole: {
+       type: String,
+       required: true,
+       enum: [
+        "member",
+        "contributor", 
+        "mentor",
+        "organizer",
+        "moderator",
+        "other"
+       ],
     },
-    image: {
-        url: String,
-        filename: String,
+    skills: {
+       type: String,
     },
     communityId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -38,10 +64,13 @@ const userSchema = new Schema({
         type: Boolean,
         default: false,
     },
-    createAt: {
+    createdAt: { // Fixed typo from createAt
         type: Date,
         default: Date.now,
     },
+    references:{
+        type: String,
+    }
 });
 
 const ApprovalCommunity = mongoose.model("ApprovalCommunity", userSchema);

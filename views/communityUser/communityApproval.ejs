@@ -858,7 +858,6 @@
                 padding: 0.875rem 1rem;
             }
 
-
             .main-container {
                 padding: 5rem 1rem 2rem;
             }
@@ -961,14 +960,6 @@
                 <div class="brand-icon">🌐</div>
                 <span class="brand-text">VirtuHub</span>
             </a>
-            <!-- <div class="header-actions">
-                <a href="#" class="back-link">
-                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    Back to Community
-                </a>
-            </div> -->
         </div>
     </header>
 
@@ -1299,11 +1290,6 @@
                 // Form validation on input
                 this.form.addEventListener('input', (e) => this.validateField(e.target));
                 this.form.addEventListener('change', (e) => this.validateField(e.target));
-                
-                // Prevent form submission on enter
-                this.form.addEventListener('submit', (e) => {
-                    e.preventDefault();
-                });
             }
 
             nextStep() {
@@ -1506,6 +1492,7 @@
                     uploadArea.style.borderColor = 'var(--hover-bg)';
                     const files = e.dataTransfer.files;
                     if (files.length > 0) {
+                        fileInput.files = files;
                         this.handleFileUpload(files[0], uploadArea, fileInfo);
                     }
                 });
@@ -1515,7 +1502,7 @@
                 if (!file) return;
 
                 // Reset states
-                uploadArea.classList.remove('has-file', 'hasError');
+                uploadArea.classList.remove('has-file', 'has-error');
                 fileInfo.classList.remove('show');
 
                 // Validate file size (5MB max)
@@ -1592,22 +1579,32 @@
                 this.nextBtn.disabled = true;
                 const spinner = this.nextBtn.querySelector('.loading-spinner');
                 const icon = this.nextBtn.querySelector('.btn-icon');
-                
+           
                 if (spinner && icon) {
                     spinner.style.display = 'block';
                     icon.style.display = 'none';
                 }
 
                 try {
-                    // Simulate API call
-                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    // Create FormData object to handle file uploads
+                    const formData = new FormData(this.form);
                     
-                    // Show success overlay
-                    const successOverlay = document.getElementById('successOverlay');
-                    if (successOverlay) {
-                        successOverlay.style.display = 'flex';
+                    // Submit the form to the server
+                    const response = await fetch(this.form.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (response.ok) {
+                        // Show success overlay
+                        const successOverlay = document.getElementById('successOverlay');
+                        if (successOverlay) {
+                            successOverlay.style.display = 'flex';
+                        }
+                    } else {
+                        throw new Error('Server error: ' + response.status);
                     }
-                    
+               
                 } catch (error) {
                     console.error('Error submitting form:', error);
                     alert('There was an error submitting your application. Please try again.');

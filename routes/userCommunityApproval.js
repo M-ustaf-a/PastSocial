@@ -3,13 +3,51 @@ const Community = require("../models/community");
 const router = express.Router();
 const multer = require("multer");
 const { storage } = require("../cloudConfig");
-const upload = multer({ storage });
 const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 const bcrypt = require("bcryptjs");
-const CommunityUser = require( "../models/communityUser" );
-const ApprovalCommunity = require( "../models/approveCommunity" );
-const { checkCommunity } = require( "../middleware" );
+const CommunityUser = require("../models/communityUser");
+const ApprovalCommunity = require("../models/approveCommunity");
+const { checkCommunity } = require("../middleware");
+
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const imagesAllowed = [
+      "profilePhoto"  // Fixed: Remove the bracket notation
+    ];
+    const videosAllowed = ["post[video]"];
+    const verificationAllowed = ["CompanyListing[verification]"];
+
+    if (imagesAllowed.includes(file.fieldname)) {
+      // only image mimetypes
+      if (file.mimetype.startsWith("image/")) {
+        return cb(null, true);
+      }
+      return cb(new Error("Only image files are allowed for logos and images"), false);
+    }
+    if (videosAllowed.includes(file.fieldname)) {
+      // only video mimetypes
+      if (file.mimetype.startsWith("video/")) {
+        return cb(null, true);
+      }
+      return cb(new Error("Only video files are allowed for videos"), false);
+    }
+    if (verificationAllowed.includes(file.fieldname)) {
+      // allow PDF or images for verification docs
+      if (
+        file.mimetype === "application/pdf" ||
+        file.mimetype.startsWith("image/")
+      ) {
+        return cb(null, true);
+      }
+      return cb(new Error("Only PDF or image files are allowed for verification documents"), false);
+    }
+
+    // if it's some other field (no file expected), just skip it
+    cb(null, false);
+  }
+});
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -21,16 +59,17 @@ const transporter = nodemailer.createTransport({
   maxConnections: 5,
   rateLimit: 1000,
 });
+
 router.get("/community/:communityId/communityApproval", async(req, res) => {
   const {communityId} = req.params;
   const community = await Community.findById(communityId);
-  console.log(community)
+  console.log(community);
   res.render("communityUser/communityApproval", {community});
 });
 
 router.post(
   "/community/:communityId/communityApproval",
-  upload.single("CommunityApproval[image]"),
+  upload.single("profilePhoto"), // Fixed: Remove the bracket notation
   async (req, res) => {
     try {
       const { communityId } = req.params;
@@ -44,10 +83,11 @@ router.post(
         return res.status(404).send("Community not found");
       }
 
-      const user = new ApprovalCommunity(req.body.CommunityApproval);
+      // Fixed: Create user with direct req.body instead of req.body.CommunityApproval
+      const user = new ApprovalCommunity(req.body);
 
       if (req.file) {
-        user.image = {
+        user.profilePhoto = {
           url: req.file.path,
           filename: req.file.filename,
         };
@@ -122,33 +162,30 @@ router.post(
       const hashedPassword = await bcrypt.hash(password, 10);
       const user = await ApprovalCommunity.findOne({ email });
       console.log(user);
-      const newUser = new CommunityUser({
-        name: user.name,
-        email: user.email,
-        password: hashedPassword,
-        role: user.role,
-        image: user.image,
-        company: user.company,
-        communityId: communityId,
-      })
-      await newUser.save();
-      if (approved == "on") {
+      
+      if (approved === "on") { // Fixed: Use === instead of ==
         const community = await Community.findById(communityId);
-        const image1 = user.image;
-        console.log(image1);
+        
+        const newUser = new CommunityUser({
+          name: user.name,
+          email: user.email,
+          password: hashedPassword,
+          role: user.desiredRole, // Fixed: Use desiredRole from the form
+          image: user.profilePhoto, // Fixed: Use profilePhoto
+          company: user.company,
+          communityId: communityId,
+        });
+        
+        await newUser.save();
         await community.save();
-        user.deleteOne();
-        await user.save();
+        
+        // Fixed: Use deleteOne() properly
+        await user.deleteOne();
+        
         await transporter.sendMail({
           from: `"Community Platform" <${process.env.EMAIL_USER}>`,
-          
-          // Send to the newly approved member's email
           to: email,
-          
-          // Clear and informative subject line
           subject: 'Your Membership Approval - Account Details',
-          
-          // Create a more comprehensive and secure communication
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333;">
               <div style="background-color: #f4f4f4; padding: 15px 20px; border-bottom: 2px solid #007bff;">
@@ -162,7 +199,8 @@ router.post(
                 
                 <div style="background-color: #f8f9fa; border: 1px solid #e9ecef; padding: 15px; margin: 20px 0; border-radius: 5px;">
                   <h3 style="margin-top: 0; color: #007bff;">Account Access Information</h3>
-                  <p><strong>Username:</strong> ${newUser.name}</p><p><strong>Password:</strong> ${password}</p>
+                  <p><strong>Username:</strong> ${newUser.name}</p>
+                  <p><strong>Password:</strong> ${password}</p>
                   
                   <div style="background-color: #ffff00; padding: 10px; border-radius: 5px; margin: 10px 0;">
                     <strong>Important Security Notice:</strong> 
@@ -189,8 +227,6 @@ router.post(
               </div>
             </div>
           `,
-          
-          // Fallback plain text version for email clients that don't support HTML
           text: `Membership Approval
         
         Dear ${newUser.name},
@@ -199,7 +235,7 @@ router.post(
         
         Login Details:
         Username: ${newUser.name}
-        Password: ${hashedPassword}
+        Password: ${password}
         
         IMPORTANT: For security reasons, please change your temporary password immediately upon first login.
         
@@ -215,21 +251,14 @@ router.post(
         });
   
         res.send('Membership approved and credentials sent.');
-      } else if(on === 'reject') {
-        // await member.deleteOne();
+      } else if(approved === 'reject') { // Fixed: Check for 'reject' instead of 'on'
+        await user.deleteOne();
   
         // Notify the user of rejection
         await transporter.sendMail({
-          // Use a clear, professional sender name
           from: `"Community Membership Review" <${process.env.EMAIL_USER}>`,
-          
-          // Send to the applicant's email
           to: email,
-          
-          // Neutral, direct subject line
           subject: 'Update Regarding Your Membership Application',
-          
-          // Develop a comprehensive HTML email template
           html: `
             <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; line-height: 1.6; color: #333;">
               <div style="background-color: #f4f4f4; padding: 15px 20px; border-bottom: 2px solid #007bff;">
@@ -266,8 +295,6 @@ router.post(
               </div>
             </div>
           `,
-          
-          // Fallback plain text version
           text: `Membership Application Review
         
         Dear Applicant,
@@ -289,13 +316,14 @@ router.post(
   
         res.send('Membership request rejected.');
       } 
-    }catch(err){
+    } catch(err) {
       console.log(err);
+      res.status(500).send('An error occurred while processing the request.');
     }   
   }
 ); 
 
-router.get("/community/:communityId/login", async(req,res)=>{
+router.get("/community/:communityId/login", async(req,res) => {
   const {communityId} = req.params;
   const community = await Community.findById(communityId);
   res.render("communityUser/login.ejs", {community});
@@ -356,16 +384,16 @@ router.post("/community/:communityId/login", async (req, res) => {
   }
 });
 
-router.get("/community/:id/logout", (req,res)=>{
+router.get("/community/:id/logout", (req,res) => {
   let {id} = req.params;
   console.log(id);
-  req.session.destroy((err)=>{
+  req.session.destroy((err) => {
     if(err){
       console.error("Error during logout:", err); 
-      res.redirect(`/community/${id}/login`)
+      res.redirect(`/community/${id}/login`);
     }
     res.redirect(`/community/${id}/main`);
-  })
-})
+  });
+});
 
 module.exports = router;
