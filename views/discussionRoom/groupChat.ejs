@@ -3,919 +3,2725 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat Application</title>
+    <title>ProjectHub - Team Collaboration</title>
     <style>
         :root {
-            --primary: #000000;
-            --background: #ffffff;
-            --surface: #f5f5f5;
-            --surface-hover: #eaeaea;
-            --border: #e0e0e0;
-            --text: #333333;
-            --text-light: #767676;
-            --accent: #505050;
-            --online: #4caf50;
-            --away: #ff9800;
-            --offline: #9e9e9e;
-            --sent-bg: #f0f0f0;
-            --received-bg: #000000;
-            --received-text: #ffffff;
-            --focus: rgba(0, 0, 0, 0.1);
+            --primary-color: #A82400;
+            --primary-dark: #8A1E00;
+            --secondary-color: #D63A0D;
+            --accent-color: #FFEBCD;
+            --bg-color: #FFEBCD;
+            --card-bg: #FFF5E6;
+            --hover-bg: #FFE4CC;
+            --text-primary: #A82400;
+            --text-secondary: #6B4423;
+            --text-dark: #3A2317;
+            --white: #FFFFFF;
+            --gray-50: #FAFAFA;
+            --gray-100: #F5F5F5;
+            --gray-200: #E5E5E5;
+            --gray-300: #D4D4D4;
+            --gray-600: #525252;
+            --gray-800: #262626;
+            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
         }
-        
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
-        
+
         body {
-            background-color: var(--background);
-            color: var(--text);
-            line-height: 1.5;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        /* Layout */
-        .chat-container {
-            display: flex;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
             height: 100vh;
             overflow: hidden;
         }
-        
-        .sidebar {
-            width: 280px;
-            border-right: 1px solid var(--border);
-            display: flex;
-            flex-direction: column;
-            background-color: var(--background);
-        }
-        
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background-color: var(--background);
-        }
-        
-        /* Sidebar Header */
-        .sidebar-header {
-            padding: 20px 16px;
-            border-bottom: 1px solid var(--border);
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            padding: 12px 20px;
+            box-shadow: var(--shadow-md);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative;
+            z-index: 1000;
         }
-        
-        .user-profile {
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .header-controls {
             display: flex;
+            gap: 12px;
             align-items: center;
         }
-        
-        .avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: var(--surface);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            margin-right: 12px;
-            font-size: 14px;
-            color: var(--text);
-        }
-        
-        .user-name {
-            font-weight: 600;
-            font-size: 14px;
-        }
-        
-        .actions {
-            display: flex;
-            gap: 16px;
-        }
-        
-        .icon-button {
-            background: none;
+
+        .btn {
+            padding: 8px 16px;
             border: none;
+            border-radius: 8px;
             cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            justify-content: center;
-            color: var(--text);
-            border-radius: 50%;
-            width: 32px;
-            height: 32px;
-            transition: background-color 0.2s;
+            gap: 6px;
         }
-        
-        .icon-button:hover {
-            background-color: var(--surface);
+
+        .btn-primary {
+            background-color: var(--white);
+            color: var(--primary-color);
         }
-        
-        /* Search */
-        .search-container {
-            padding: 12px 16px;
-            border-bottom: 1px solid var(--border);
+
+        .btn-primary:hover {
+            background-color: var(--gray-100);
+            transform: translateY(-1px);
         }
-        
-        .search-input {
-            width: 100%;
-            padding: 8px 12px;
-            border-radius: 16px;
-            border: none;
-            background-color: var(--surface);
-            font-size: 14px;
-            transition: background-color 0.2s;
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--white);
+            border: 2px solid var(--white);
         }
-        
-        .search-input:focus {
-            outline: none;
-            background-color: var(--surface-hover);
+
+        .btn-secondary:hover {
+            background-color: var(--white);
+            color: var(--primary-color);
         }
-        
-        /* Contact List */
-        .contact-list {
+
+        .btn.active {
+            background-color: #DC2626 !important;
+            color: var(--white) !important;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 320px;
+            grid-template-rows: 1fr;
+            height: calc(100vh - 64px);
+            gap: 0;
+        }
+
+        /* Left Sidebar */
+        .left-sidebar {
+            background-color: var(--card-bg);
+            border-right: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .sidebar-section h3 {
+            color: var(--text-primary);
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .nav-item:hover {
+            background-color: var(--hover-bg);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .nav-item span {
+            margin-left: 10px;
+        }
+
+        .project-list {
             flex: 1;
             overflow-y: auto;
+            padding: 0 20px;
         }
-        
-        .contact-item {
+
+        .project-item {
             display: flex;
-            padding: 12px 16px;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            border-bottom: 1px solid var(--border);
-        }
-        
-        .contact-item:hover,
-        .contact-item.active {
-            background-color: var(--surface);
-        }
-        
-        .contact-avatar {
-            position: relative;
-            margin-right: 12px;
-        }
-        
-        .status-indicator {
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            border: 2px solid var(--background);
-        }
-        
-        .status-online {
-            background-color: var(--online);
-        }
-        
-        .status-away {
-            background-color: var(--away);
-        }
-        
-        .status-offline {
-            background-color: var(--offline);
-        }
-        
-        .contact-info {
-            flex: 1;
-            overflow: hidden;
-        }
-        
-        .contact-top {
-            display: flex;
+            align-items: center;
             justify-content: space-between;
+            padding: 12px 16px;
+            margin-bottom: 8px;
+            background-color: var(--white);
+            border-radius: 8px;
+            box-shadow: var(--shadow-xs);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .project-item:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+
+        .project-item.selected {
+            background-color: var(--hover-bg);
+            border: 2px solid var(--primary-color);
+        }
+
+        .project-info h4 {
+            color: var(--text-primary);
+            font-size: 14px;
             margin-bottom: 4px;
         }
-        
-        .contact-name {
-            font-weight: 500;
-            font-size: 14px;
-        }
-        
-        .contact-time {
+
+        .project-info p {
+            color: var(--text-secondary);
             font-size: 12px;
-            color: var(--text-light);
         }
-        
-        .contact-last-message {
-            font-size: 13px;
-            color: var(--text-light);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .unread-count {
-            background-color: var(--primary);
-            color: white;
-            font-size: 12px;
-            font-weight: 500;
-            border-radius: 50%;
-            width: 18px;
-            height: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-left: 8px;
-        }
-        
-        /* Chat Header */
-        .chat-header {
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .chat-header-info {
-            display: flex;
-            align-items: center;
-        }
-        
-        .chat-header-name {
-            font-weight: 600;
-            margin-left: 12px;
-        }
-        
-        .chat-header-status {
-            font-size: 13px;
-            color: var(--text-light);
-            margin-left: 12px;
-        }
-        
-        .chat-header-actions {
-            display: flex;
-            gap: 16px;
-        }
-        
-        /* Messages Area */
-        .messages-container {
-            flex: 1;
-            overflow-y: auto;
-            padding: 16px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .date-separator {
-            text-align: center;
-            margin: 16px 0;
-            position: relative;
-        }
-        
-        .date-separator span {
-            background-color: var(--background);
-            padding: 0 12px;
-            font-size: 12px;
-            color: var(--text-light);
-            position: relative;
-            z-index: 1;
-        }
-        
-        .date-separator:before {
-            content: "";
-            position: absolute;
-            top: 50%;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background-color: var(--border);
-            z-index: 0;
-        }
-        
-        .message {
-            max-width: 70%;
-            margin-bottom: 8px;
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .message-sent {
-            align-self: flex-end;
-        }
-        
-        .message-received {
-            align-self: flex-start;
-        }
-        
-        .message-content {
-            padding: 10px 14px;
-            border-radius: 18px;
-            font-size: 14px;
-            word-break: break-word;
-        }
-        
-        .message-sent .message-content {
-            background-color: var(--sent-bg);
-            border-bottom-right-radius: 4px;
-        }
-        
-        .message-received .message-content {
-            background-color: var(--received-bg);
-            color: var(--received-text);
-            border-bottom-left-radius: 4px;
-        }
-        
-        .message-time {
-            font-size: 11px;
-            color: var(--text-light);
-            margin-top: 4px;
-            align-self: flex-end;
-        }
-        
-        .message-received .message-time {
-            align-self: flex-start;
-        }
-        
-        /* Message Composer */
-        .message-composer {
-            padding: 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .message-input {
-            flex: 1;
-            padding: 12px 16px;
-            border-radius: 24px;
-            border: 1px solid var(--border);
-            font-size: 14px;
-            resize: none;
-            max-height: 120px;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-        
-        .message-input:focus {
-            border-color: var(--accent);
-        }
-        
-        .send-button {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .send-button:hover {
-            background-color: var(--accent);
-        }
-        
-        .attachment-button {
-            background: none;
-            border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: var(--text-light);
-            padding: 8px;
-            border-radius: 50%;
-            transition: background-color 0.2s;
-        }
-        
-        .attachment-button:hover {
-            background-color: var(--surface);
-        }
-        
-        /* Mobile Responsive Design */
-        @media (max-width: 768px) {
-            .chat-container {
-                flex-direction: column;
-            }
-            
-            .sidebar {
-                width: 100%;
-                height: 100vh;
-                position: absolute;
-                top: 0;
-                left: 0;
-                z-index: 10;
-                transform: translateX(-100%);
-                transition: transform 0.3s ease-in-out;
-            }
-            
-            .sidebar.open {
-                transform: translateX(0);
-            }
-            
-            .main-content {
-                width: 100%;
-            }
-            
-            .show-sidebar-button {
-                display: block;
-            }
-            
-            .back-button {
-                display: block;
-            }
-        }
-        
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .message {
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background-color: transparent;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background-color: #ddd;
-            border-radius: 3px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background-color: #ccc;
-        }
-        
-        /* Typing indicator */
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-            margin-bottom: 16px;
-            align-self: flex-start;
-        }
-        
-        .typing-bubble {
+
+        .project-status {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background-color: var(--text-light);
-            margin-right: 4px;
-            animation: typing 1s infinite ease-in-out;
+            background-color: var(--secondary-color);
         }
-        
-        .typing-bubble:nth-child(1) {
-            animation-delay: 0.2s;
+
+        /* Main Content Area */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--white);
+            overflow: hidden;
         }
-        
-        .typing-bubble:nth-child(2) {
-            animation-delay: 0.4s;
+
+        /* Video Call Section */
+        .video-section {
+            height: 40%;
+            background: linear-gradient(135deg, var(--gray-800), var(--gray-600));
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: 1px solid var(--gray-200);
+            overflow: hidden;
         }
-        
-        .typing-bubble:nth-child(3) {
-            animation-delay: 0.6s;
-            margin-right: 0;
+
+        .video-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        
-        @keyframes typing {
-            0% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
-            100% { transform: translateY(0); }
+
+        .local-video, .remote-video, .screen-share-video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            background-color: var(--gray-800);
         }
-        
-        /* Mobile menu button */
-        .menu-button {
+
+        .video-placeholder {
+            color: var(--white);
+            text-align: center;
+            font-size: 18px;
+        }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 18px;
+        }
+
+        .pip-video {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 150px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            z-index: 200;
+        }
+
+        .video-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: var(--white);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 18px;
+        }
+
+        .video-btn:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .video-btn.danger {
+            background-color: #DC2626;
+        }
+
+        .video-btn.danger:hover {
+            background-color: #B91C1C;
+        }
+
+        .video-btn.muted {
+            background-color: #DC2626;
+        }
+
+        .video-btn.disabled {
+            background-color: #6B7280;
+            cursor: not-allowed;
+        }
+
+        /* Call Status */
+        .call-status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            z-index: 200;
+        }
+
+        .recording-indicator {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #DC2626;
+            color: var(--white);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            animation: pulse 2s infinite;
+            z-index: 200;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* Chat & Collaboration Section */
+        .collaboration-section {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        .tab-navigation {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 20px;
+            background-color: var(--gray-100);
+            border-radius: 8px;
+            padding: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            color: var(--text-secondary);
+        }
+
+        .tab-btn.active {
+            background-color: var(--white);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-xs);
+        }
+
+        .tab-content {
+            flex: 1;
             display: none;
+            flex-direction: column;
+            overflow: hidden;
         }
-        
-        @media (max-width: 768px) {
-            .menu-button {
-                display: block;
-                margin-right: 12px;
+
+        .tab-content.active {
+            display: flex;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            background-color: var(--gray-50);
+            border-radius: 8px;
+            margin-bottom: 16px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 16px;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            flex-shrink: 0;
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+        }
+
+        .message-author {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .message-time {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .message-text {
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-secondary);
+            font-style: italic;
+            padding: 8px 0;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            animation: typingDots 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDots {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .message-input {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .message-input input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .message-input input:focus {
+            border-color: var(--primary-color);
+        }
+
+        .send-btn {
+            padding: 12px 20px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .send-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .send-btn:disabled {
+            background-color: var(--gray-300);
+            cursor: not-allowed;
+        }
+
+        /* Right Sidebar */
+        .right-sidebar {
+            background-color: var(--card-bg);
+            border-left: 1px solid var(--gray-200);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .team-section {
+            padding: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 0;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .team-member:hover {
+            background-color: var(--hover-bg);
+            padding-left: 8px;
+        }
+
+        .member-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .member-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: #10B981;
+        }
+
+        .status-indicator.away {
+            background-color: #F59E0B;
+        }
+
+        .status-indicator.offline {
+            background-color: var(--gray-300);
+        }
+
+        .status-indicator.in-call {
+            background-color: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+
+        /* File Section */
+        .file-section {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .file-upload-zone {
+            border: 2px dashed var(--gray-300);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .file-upload-zone:hover {
+            border-color: var(--primary-color);
+            background-color: var(--hover-bg);
+        }
+
+        .file-upload-zone.dragover {
+            border-color: var(--primary-color);
+            background-color: var(--hover-bg);
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            background-color: var(--white);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background-color: var(--hover-bg);
+        }
+
+        .file-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+            margin-bottom: 2px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .file-action-btn {
+            padding: 4px 8px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .file-action-btn:hover {
+            background-color: var(--hover-bg);
+            border-color: var(--primary-color);
+        }
+
+        /* Kanban Board */
+        .kanban-board {
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding: 16px;
+        }
+
+        .kanban-column {
+            min-width: 280px;
+            background-color: var(--gray-50);
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .column-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .task-count {
+            background-color: var(--primary-color);
+            color: var(--white);
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+        }
+
+        .task-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow-xs);
+            cursor: grab;
+            transition: all 0.2s ease;
+        }
+
+        .task-card:hover {
+            box-shadow: var(--shadow-sm);
+            transform: translateY(-1px);
+        }
+
+        .task-card.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        .task-title {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .task-description {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .task-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-priority {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .priority-high {
+            background-color: #FEE2E2;
+            color: #DC2626;
+        }
+
+        .priority-medium {
+            background-color: #FEF3C7;
+            color: #D97706;
+        }
+
+        .priority-low {
+            background-color: #DCFCE7;
+            color: #16A34A;
+        }
+
+        .task-assignee {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        /* Whiteboard */
+        .whiteboard-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .whiteboard-canvas {
+            width: 100%;
+            height: 100%;
+            cursor: crosshair;
+        }
+
+        .whiteboard-tools {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            display: flex;
+            gap: 8px;
+            background: var(--white);
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-md);
+        }
+
+        .tool-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background-color: var(--gray-100);
+        }
+
+        .tool-btn.active {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .tool-btn:hover {
+            background-color: var(--hover-bg);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 500px;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .modal h2 {
+            color: var(--text-primary);
+            margin-bottom: 20px;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid var(--gray-300);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 12px 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow-lg);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
+            font-weight: 500;
+            max-width: 300px;
+        }
+
+        .notification.success {
+            background-color: #10B981;
+        }
+
+        .notification.error {
+            background-color: #DC2626;
+        }
+
+        .notification.warning {
+            background-color: #F59E0B;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
             }
+
+            .left-sidebar,
+            .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .video-section {
+                height: 30%;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .header-controls {
+                gap: 8px;
+            }
+
+            .btn {
+                padding: 6px 12px;
+                font-size: 14px;
+            }
+
+            .pip-video {
+                width: 120px;
+                height: 90px;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeOut {
+            to {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--gray-100);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--gray-300);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--gray-600);
         }
     </style>
 </head>
 <body>
-    <div class="chat-container">
-        <!-- Sidebar / Contact List -->
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="user-profile">
-                    <div class="avatar">JS</div>
-                    <span class="user-name">John Smith</span>
-                </div>
-                <div class="actions">
-                    <button class="icon-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
-                        </svg>
-                    </button>
-                    <button class="icon-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M19.43 12.98C19.47 12.66 19.5 12.34 19.5 12C19.5 11.66 19.47 11.34 19.43 11.02L21.54 9.37C21.73 9.22 21.78 8.95 21.66 8.73L19.66 5.27C19.54 5.05 19.27 4.97 19.05 5.05L16.56 6.05C16.04 5.65 15.48 5.32 14.87 5.07L14.49 2.42C14.46 2.18 14.25 2 14 2H10C9.75 2 9.54 2.18 9.51 2.42L9.13 5.07C8.52 5.32 7.96 5.66 7.44 6.05L4.95 5.05C4.72 4.96 4.46 5.05 4.34 5.27L2.34 8.73C2.21 8.95 2.27 9.22 2.46 9.37L4.57 11.02C4.53 11.34 4.5 11.67 4.5 12C4.5 12.33 4.53 12.66 4.57 12.98L2.46 14.63C2.27 14.78 2.22 15.05 2.34 15.27L4.34 18.73C4.46 18.95 4.73 19.03 4.95 18.95L7.44 17.95C7.96 18.35 8.52 18.68 9.13 18.93L9.51 21.58C9.54 21.82 9.75 22 10 22H14C14.25 22 14.46 21.82 14.49 21.58L14.87 18.93C15.48 18.68 16.04 18.34 16.56 17.95L19.05 18.95C19.28 19.04 19.54 18.95 19.66 18.73L21.66 15.27C21.78 15.05 21.73 14.78 21.54 14.63L19.43 12.98ZM12 15.5C10.07 15.5 8.5 13.93 8.5 12C8.5 10.07 10.07 8.5 12 8.5C13.93 8.5 15.5 10.07 15.5 12C15.5 13.93 13.93 15.5 12 15.5Z" fill="currentColor"/>
-                        </svg>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="search-container">
-                <input type="text" class="search-input" placeholder="Search or start new chat">
-            </div>
-            
-            <div class="contact-list">
-                <div class="contact-item active">
-                    <div class="contact-avatar">
-                        <div class="avatar">AJ</div>
-                        <span class="status-indicator status-online"></span>
-                    </div>
-                    <div class="contact-info">
-                        <div class="contact-top">
-                            <div class="contact-name">Alex Johnson</div>
-                            <div class="contact-time">10:42 AM</div>
-                        </div>
-                        <div class="contact-last-message">Hey, are we still meeting today?</div>
-                    </div>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-avatar">
-                        <div class="avatar">SL</div>
-                        <span class="status-indicator status-away"></span>
-                    </div>
-                    <div class="contact-info">
-                        <div class="contact-top">
-                            <div class="contact-name">Sarah Lee</div>
-                            <div class="contact-time">Yesterday</div>
-                        </div>
-                        <div class="contact-last-message">Thanks for the update!</div>
-                    </div>
-                    <div class="unread-count">2</div>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-avatar">
-                        <div class="avatar">DW</div>
-                        <span class="status-indicator status-offline"></span>
-                    </div>
-                    <div class="contact-info">
-                        <div class="contact-top">
-                            <div class="contact-name">Design Team</div>
-                            <div class="contact-time">Tuesday</div>
-                        </div>
-                        <div class="contact-last-message">David: I just sent the final mockups</div>
-                    </div>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-avatar">
-                        <div class="avatar">MP</div>
-                        <span class="status-indicator status-online"></span>
-                    </div>
-                    <div class="contact-info">
-                        <div class="contact-top">
-                            <div class="contact-name">Michael Peters</div>
-                            <div class="contact-time">Monday</div>
-                        </div>
-                        <div class="contact-last-message">Let me check that and get back to you</div>
-                    </div>
-                </div>
-                
-                <div class="contact-item">
-                    <div class="contact-avatar">
-                        <div class="avatar">TN</div>
-                        <span class="status-indicator status-online"></span>
-                    </div>
-                    <div class="contact-info">
-                        <div class="contact-top">
-                            <div class="contact-name">Tech Ninjas</div>
-                            <div class="contact-time">05/08</div>
-                        </div>
-                        <div class="contact-last-message">Emma: Can someone review the PR?</div>
-                    </div>
-                </div>
-            </div>
+    <!-- Header -->
+    <header class="header">
+        <h1>ProjectHub</h1>
+        <div class="header-controls">
+            <button class="btn btn-secondary" id="screenShareBtn" onclick="toggleScreenShare()">
+                📺 Share Screen
+            </button>
+            <button class="btn btn-secondary" id="recordBtn" onclick="toggleRecording()">
+                🔴 Record
+            </button>
+            <button class="btn btn-primary" onclick="inviteMembers()">
+                👥 Invite Team
+            </button>
         </div>
-        
-        <!-- Main Chat Area -->
-        <div class="main-content">
-            <div class="chat-header">
-                <div class="chat-header-info">
-                    <button class="icon-button menu-button" id="menu-button">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 18H21V16H3V18ZM3 13H21V11H3V13ZM3 6V8H21V6H3Z" fill="currentColor"/>
-                        </svg>
-                    </button>
-                    <div class="avatar">AJ</div>
-                    <div class="chat-header-name">Alex Johnson</div>
-                    <div class="chat-header-status">Online</div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <div class="sidebar-section">
+                <h3>Navigation</h3>
+                <div class="nav-item active" onclick="switchView('dashboard')">
+                    🏠 <span>Dashboard</span>
                 </div>
-                <div class="chat-header-actions">
-                    <button class="icon-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 10.5V7C17 6.45 16.55 6 16 6H4C3.45 6 3 6.45 3 7V17C3 17.55 3.45 18 4 18H16C16.55 18 17 17.55 17 17V13.5L21 17.5V6.5L17 10.5Z" fill="currentColor"/>
-                        </svg>
-                    </button>
-                    <button class="icon-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 1C7.03 1 3 5.03 3 10V17C3 18.66 4.34 20 6 20H9V12H5V10C5 6.13 8.13 3 12 3C15.87 3 19 6.13 19 10V12H15V20H19V21H12V23H18C19.66 23 21 21.66 21 20V10C21 5.03 16.97 1 12 1Z" fill="currentColor"/>
-                        </svg>
-                    </button>
-                    <button class="icon-button">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 8C13.1 8 14 7.1 14 6C14 4.9 13.1 4 12 4C10.9 4 10 4.9 10 6C10 7.1 10.9 8 12 8ZM12 10C10.9 10 10 10.9 10 12C10 13.1 10.9 14 12 14C13.1 14 14 13.1 14 12C14 10.9 13.1 10 12 10ZM12 16C10.9 16 10 16.9 10 18C10 19.1 10.9 20 12 20C13.1 20 14 19.1 14 18C14 16.9 13.1 16 12 16Z" fill="currentColor"/>
-                        </svg>
-                    </button>
+                <div class="nav-item" onclick="switchView('projects')">
+                    📋 <span>Projects</span>
+                </div>
+                <div class="nav-item" onclick="switchView('calendar')">
+                    📅 <span>Calendar</span>
+                </div>
+                <div class="nav-item" onclick="switchView('files')">
+                    📁 <span>Files</span>
+                </div>
+                <div class="nav-item" onclick="switchView('analytics')">
+                    📊 <span>Analytics</span>
                 </div>
             </div>
             
-            <div class="messages-container" id="messages-container">
-                <div class="date-separator">
-                    <span>Today</span>
-                </div>
-                
-                <div class="message message-received">
-                    <div class="message-content">Hey! How are you doing?</div>
-                    <div class="message-time">10:30 AM</div>
-                </div>
-                
-                <div class="message message-sent">
-                    <div class="message-content">I'm good, thanks! Just wrapping up some work before our meeting. How about you?</div>
-                    <div class="message-time">10:32 AM</div>
-                </div>
-                
-                <div class="message message-received">
-                    <div class="message-content">Doing well! Are we still meeting today at 2pm?</div>
-                    <div class="message-time">10:33 AM</div>
-                </div>
-                
-                <div class="message message-sent">
-                    <div class="message-content">Yes, definitely. I've prepared all the materials we discussed.</div>
-                    <div class="message-time">10:35 AM</div>
-                </div>
-                
-                <div class="message message-received">
-                    <div class="message-content">Perfect! I'm looking forward to seeing what you've put together.</div>
-                    <div class="message-time">10:36 AM</div>
-                </div>
-                
-                <div class="message message-sent">
-                    <div class="message-content">Great! Do you want me to send you a quick preview beforehand?</div>
-                    <div class="message-time">10:37 AM</div>
-                </div>
-                
-                <div class="message message-received">
-                    <div class="message-content">That would be helpful! If you don't mind.</div>
-                    <div class="message-time">10:40 AM</div>
-                </div>
-                
-                <div class="message message-sent">
-                    <div class="message-content">No problem at all. I'll email it to you in about 30 minutes.</div>
-                    <div class="message-time">10:41 AM</div>
-                </div>
-                
-                <div class="message message-received">
-                    <div class="message-content">Hey, are we still meeting today?</div>
-                    <div class="message-time">10:42 AM</div>
-                </div>
-                
-                <div class="typing-indicator">
-                    <div class="typing-bubble"></div>
-                    <div class="typing-bubble"></div>
-                    <div class="typing-bubble"></div>
-                </div>
+            <div class="sidebar-section">
+                <h3>Active Projects</h3>
             </div>
             
-            <div class="message-composer">
-                <button class="attachment-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16.5 6V17.5C16.5 19.71 14.71 21.5 12.5 21.5C10.29 21.5 8.5 19.71 8.5 17.5V5C8.5 3.62 9.62 2.5 11 2.5C12.38 2.5 13.5 3.62 13.5 5V15.5C13.5 16.05 13.05 16.5 12.5 16.5C11.95 16.5 11.5 16.05 11.5 15.5V6H10V15.5C10 16.88 11.12 18 12.5 18C13.88 18 15 16.88 15 15.5V5C15 2.79 13.21 1 11 1C8.79 1 7 2.79 7 5V17.5C7 20.54 9.46 23 12.5 23C15.54 23 18 20.54 18 17.5V6H16.5Z" fill="currentColor"/>
-                    </svg>
-                </button>
-                <input type="text" class="message-input" placeholder="Type a message..." id="message-input">
-                <button class="send-button" id="send-button">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M2.01 21L23 12L2.01 3L2 10L17 12L2 14L2.01 21Z" fill="white"/>
-                    </svg>
-                </button>
+            <div class="project-list">
+                <div class="project-item selected" onclick="selectProject('mobile-app')">
+                    <div class="project-info">
+                        <h4>Mobile App Redesign</h4>
+                        <p>UI/UX Team • 5 members</p>
+                    </div>
+                    <div class="project-status"></div>
+                </div>
+                
+                <div class="project-item" onclick="selectProject('web-platform')">
+                    <div class="project-info">
+                        <h4>Web Platform</h4>
+                        <p>Development Team • 8 members</p>
+                    </div>
+                    <div class="project-status"></div>
+                </div>
+                
+                <div class="project-item" onclick="selectProject('marketing-campaign')">
+                    <div class="project-info">
+                        <h4>Marketing Campaign</h4>
+                        <p>Marketing Team • 4 members</p>
+                    </div>
+                    <div class="project-status"></div>
+                </div>
+                
+                <div class="project-item" onclick="selectProject('product-launch')">
+                    <div class="project-info">
+                        <h4>Product Launch</h4>
+                        <p>Cross-functional • 12 members</p>
+                    </div>
+                    <div class="project-status"></div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Video Call Section -->
+            <div class="video-section">
+                <div class="video-container" id="videoContainer">
+                    <div class="video-placeholder" id="videoPlaceholder">
+                        <p>🎥 Video Call Ready</p>
+                        <p style="font-size: 14px; margin-top: 8px;">Click camera button to start</p>
+                    </div>
+                    <video id="localVideo" class="local-video" autoplay muted style="display: none;"></video>
+                    <video id="remoteVideo" class="remote-video" autoplay style="display: none;"></video>
+                    <video id="screenShareVideo" class="screen-share-video" autoplay style="display: none;"></video>
+                    <div id="pipVideo" class="pip-video" style="display: none;">
+                        <video id="pipVideoElement" autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
+                    </div>
+                </div>
+                
+                <div class="call-status" id="callStatus" style="display: none;">
+                    <span id="callTimer">00:00</span> • <span id="callParticipants">1 participant</span>
+                </div>
+                
+                <div class="recording-indicator" id="recordingIndicator" style="display: none;">
+                    🔴 Recording
+                </div>
+                
+                <div class="video-controls">
+                    <button class="video-btn" id="muteBtn" onclick="toggleMute()" title="Toggle Mute">
+                        🎤
+                    </button>
+                    <button class="video-btn" id="videoBtn" onclick="toggleVideo()" title="Toggle Video">
+                        📹
+                    </button>
+                    <button class="video-btn" id="shareBtn" onclick="shareScreen()" title="Share Screen">
+                        🖥️
+                    </button>
+                    <button class="video-btn danger" id="endCallBtn" onclick="endCall()" title="End Call">
+                        📞
+                    </button>
+                </div>
+            </div>
+
+            <!-- Collaboration Section -->
+            <div class="collaboration-section">
+                <div class="tab-navigation">
+                    <button class="tab-btn active" onclick="switchTab('chat')">💬 Chat</button>
+                    <button class="tab-btn" onclick="switchTab('tasks')">✅ Tasks</button>
+                    <button class="tab-btn" onclick="switchTab('whiteboard')">🎨 Whiteboard</button>
+                    <button class="tab-btn" onclick="switchTab('notes')">📝 Notes</button>
+                </div>
+
+                <!-- Chat Tab -->
+                <div id="chat-tab" class="tab-content active">
+                    <div class="chat-messages" id="chatMessages">
+                        <div class="message">
+                            <div class="message-avatar">JD</div>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <span class="message-author">John Doe</span>
+                                    <span class="message-time">10:30 AM</span>
+                                </div>
+                                <div class="message-text">Hey team! Ready to discuss the mobile app redesign project?</div>
+                            </div>
+                        </div>
+                        
+                        <div class="message">
+                            <div class="message-avatar">AS</div>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <span class="message-author">Alice Smith</span>
+                                    <span class="message-time">10:32 AM</span>
+                                </div>
+                                <div class="message-text">Absolutely! I've prepared the user research findings. Should I share them now?</div>
+                            </div>
+                        </div>
+                        
+                        <div class="message">
+                            <div class="message-avatar">MJ</div>
+                            <div class="message-content">
+                                <div class="message-header">
+                                    <span class="message-author">Mike Johnson</span>
+                                    <span class="message-time">10:33 AM</span>
+                                </div>
+                                <div class="message-text">Perfect timing! I've also uploaded the wireframes to the files section.</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="typingIndicator" class="typing-indicator" style="display: none;">
+                        <span>Someone is typing</span>
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="message-input">
+                        <input type="text" id="messageInput" placeholder="Type your message..." 
+                               onkeypress="handleMessageInput(event)" oninput="handleTyping()">
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+
+                <!-- Tasks Tab -->
+                <div id="tasks-tab" class="tab-content">
+                    <div class="kanban-board" id="kanbanBoard">
+                        <div class="kanban-column" data-status="todo">
+                            <div class="column-header">
+                                <span class="column-title">To Do</span>
+                                <span class="task-count">3</span>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="1">
+                                <div class="task-title">User Research Analysis</div>
+                                <div class="task-description">Analyze user feedback and create insights report</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-high">High</span>
+                                    <div class="task-assignee">AS</div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="2">
+                                <div class="task-title">Design System Update</div>
+                                <div class="task-description">Update component library with new styles</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-medium">Medium</span>
+                                    <div class="task-assignee">MJ</div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="3">
+                                <div class="task-title">API Documentation</div>
+                                <div class="task-description">Document new API endpoints</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-low">Low</span>
+                                    <div class="task-assignee">JD</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="kanban-column" data-status="inprogress">
+                            <div class="column-header">
+                                <span class="column-title">In Progress</span>
+                                <span class="task-count">2</span>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="4">
+                                <div class="task-title">Mobile Wireframes</div>
+                                <div class="task-description">Create wireframes for key screens</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-high">High</span>
+                                    <div class="task-assignee">AS</div>
+                                </div>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="5">
+                                <div class="task-title">Backend Integration</div>
+                                <div class="task-description">Integrate with payment gateway</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-medium">Medium</span>
+                                    <div class="task-assignee">MJ</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="kanban-column" data-status="review">
+                            <div class="column-header">
+                                <span class="column-title">Review</span>
+                                <span class="task-count">1</span>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="6">
+                                <div class="task-title">Prototype Testing</div>
+                                <div class="task-description">Test interactive prototype with users</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-high">High</span>
+                                    <div class="task-assignee">JD</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="kanban-column" data-status="done">
+                            <div class="column-header">
+                                <span class="column-title">Done</span>
+                                <span class="task-count">4</span>
+                            </div>
+                            
+                            <div class="task-card" draggable="true" data-task-id="7">
+                                <div class="task-title">Project Kickoff</div>
+                                <div class="task-description">Initial team meeting and planning</div>
+                                <div class="task-meta">
+                                    <span class="task-priority priority-medium">Medium</span>
+                                    <div class="task-assignee">JD</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Whiteboard Tab -->
+                <div id="whiteboard-tab" class="tab-content">
+                    <div class="whiteboard-container">
+                        <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
+                        <div class="whiteboard-tools">
+                            <button class="tool-btn active" id="penTool" onclick="setTool('pen')" title="Pen">✏️</button>
+                            <button class="tool-btn" id="eraserTool" onclick="setTool('eraser')" title="Eraser">🧽</button>
+                            <button class="tool-btn" id="textTool" onclick="setTool('text')" title="Text">📝</button>
+                            <button class="tool-btn" id="shapeTool" onclick="setTool('shape')" title="Shapes">⭕</button>
+                            <button class="tool-btn" onclick="clearWhiteboard()" title="Clear">🗑️</button>
+                            <input type="color" id="colorPicker" value="#A82400" style="width: 40px; height: 40px; border: none; border-radius: 6px; cursor: pointer;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Notes Tab -->
+                <div id="notes-tab" class="tab-content">
+                    <div style="display: flex; flex-direction: column; height: 100%;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                            <h3 style="color: var(--text-primary); margin: 0;">Meeting Notes</h3>
+                            <div style="display: flex; gap: 8px;">
+                                <button class="btn btn-secondary" onclick="exportNotes()">📤 Export</button>
+                                <button class="btn btn-primary" onclick="saveNotes()">💾 Save Notes</button>
+                            </div>
+                        </div>
+                        <textarea 
+                            id="meetingNotes" 
+                            placeholder="Take notes during your meeting..."
+                            style="flex: 1; padding: 16px; border: 1px solid var(--gray-300); border-radius: 8px; resize: none; font-family: inherit; font-size: 14px; line-height: 1.6; outline: none;"
+                            onfocus="this.style.borderColor='var(--primary-color)'"
+                            onblur="this.style.borderColor='var(--gray-300)'"
+                            oninput="autoSaveNotes()"
+                        >Project: Mobile App Redesign
+
+Attendees:
+- John Doe (Project Manager)
+- Alice Smith (UX Designer)
+- Mike Johnson (Developer)
+
+Key Discussion Points:
+1. User research findings review
+2. Wireframe approval process
+3. Technical implementation timeline
+
+Action Items:
+- [ ] Complete user persona documentation (Alice)
+- [ ] Review API requirements (Mike)
+- [ ] Schedule stakeholder presentation (John)
+
+Next Meeting: Tomorrow at 2:00 PM</textarea>
+                        <div style="margin-top: 12px; color: var(--text-secondary); font-size: 12px;" id="notesStatus">
+                            Last saved: Auto-save enabled
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="team-section">
+                <h3>Team Members</h3>
+                
+                <div class="team-member" onclick="callMember('john-doe')">
+                    <div class="member-avatar">JD</div>
+                    <div class="member-info">
+                        <div class="member-name">John Doe</div>
+                        <div class="member-status">Project Manager</div>
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+                
+                <div class="team-member" onclick="callMember('alice-smith')">
+                    <div class="member-avatar">AS</div>
+                    <div class="member-info">
+                        <div class="member-name">Alice Smith</div>
+                        <div class="member-status">UX Designer</div>
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+                
+                <div class="team-member" onclick="callMember('mike-johnson')">
+                    <div class="member-avatar">MJ</div>
+                    <div class="member-info">
+                        <div class="member-name">Mike Johnson</div>
+                        <div class="member-status">Developer</div>
+                    </div>
+                    <div class="status-indicator away"></div>
+                </div>
+                
+                <div class="team-member" onclick="callMember('sarah-parker')">
+                    <div class="member-avatar">SP</div>
+                    <div class="member-info">
+                        <div class="member-name">Sarah Parker</div>
+                        <div class="member-status">QA Engineer</div>
+                    </div>
+                    <div class="status-indicator offline"></div>
+                </div>
+                
+                <div class="team-member" onclick="callMember('david-wilson')">
+                    <div class="member-avatar">DW</div>
+                    <div class="member-info">
+                        <div class="member-name">David Wilson</div>
+                        <div class="member-status">Product Owner</div>
+                    </div>
+                    <div class="status-indicator"></div>
+                </div>
+            </div>
+
+            <div class="file-section">
+                <h3>Project Files</h3>
+                
+                <div class="file-upload-zone" id="fileUploadZone" onclick="triggerFileUpload()">
+                    <p>📁 Drop files here or click to upload</p>
+                    <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileUpload(event)">
+                </div>
+                
+                <div id="fileList">
+                    <div class="file-item" onclick="openFile('wireframes.fig', 'design')">
+                        <div class="file-icon">📐</div>
+                        <div class="file-info">
+                            <div class="file-name">Mobile Wireframes.fig</div>
+                            <div class="file-size">2.4 MB • Updated 2h ago</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action-btn" onclick="downloadFile('wireframes.fig', event)">⬇️</button>
+                            <button class="file-action-btn" onclick="shareFile('wireframes.fig', event)">🔗</button>
+                        </div>
+                    </div>
+                    
+                    <div class="file-item" onclick="openFile('research.pdf', 'document')">
+                        <div class="file-icon">📊</div>
+                        <div class="file-info">
+                            <div class="file-name">User Research Report.pdf</div>
+                            <div class="file-size">1.8 MB • Updated 5h ago</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action-btn" onclick="downloadFile('research.pdf', event)">⬇️</button>
+                            <button class="file-action-btn" onclick="shareFile('research.pdf', event)">🔗</button>
+                        </div>
+                    </div>
+                    
+                    <div class="file-item" onclick="openFile('specs.doc', 'document')">
+                        <div class="file-icon">📝</div>
+                        <div class="file-info">
+                            <div class="file-name">Technical Specs.docx</div>
+                            <div class="file-size">892 KB • Updated 1d ago</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action-btn" onclick="downloadFile('specs.doc', event)">⬇️</button>
+                            <button class="file-action-btn" onclick="shareFile('specs.doc', event)">🔗</button>
+                        </div>
+                    </div>
+                    
+                    <div class="file-item" onclick="openFile('mockups.zip', 'archive')">
+                        <div class="file-icon">🎨</div>
+                        <div class="file-info">
+                            <div class="file-name">Design Mockups.zip</div>
+                            <div class="file-size">15.2 MB • Updated 3d ago</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action-btn" onclick="downloadFile('mockups.zip', event)">⬇️</button>
+                            <button class="file-action-btn" onclick="shareFile('mockups.zip', event)">🔗</button>
+                        </div>
+                    </div>
+                    
+                    <div class="file-item" onclick="openFile('meeting-recording.mp4', 'video')">
+                        <div class="file-icon">🎥</div>
+                        <div class="file-info">
+                            <div class="file-name">Last Meeting Recording.mp4</div>
+                            <div class="file-size">124 MB • Updated 1w ago</div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action-btn" onclick="downloadFile('meeting-recording.mp4', event)">⬇️</button>
+                            <button class="file-action-btn" onclick="shareFile('meeting-recording.mp4', event)">🔗</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modals -->
+    <div id="inviteModal" class="modal">
+        <div class="modal-content">
+            <h2>Invite Team Members</h2>
+            <input type="email" id="inviteEmail" placeholder="Enter email address">
+            <input type="text" id="inviteRole" placeholder="Role (optional)">
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal('inviteModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="sendInvite()">Send Invite</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Toggle sidebar on mobile
-document.getElementById('menu-button').addEventListener('click', function() {
-    document.getElementById('sidebar').classList.toggle('open');
-});
+        // Global state management
+        const appState = {
+            currentProject: 'mobile-app',
+            video: {
+                isOn: false,
+                isAudioOn: true,
+                isScreenSharing: false,
+                isRecording: false,
+                isInCall: false,
+                callStartTime: null,
+                localStream: null,
+                remoteStream: null,
+                screenStream: null,
+                peerConnection: null,
+                mediaRecorder: null,
+                recordedChunks: []
+            },
+            chat: {
+                messages: [],
+                typingUsers: new Set(),
+                typingTimeout: null
+            },
+            whiteboard: {
+                isDrawing: false,
+                currentTool: 'pen',
+                currentColor: '#A82400',
+                lastX: 0,
+                lastY: 0,
+                canvas: null,
+                ctx: null
+            },
+            files: new Map(),
+            tasks: new Map(),
+            notes: {
+                content: '',
+                lastSaved: new Date(),
+                autoSaveEnabled: true
+            }
+        };
 
-// Sending messages functionality
-const messagesContainer = document.getElementById('messages-container');
-const messageInput = document.getElementById('message-input');
-const sendButton = document.getElementById('send-button');
+        // WebRTC Configuration
+        const rtcConfiguration = {
+            iceServers: [
+                { urls: 'stun:stun.l.google.com:19302' },
+                { urls: 'stun:stun1.l.google.com:19302' }
+            ]
+        };
 
-function sendMessage() {
-    const messageText = messageInput.value.trim();
-    if (messageText === '') return;
-    
-    const now = new Date();
-    const hours = now.getHours();
-    const minutes = now.getMinutes();
-    const ampm = hours >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours % 12 || 12;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-    const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
-    
-    const messageElement = document.createElement('div');
-    messageElement.className = 'message message-sent';
-    messageElement.innerHTML = `
-        <div class="message-content">${messageText}</div>
-        <div class="message-time">${timeString}</div>
-    `;
-    
-    messagesContainer.appendChild(messageElement);
-    messageInput.value = '';
-    
-    // Auto scroll to bottom
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    
-    // Simulate reply after delay (for demo purposes)
-    setTimeout(simulateReply, 1500);
-}
-
-// Function to simulate receiving a message
-function simulateReply() {
-    // Show typing indicator
-    showTypingIndicator();
-    
-    // Simulate typing delay before showing the message
-    setTimeout(() => {
-        // Hide typing indicator
-        hideTypingIndicator();
-        
-        // Create response messages
-        const responses = [
-            "That sounds great!",
-            "I'll get back to you on that.",
-            "Could you provide more details?",
-            "Let's discuss this in our meeting.",
-            "Thanks for letting me know!",
-            "Yes, that works for me.",
-            "I'm not sure I understand. Can you explain?",
-            "Perfect, I'll see you then."
-        ];
-        
-        const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-        
-        const now = new Date();
-        const hours = now.getHours();
-        const minutes = now.getMinutes();
-        const ampm = hours >= 12 ? 'PM' : 'AM';
-        const formattedHours = hours % 12 || 12;
-        const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-        const timeString = `${formattedHours}:${formattedMinutes} ${ampm}`;
-        
-        const messageElement = document.createElement('div');
-        messageElement.className = 'message message-received';
-        messageElement.innerHTML = `
-            <div class="message-content">${randomResponse}</div>
-            <div class="message-time">${timeString}</div>
-        `;
-        
-        messagesContainer.appendChild(messageElement);
-        
-        // Auto scroll to bottom
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        
-    }, 2000); // Simulate typing for 2 seconds
-}
-
-// Function to show typing indicator
-function showTypingIndicator() {
-    // Check if typing indicator already exists
-    let typingIndicator = document.querySelector('.typing-indicator');
-    
-    // If it doesn't exist, create it
-    if (!typingIndicator) {
-        typingIndicator = document.createElement('div');
-        typingIndicator.className = 'typing-indicator';
-        typingIndicator.innerHTML = `
-            <div class="typing-bubble"></div>
-            <div class="typing-bubble"></div>
-            <div class="typing-bubble"></div>
-        `;
-        messagesContainer.appendChild(typingIndicator);
-    } else {
-        // Make sure it's visible
-        typingIndicator.style.display = 'flex';
-    }
-    
-    // Auto scroll to show typing indicator
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-}
-
-// Function to hide typing indicator
-function hideTypingIndicator() {
-    const typingIndicator = document.querySelector('.typing-indicator');
-    if (typingIndicator) {
-        typingIndicator.style.display = 'none';
-    }
-}
-
-// Event listeners for sending messages
-sendButton.addEventListener('click', sendMessage);
-
-messageInput.addEventListener('keypress', function(event) {
-    if (event.key === 'Enter') {
-        event.preventDefault();
-        sendMessage();
-    }
-});
-
-// Handle contact list selections
-const contactItems = document.querySelectorAll('.contact-item');
-contactItems.forEach(item => {
-    item.addEventListener('click', function() {
-        // Remove active class from all contacts
-        contactItems.forEach(contact => {
-            contact.classList.remove('active');
+        // Initialize app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeApp();
         });
-        
-        // Add active class to clicked contact
-        this.classList.add('active');
-        
-        // Update chat header with contact info
-        const contactName = this.querySelector('.contact-name').textContent;
-        const contactInitials = this.querySelector('.avatar').textContent;
-        
-        document.querySelector('.chat-header-name').textContent = contactName;
-        document.querySelector('.chat-header .avatar').textContent = contactInitials;
-        
-        // Clear unread count if any
-        const unreadCount = this.querySelector('.unread-count');
-        if (unreadCount) {
-            unreadCount.remove();
+
+        function initializeApp() {
+            console.log('ProjectHub initializing...');
+            
+            // Initialize video functionality
+            initializeVideo();
+            
+            // Initialize chat
+            initializeChat();
+            
+            // Initialize whiteboard
+            initializeWhiteboard();
+            
+            // Initialize file handling
+            initializeFileHandling();
+            
+            // Initialize drag and drop for tasks
+            initializeTaskDragDrop();
+            
+            // Initialize keyboard shortcuts
+            initializeKeyboardShortcuts();
+            
+            // Initialize auto-save
+            initializeAutoSave();
+            
+            // Welcome message
+            setTimeout(() => {
+                showNotification('Welcome to ProjectHub! All systems ready.', 'success');
+            }, 1000);
+            
+            console.log('ProjectHub initialized successfully');
         }
-        
-        // For mobile: Close sidebar after selecting contact
-        document.getElementById('sidebar').classList.remove('open');
-    });
-});
 
-// Handle search functionality
-const searchInput = document.querySelector('.search-input');
-searchInput.addEventListener('input', function() {
-    const searchTerm = this.value.toLowerCase();
-    
-    contactItems.forEach(item => {
-        const contactName = item.querySelector('.contact-name').textContent.toLowerCase();
-        const lastMessage = item.querySelector('.contact-last-message').textContent.toLowerCase();
-        
-        if (contactName.includes(searchTerm) || lastMessage.includes(searchTerm)) {
-            item.style.display = 'flex';
-        } else {
-            item.style.display = 'none';
+        // Real WebRTC Video Call System
+        async function initializeVideo() {
+            try {
+                // Check for browser support
+                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+                    showNotification('Video calling not supported in this browser', 'error');
+                    return;
+                }
+                
+                // Check for WebRTC support
+                if (!window.RTCPeerConnection) {
+                    showNotification('WebRTC not supported in this browser', 'error');
+                    return;
+                }
+                
+                console.log('Video system initialized with WebRTC support');
+            } catch (error) {
+                console.error('Video initialization error:', error);
+                showNotification('Error initializing video system', 'error');
+            }
         }
-    });
-});
 
-// Theme toggle functionality (extra feature)
-function toggleDarkMode() {
-    document.body.classList.toggle('dark-mode');
-    localStorage.setItem('darkMode', document.body.classList.contains('dark-mode'));
-}
-
-// Function to initialize the chat
-function initChat() {
-    // Scroll to bottom of messages on load
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    
-    // Check for saved dark mode preference
-    const darkModePreference = localStorage.getItem('darkMode');
-    if (darkModePreference === 'true') {
-        document.body.classList.add('dark-mode');
-    }
-    
-    // Remove any extra typing indicators on load
-    const typingIndicators = document.querySelectorAll('.typing-indicator');
-    if (typingIndicators.length > 1) {
-        for (let i = 1; i < typingIndicators.length; i++) {
-            typingIndicators[i].remove();
+        async function createPeerConnection() {
+            try {
+                const peerConnection = new RTCPeerConnection(rtcConfiguration);
+                
+                // Handle ICE candidates
+                peerConnection.onicecandidate = (event) => {
+                    if (event.candidate) {
+                        // In a real implementation, send this to the remote peer via signaling server
+                        console.log('ICE candidate:', event.candidate);
+                    }
+                };
+                
+                // Handle remote stream
+                peerConnection.ontrack = (event) => {
+                    const remoteVideo = document.getElementById('remoteVideo');
+                    const videoPlaceholder = document.getElementById('videoPlaceholder');
+                    
+                    if (event.streams && event.streams[0]) {
+                        remoteVideo.srcObject = event.streams[0];
+                        remoteVideo.style.display = 'block';
+                        videoPlaceholder.style.display = 'none';
+                        
+                        // Update call status
+                        updateParticipantCount(2);
+                        showNotification('Remote participant connected', 'success');
+                    }
+                };
+                
+                // Handle connection state changes
+                peerConnection.onconnectionstatechange = () => {
+                    console.log('Connection state:', peerConnection.connectionState);
+                    
+                    if (peerConnection.connectionState === 'connected') {
+                        showNotification('Call connected successfully', 'success');
+                    } else if (peerConnection.connectionState === 'disconnected') {
+                        showNotification('Call disconnected', 'warning');
+                    } else if (peerConnection.connectionState === 'failed') {
+                        showNotification('Call connection failed', 'error');
+                        endCall();
+                    }
+                };
+                
+                return peerConnection;
+            } catch (error) {
+                console.error('Error creating peer connection:', error);
+                throw error;
+            }
         }
-    }
-}
 
-// Initialize everything when the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', initChat);
+        async function toggleVideo() {
+            const videoBtn = document.getElementById('videoBtn');
+            const localVideo = document.getElementById('localVideo');
+            const videoPlaceholder = document.getElementById('videoPlaceholder');
+            const callStatus = document.getElementById('callStatus');
+            
+            try {
+                if (!appState.video.isOn) {
+                    // Start video call
+                    const stream = await navigator.mediaDevices.getUserMedia({ 
+                        video: { 
+                            width: { ideal: 1280 },
+                            height: { ideal: 720 },
+                            frameRate: { ideal: 30 }
+                        }, 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        }
+                    });
+                    
+                    appState.video.localStream = stream;
+                    localVideo.srcObject = stream;
+                    localVideo.style.display = 'block';
+                    videoPlaceholder.style.display = 'none';
+                    
+                    // Create peer connection
+                    appState.video.peerConnection = await createPeerConnection();
+                    
+                    // Add local stream to peer connection
+                    stream.getTracks().forEach(track => {
+                        appState.video.peerConnection.addTrack(track, stream);
+                    });
+                    
+                    appState.video.isOn = true;
+                    appState.video.isInCall = true;
+                    appState.video.callStartTime = new Date();
+                    
+                    videoBtn.style.backgroundColor = 'var(--primary-color)';
+                    videoBtn.innerHTML = '📹';
+                    
+                    callStatus.style.display = 'block';
+                    updateCallTimer();
+                    updateParticipantCount(1);
+                    
+                    showNotification('Video call started', 'success');
+                    
+                    // In a real application, you would initiate signaling here
+                    // For demo purposes, simulate a remote connection after 3 seconds
+                    setTimeout(() => {
+                        simulateRemoteConnection();
+                    }, 3000);
+                    
+                } else {
+                    // Stop video call
+                    endCall();
+                }
+            } catch (error) {
+                console.error('Video toggle error:', error);
+                showNotification('Camera access denied or not available', 'error');
+            }
+        }
+
+        function toggleMute() {
+            const muteBtn = document.getElementById('muteBtn');
+            
+            appState.video.isAudioOn = !appState.video.isAudioOn;
+            
+            if (appState.video.localStream) {
+                const audioTracks = appState.video.localStream.getAudioTracks();
+                audioTracks.forEach(track => {
+                    track.enabled = appState.video.isAudioOn;
+                });
+            }
+            
+            muteBtn.innerHTML = appState.video.isAudioOn ? '🎤' : '🔇';
+            muteBtn.classList.toggle('muted', !appState.video.isAudioOn);
+            
+            showNotification(appState.video.isAudioOn ? 'Microphone on' : 'Microphone off');
+        }
+
+        async function shareScreen() {
+            const shareBtn = document.getElementById('shareBtn');
+            const screenShareVideo = document.getElementById('screenShareVideo');
+            const localVideo = document.getElementById('localVideo');
+            const pipVideo = document.getElementById('pipVideo');
+            const pipVideoElement = document.getElementById('pipVideoElement');
+            
+            try {
+                if (!appState.video.isScreenSharing) {
+                    // Start screen sharing
+                    const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
+                        video: {
+                            cursor: 'always',
+                            displaySurface: 'monitor'
+                        }, 
+                        audio: true 
+                    });
+                    
+                    appState.video.screenStream = screenStream;
+                    screenShareVideo.srcObject = screenStream;
+                    screenShareVideo.style.display = 'block';
+                    
+                    // Replace video track in peer connection
+                    if (appState.video.peerConnection && appState.video.localStream) {
+                        const videoTrack = screenStream.getVideoTracks()[0];
+                        const sender = appState.video.peerConnection.getSenders().find(s => 
+                            s.track && s.track.kind === 'video'
+                        );
+                        
+                        if (sender) {
+                            await sender.replaceTrack(videoTrack);
+                        }
+                    }
+                    
+                    // Move local video to PIP
+                    if (appState.video.localStream) {
+                        pipVideoElement.srcObject = appState.video.localStream;
+                        pipVideo.style.display = 'block';
+                        localVideo.style.display = 'none';
+                    }
+                    
+                    appState.video.isScreenSharing = true;
+                    shareBtn.innerHTML = '🛑';
+                    shareBtn.style.backgroundColor = '#DC2626';
+                    
+                    showNotification('Screen sharing started', 'success');
+                    
+                    // Handle screen share end
+                    screenStream.getVideoTracks()[0].addEventListener('ended', () => {
+                        stopScreenShare();
+                    });
+                    
+                } else {
+                    stopScreenShare();
+                }
+            } catch (error) {
+                console.error('Screen sharing error:', error);
+                showNotification('Screen sharing not available or denied', 'error');
+            }
+        }
+
+        async function stopScreenShare() {
+            const shareBtn = document.getElementById('shareBtn');
+            const screenShareVideo = document.getElementById('screenShareVideo');
+            const localVideo = document.getElementById('localVideo');
+            const pipVideo = document.getElementById('pipVideo');
+            
+            if (appState.video.screenStream) {
+                appState.video.screenStream.getTracks().forEach(track => track.stop());
+            }
+            
+            screenShareVideo.style.display = 'none';
+            pipVideo.style.display = 'none';
+            
+            // Restore original video track
+            if (appState.video.peerConnection && appState.video.localStream) {
+                const videoTrack = appState.video.localStream.getVideoTracks()[0];
+                const sender = appState.video.peerConnection.getSenders().find(s => 
+                    s.track && s.track.kind === 'video'
+                );
+                
+                if (sender && videoTrack) {
+                    await sender.replaceTrack(videoTrack);
+                }
+            }
+            
+            if (appState.video.isOn) {
+                localVideo.style.display = 'block';
+            }
+            
+            appState.video.isScreenSharing = false;
+            shareBtn.innerHTML = '🖥️';
+            shareBtn.style.backgroundColor = 'var(--primary-color)';
+            
+            showNotification('Screen sharing stopped', 'warning');
+        }
+
+        function endCall() {
+            // Stop all streams
+            if (appState.video.localStream) {
+                appState.video.localStream.getTracks().forEach(track => track.stop());
+            }
+            if (appState.video.screenStream) {
+                appState.video.screenStream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Close peer connection
+            if (appState.video.peerConnection) {
+                appState.video.peerConnection.close();
+                appState.video.peerConnection = null;
+            }
+            
+            // Stop recording if active
+            if (appState.video.isRecording) {
+                toggleRecording();
+            }
+            
+            // Reset video elements
+            document.getElementById('localVideo').style.display = 'none';
+            document.getElementById('remoteVideo').style.display = 'none';
+            document.getElementById('screenShareVideo').style.display = 'none';
+            document.getElementById('pipVideo').style.display = 'none';
+            document.getElementById('videoPlaceholder').style.display = 'block';
+            document.getElementById('callStatus').style.display = 'none';
+            
+            // Reset state
+            appState.video.isOn = false;
+            appState.video.isInCall = false;
+            appState.video.isScreenSharing = false;
+            appState.video.localStream = null;
+            appState.video.remoteStream = null;
+            appState.video.screenStream = null;
+            
+            // Reset button states
+            document.getElementById('videoBtn').innerHTML = '📹';
+            document.getElementById('muteBtn').innerHTML = '🎤';
+            document.getElementById('shareBtn').innerHTML = '🖥️';
+            document.querySelectorAll('.video-btn').forEach(btn => {
+                btn.style.backgroundColor = btn.classList.contains('danger') ? '#DC2626' : 'var(--primary-color)';
+                btn.classList.remove('muted');
+            });
+            
+            showNotification('Call ended', 'warning');
+        }
+
+        async function simulateRemoteConnection() {
+            // In a real implementation, this would be handled by signaling server
+            // For demo purposes, we'll simulate a remote connection
+            try {
+                if (appState.video.peerConnection) {
+                    // Create offer
+                    const offer = await appState.video.peerConnection.createOffer();
+                    await appState.video.peerConnection.setLocalDescription(offer);
+                    
+                    // Simulate remote answer (in real app, this comes from signaling server)
+                    setTimeout(async () => {
+                        try {
+                            const answer = await appState.video.peerConnection.createAnswer();
+                            await appState.video.peerConnection.setRemoteDescription(answer);
+                            
+                            // Simulate remote stream
+                            const remoteVideo = document.getElementById('remoteVideo');
+                            const canvas = document.createElement('canvas');
+                            canvas.width = 640;
+                            canvas.height = 480;
+                            const ctx = canvas.getContext('2d');
+                            
+                            // Create animated gradient background for demo
+                            let hue = 0;
+                            const drawFrame = () => {
+                                ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
+                                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                                
+                                ctx.fillStyle = 'white';
+                                ctx.font = '24px Arial';
+                                ctx.textAlign = 'center';
+                                ctx.fillText('Remote Participant', canvas.width / 2, canvas.height / 2 - 20);
+                                ctx.fillText('(Demo Mode)', canvas.width / 2, canvas.height / 2 + 20);
+                                
+                                hue = (hue + 1) % 360;
+                            };
+                            
+                            setInterval(drawFrame, 100);
+                            
+                            const stream = canvas.captureStream(30);
+                            remoteVideo.srcObject = stream;
+                            remoteVideo.style.display = 'block';
+                            
+                            updateParticipantCount(2);
+                            showNotification('Remote participant joined', 'success');
+                            
+                        } catch (error) {
+                            console.error('Error in simulated connection:', error);
+                        }
+                    }, 1000);
+                }
+            } catch (error) {
+                console.error('Error creating offer:', error);
+            }
+        }
+
+        function updateCallTimer() {
+            if (!appState.video.isInCall) return;
+            
+            const callTimer = document.getElementById('callTimer');
+            const now = new Date();
+            const elapsed = Math.floor((now - appState.video.callStartTime) / 1000);
+            
+            const minutes = Math.floor(elapsed / 60);
+            const seconds = elapsed % 60;
+            
+            callTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            
+            setTimeout(updateCallTimer, 1000);
+        }
+
+        function updateParticipantCount(count) {
+            const callParticipants = document.getElementById('callParticipants');
+            callParticipants.textContent = `${count} participant${count !== 1 ? 's' : ''}`;
+        }
+
+        async function toggleRecording() {
+            const recordBtn = document.getElementById('recordBtn');
+            const recordingIndicator = document.getElementById('recordingIndicator');
+            
+            try {
+                if (!appState.video.isRecording) {
+                    // Start recording
+                    if (!appState.video.localStream) {
+                        showNotification('Start video call first to record', 'error');
+                        return;
+                    }
+                    
+                    const options = { mimeType: 'video/webm; codecs=vp9' };
+                    appState.video.mediaRecorder = new MediaRecorder(appState.video.localStream, options);
+                    appState.video.recordedChunks = [];
+                    
+                    appState.video.mediaRecorder.ondataavailable = (event) => {
+                        if (event.data.size > 0) {
+                            appState.video.recordedChunks.push(event.data);
+                        }
+                    };
+                    
+                    appState.video.mediaRecorder.onstop = () => {
+                        const blob = new Blob(appState.video.recordedChunks, { type: 'video/webm' });
+                        const url = URL.createObjectURL(blob);
+                        
+                        // Auto-download the recording
+                        const a = document.createElement('a');
+                        a.style.display = 'none';
+                        a.href = url;
+                        a.download = `meeting-recording-${new Date().toISOString().split('T')[0]}.webm`;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+                        
+                        showNotification('Recording saved to downloads', 'success');
+                    };
+                    
+                    appState.video.mediaRecorder.start();
+                    appState.video.isRecording = true;
+                    
+                    recordBtn.classList.add('active');
+                    recordingIndicator.style.display = 'block';
+                    showNotification('Recording started', 'success');
+                    
+                } else {
+                    // Stop recording
+                    if (appState.video.mediaRecorder) {
+                        appState.video.mediaRecorder.stop();
+                    }
+                    
+                    appState.video.isRecording = false;
+                    recordBtn.classList.remove('active');
+                    recordingIndicator.style.display = 'none';
+                    showNotification('Recording stopped', 'warning');
+                }
+            } catch (error) {
+                console.error('Recording error:', error);
+                showNotification('Recording not supported in this browser', 'error');
+            }
+        }
+
+        function toggleScreenShare() {
+            shareScreen();
+        }
+
+        // Chat System
+        function initializeChat() {
+            const messageInput = document.getElementById('messageInput');
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+        }
+
+        function sendMessage() {
+            const messageInput = document.getElementById('messageInput');
+            const messageText = messageInput.value.trim();
+            
+            if (!messageText) return;
+            
+            const message = {
+                id: Date.now(),
+                author: 'You',
+                text: messageText,
+                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                avatar: 'YU'
+            };
+            
+            addMessageToChat(message);
+            messageInput.value = '';
+            
+            // Simulate response from team member
+            setTimeout(() => {
+                simulateTeamResponse();
+            }, 1000 + Math.random() * 2000);
+        }
+
+        function addMessageToChat(message) {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = 'message';
+            messageElement.innerHTML = `
+                <div class="message-avatar">${message.avatar}</div>
+                <div class="message-content">
+                    <div class="message-header">
+                        <span class="message-author">${message.author}</span>
+                        <span class="message-time">${message.time}</span>
+                    </div>
+                    <div class="message-text">${message.text}</div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function simulateTeamResponse() {
+            const responses = [
+                { author: 'Alice Smith', avatar: 'AS', text: 'Great point! I agree with that approach.' },
+                { author: 'Mike Johnson', avatar: 'MJ', text: 'Let me check the technical feasibility and get back to you.' },
+                { author: 'John Doe', avatar: 'JD', text: 'Sounds good. Let\'s schedule a follow-up meeting.' },
+                { author: 'Alice Smith', avatar: 'AS', text: 'I\'ll update the design specs accordingly.' },
+                { author: 'Mike Johnson', avatar: 'MJ', text: 'The API integration should be straightforward.' }
+            ];
+            
+            const response = responses[Math.floor(Math.random() * responses.length)];
+            response.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            
+            addMessageToChat(response);
+        }
+
+        function handleMessageInput(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function handleTyping() {
+            // Show typing indicator simulation
+            const typingIndicator = document.getElementById('typingIndicator');
+            
+            if (appState.chat.typingTimeout) {
+                clearTimeout(appState.chat.typingTimeout);
+            }
+            
+            typingIndicator.style.display = 'flex';
+            
+            appState.chat.typingTimeout = setTimeout(() => {
+                typingIndicator.style.display = 'none';
+            }, 2000);
+        }
+
+        // Whiteboard System
+        function initializeWhiteboard() {
+            const canvas = document.getElementById('whiteboardCanvas');
+            if (!canvas) return;
+            
+            appState.whiteboard.canvas = canvas;
+            appState.whiteboard.ctx = canvas.getContext('2d');
+            
+            // Set canvas size
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            
+            // Add event listeners
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+            
+            // Touch events for mobile
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+            
+            // Color picker
+            const colorPicker = document.getElementById('colorPicker');
+            colorPicker.addEventListener('change', (e) => {
+                appState.whiteboard.currentColor = e.target.value;
+            });
+        }
+
+        function resizeCanvas() {
+            const canvas = appState.whiteboard.canvas;
+            if (!canvas) return;
+            
+            const container = canvas.parentElement;
+            canvas.width = container.offsetWidth;
+            canvas.height = container.offsetHeight;
+            
+            // Reset drawing settings
+            const ctx = appState.whiteboard.ctx;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.lineWidth = 2;
+        }
+
+        function startDrawing(e) {
+            if (appState.whiteboard.currentTool !== 'pen') return;
+            
+            appState.whiteboard.isDrawing = true;
+            
+            const rect = appState.whiteboard.canvas.getBoundingClientRect();
+            appState.whiteboard.lastX = e.clientX - rect.left;
+            appState.whiteboard.lastY = e.clientY - rect.top;
+        }
+
+        function draw(e) {
+            if (!appState.whiteboard.isDrawing || appState.whiteboard.currentTool !== 'pen') return;
+            
+            const ctx = appState.whiteboard.ctx;
+            const rect = appState.whiteboard.canvas.getBoundingClientRect();
+            const currentX = e.clientX - rect.left;
+            const currentY = e.clientY - rect.top;
+            
+            ctx.strokeStyle = appState.whiteboard.currentColor;
+            ctx.beginPath();
+            ctx.moveTo(appState.whiteboard.lastX, appState.whiteboard.lastY);
+            ctx.lineTo(currentX, currentY);
+            ctx.stroke();
+            
+            appState.whiteboard.lastX = currentX;
+            appState.whiteboard.lastY = currentY;
+        }
+
+        function stopDrawing() {
+            appState.whiteboard.isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
+                                            e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            appState.whiteboard.canvas.dispatchEvent(mouseEvent);
+        }
+
+        function setTool(tool) {
+            appState.whiteboard.currentTool = tool;
+            
+            // Update tool button states
+            document.querySelectorAll('.tool-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            if (tool === 'pen') document.getElementById('penTool').classList.add('active');
+            else if (tool === 'eraser') document.getElementById('eraserTool').classList.add('active');
+            else if (tool === 'text') document.getElementById('textTool').classList.add('active');
+            else if (tool === 'shape') document.getElementById('shapeTool').classList.add('active');
+            
+            // Update cursor
+            const canvas = appState.whiteboard.canvas;
+            if (tool === 'eraser') {
+                canvas.style.cursor = 'grab';
+            } else {
+                canvas.style.cursor = 'crosshair';
+            }
+        }
+
+        function clearWhiteboard() {
+            const ctx = appState.whiteboard.ctx;
+            const canvas = appState.whiteboard.canvas;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            showNotification('Whiteboard cleared', 'success');
+        }
+
+        // File System with Real Download Functionality
+        function initializeFileHandling() {
+            const fileUploadZone = document.getElementById('fileUploadZone');
+            const fileInput = document.getElementById('fileInput');
+            
+            // Drag and drop events
+            fileUploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                fileUploadZone.classList.add('dragover');
+            });
+            
+            fileUploadZone.addEventListener('dragleave', () => {
+                fileUploadZone.classList.remove('dragover');
+            });
+            
+            fileUploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                fileUploadZone.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+        }
+
+        function triggerFileUpload() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileUpload(event) {
+            handleFiles(event.target.files);
+        }
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                const fileData = {
+                    name: file.name,
+                    size: formatFileSize(file.size),
+                    type: file.type,
+                    uploadTime: new Date(),
+                    file: file // Store the actual file object
+                };
+                
+                // Store in our files map
+                appState.files.set(file.name, fileData);
+                
+                addFileToList(fileData);
+                showNotification(`${file.name} uploaded successfully`, 'success');
+            });
+        }
+
+        function addFileToList(fileData) {
+            const fileList = document.getElementById('fileList');
+            
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                <div class="file-icon">${getFileIcon(fileData.type)}</div>
+                <div class="file-info">
+                    <div class="file-name">${fileData.name}</div>
+                    <div class="file-size">${fileData.size} • Just uploaded</div>
+                </div>
+                <div class="file-actions">
+                    <button class="file-action-btn" onclick="downloadFile('${fileData.name}', event)">⬇️</button>
+                    <button class="file-action-btn" onclick="shareFile('${fileData.name}', event)">🔗</button>
+                </div>
+            `;
+            
+            fileList.insertBefore(fileItem, fileList.firstChild);
+        }
+
+        function getFileIcon(fileType) {
+            if (fileType.startsWith('image/')) return '🖼️';
+            if (fileType.startsWith('video/')) return '🎥';
+            if (fileType.startsWith('audio/')) return '🎵';
+            if (fileType.includes('pdf')) return '📄';
+            if (fileType.includes('word')) return '📝';
+            if (fileType.includes('excel')) return '📊';
+            if (fileType.includes('powerpoint')) return '📋';
+            return '📁';
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function downloadFile(filename, event) {
+            event.stopPropagation();
+            
+            // Check if file exists in our uploaded files
+            if (appState.files.has(filename)) {
+                const fileData = appState.files.get(filename);
+                const url = URL.createObjectURL(fileData.file);
+                
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                showNotification(`Downloading ${filename}...`, 'success');
+            } else {
+                // For demo files, create sample content
+                createSampleFileDownload(filename);
+            }
+        }
+
+        function createSampleFileDownload(filename) {
+            let content, mimeType;
+            
+            // Create sample content based on file type
+            if (filename.includes('.pdf')) {
+                content = 'Sample PDF content for ' + filename;
+                mimeType = 'application/pdf';
+            } else if (filename.includes('.doc')) {
+                content = 'Sample document content for ' + filename;
+                mimeType = 'application/msword';
+            } else if (filename.includes('.zip')) {
+                content = 'Sample archive content for ' + filename;
+                mimeType = 'application/zip';
+            } else if (filename.includes('.mp4')) {
+                content = 'Sample video content for ' + filename;
+                mimeType = 'video/mp4';
+            } else {
+                content = 'Sample file content for ' + filename;
+                mimeType = 'text/plain';
+            }
+            
+            const blob = new Blob([content], { type: mimeType });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification(`Downloading ${filename}...`, 'success');
+        }
+
+        function shareFile(filename, event) {
+            event.stopPropagation();
+            
+            // Generate a shareable link (in real app, this would be a server endpoint)
+            const shareUrl = `https://projecthub.com/files/${encodeURIComponent(filename)}`;
+            
+            // Copy to clipboard
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                showNotification('Share link copied to clipboard', 'success');
+            }).catch(() => {
+                // Fallback for browsers that don't support clipboard API
+                const textArea = document.createElement('textarea');
+                textArea.value = shareUrl;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showNotification('Share link copied to clipboard', 'success');
+            });
+        }
+
+        function openFile(filename, type) {
+            showNotification(`Opening ${filename}...`, 'success');
+            
+            // In a real application, this would open the file in an appropriate viewer
+            // For demo purposes, we'll just show a notification
+            setTimeout(() => {
+                showNotification(`${filename} opened successfully`, 'success');
+            }, 1000);
+        }
+
+        // Task Management (Kanban)
+        function initializeTaskDragDrop() {
+            const taskCards = document.querySelectorAll('.task-card');
+            const columns = document.querySelectorAll('.kanban-column');
+            
+            taskCards.forEach(card => {
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragend', handleDragEnd);
+            });
+            
+            columns.forEach(column => {
+                column.addEventListener('dragover', handleDragOver);
+                column.addEventListener('drop', handleDrop);
+            });
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.taskId);
+            e.target.classList.add('dragging');
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const taskId = e.dataTransfer.getData('text/plain');
+            const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+            const targetColumn = e.target.closest('.kanban-column');
+            
+            if (targetColumn && taskCard) {
+                targetColumn.appendChild(taskCard);
+                updateTaskCounts();
+                showNotification('Task moved successfully', 'success');
+            }
+        }
+
+        function updateTaskCounts() {
+            const columns = document.querySelectorAll('.kanban-column');
+            columns.forEach(column => {
+                const taskCount = column.querySelectorAll('.task-card').length;
+                const countElement = column.querySelector('.task-count');
+                if (countElement) {
+                    countElement.textContent = taskCount;
+                }
+            });
+        }
+
+        // Notes System
+        function initializeAutoSave() {
+            const notesTextarea = document.getElementById('meetingNotes');
+            if (notesTextarea) {
+                // Load saved notes from memory (since localStorage is not supported)
+                if (appState.notes.content) {
+                    notesTextarea.value = appState.notes.content;
+                }
+            }
+        }
+
+        function autoSaveNotes() {
+            const notesTextarea = document.getElementById('meetingNotes');
+            const notesStatus = document.getElementById('notesStatus');
+            
+            if (appState.notes.autoSaveEnabled) {
+                appState.notes.content = notesTextarea.value;
+                appState.notes.lastSaved = new Date();
+                
+                notesStatus.textContent = `Last saved: ${appState.notes.lastSaved.toLocaleTimeString()}`;
+            }
+        }
+
+        function saveNotes() {
+            const notesTextarea = document.getElementById('meetingNotes');
+            appState.notes.content = notesTextarea.value;
+            appState.notes.lastSaved = new Date();
+            
+            showNotification('Notes saved successfully', 'success');
+            autoSaveNotes();
+        }
+
+        function exportNotes() {
+            const notesContent = document.getElementById('meetingNotes').value;
+            const blob = new Blob([notesContent], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `meeting-notes-${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Notes exported successfully', 'success');
+        }
+
+        // Navigation and UI
+        function switchTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected tab
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+            
+            // Initialize whiteboard when switching to it
+            if (tabName === 'whiteboard') {
+                setTimeout(() => {
+                    initializeWhiteboard();
+                }, 100);
+            }
+        }
+
+        function switchView(viewName) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            showNotification(`Switched to ${viewName}`, 'success');
+        }
+
+        function selectProject(projectId) {
+            // Update project selection
+            document.querySelectorAll('.project-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+            
+            appState.currentProject = projectId;
+            showNotification(`Switched to project: ${projectId}`, 'success');
+        }
+
+        // Team Management
+        async function callMember(memberId) {
+            const memberName = event.target.querySelector('.member-name').textContent;
+            
+            try {
+                // If not in a call, start one
+                if (!appState.video.isInCall) {
+                    await toggleVideo();
+                }
+                
+                showNotification(`Calling ${memberName}...`, 'success');
+                
+                // Update status indicator to show in call
+                const statusIndicator = event.target.querySelector('.status-indicator');
+                statusIndicator.classList.add('in-call');
+                
+                // Simulate connection after a delay
+                setTimeout(() => {
+                    showNotification(`${memberName} joined the call`, 'success');
+                }, 2000);
+                
+            } catch (error) {
+                console.error('Error calling member:', error);
+                showNotification(`Failed to call ${memberName}`, 'error');
+            }
+        }
+
+        function inviteMembers() {
+            document.getElementById('inviteModal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function sendInvite() {
+            const email = document.getElementById('inviteEmail').value;
+            const role = document.getElementById('inviteRole').value;
+            
+            if (!email) {
+                showNotification('Please enter an email address', 'error');
+                return;
+            }
+            
+            showNotification(`Invitation sent to ${email}`, 'success');
+            closeModal('inviteModal');
+            
+            // Clear form
+            document.getElementById('inviteEmail').value = '';
+            document.getElementById('inviteRole').value = '';
+        }
+
+        // Keyboard Shortcuts
+        function initializeKeyboardShortcuts() {
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + S for save notes
+                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                    e.preventDefault();
+                    saveNotes();
+                }
+                
+                // Ctrl/Cmd + Enter for send message
+                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                    sendMessage();
+                }
+                
+                // Escape to close modals
+                if (e.key === 'Escape') {
+                    document.querySelectorAll('.modal').forEach(modal => {
+                        modal.style.display = 'none';
+                    });
+                }
+                
+                // Space to toggle mute (when not in input fields)
+                if (e.key === ' ' && !e.target.matches('input, textarea')) {
+                    e.preventDefault();
+                    toggleMute();
+                }
+            });
+        }
+
+        // Notifications
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after animation
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Click outside modal to close
+        window.addEventListener('click', (e) => {
+            document.querySelectorAll('.modal').forEach(modal => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        });
+
+        // Responsive sidebar toggle for mobile
+        function toggleSidebar(side) {
+            const sidebar = document.querySelector(`.${side}-sidebar`);
+            sidebar.style.display = sidebar.style.display === 'none' ? 'flex' : 'none';
+        }
+
+        // Performance optimization: Debounce resize events
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        // Optimized resize handler
+        const optimizedResize = debounce(() => {
+            resizeCanvas();
+        }, 250);
+
+        window.addEventListener('resize', optimizedResize);
+
+        // Cleanup function for when page is unloaded
+        window.addEventListener('beforeunload', () => {
+            // Close peer connections
+            if (appState.video.peerConnection) {
+                appState.video.peerConnection.close();
+            }
+            
+            // Stop all media streams
+            if (appState.video.localStream) {
+                appState.video.localStream.getTracks().forEach(track => track.stop());
+            }
+            if (appState.video.screenStream) {
+                appState.video.screenStream.getTracks().forEach(track => track.stop());
+            }
+            
+            // Stop recording
+            if (appState.video.mediaRecorder && appState.video.mediaRecorder.state === 'recording') {
+                appState.video.mediaRecorder.stop();
+            }
+        });
+
+        // Error handling for WebRTC
+        window.addEventListener('error', (e) => {
+            console.error('Global error:', e);
+            if (e.message.includes('WebRTC') || e.message.includes('getUserMedia')) {
+                showNotification('Video calling error occurred', 'error');
+            }
+        });
+
+        // Handle permission changes
+        navigator.permissions?.query({name: 'camera'}).then((result) => {
+            result.onchange = () => {
+                if (result.state === 'denied') {
+                    showNotification('Camera permission denied', 'error');
+                }
+            };
+        });
+
+        navigator.permissions?.query({name: 'microphone'}).then((result) => {
+            result.onchange = () => {
+                if (result.state === 'denied') {
+                    showNotification('Microphone permission denied', 'error');
+                }
+            };
+        });
     </script>
+</body>
+</html>
