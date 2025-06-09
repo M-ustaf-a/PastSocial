@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ProjectHub - Team Collaboration</title>
+    <title>ProjectHub - Real-time Team Collaboration</title>
     <style>
         :root {
             --primary-color: #A82400;
@@ -23,11 +23,21 @@
             --gray-300: #D4D4D4;
             --gray-600: #525252;
             --gray-800: #262626;
-            --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #DC2626;
+            --online: #10B981;
+            --away: #F59E0B;
+            --busy: #DC2626;
+            --offline: #9CA3AF;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px rgba(0,0,0,0.1), 0 10px 10px rgba(0,0,0,0.04);
+            --border-radius: 16px;
+            --border-radius-sm: 12px;
+            --border-radius-xs: 8px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         * {
@@ -37,386 +47,547 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--bg-color) 0%, #FFF8E1 100%);
             color: var(--text-dark);
             height: 100vh;
             overflow: hidden;
+            line-height: 1.6;
         }
 
-        /* Header */
+        /* Professional Header */
         .header {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
             color: var(--white);
-            padding: 12px 20px;
-            box-shadow: var(--shadow-md);
+            padding: 20px 32px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow-lg);
             position: relative;
             z-index: 1000;
         }
 
-        .header h1 {
-            font-size: 24px;
-            font-weight: 600;
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        .header-controls {
+        .header-left {
             display: flex;
-            gap: 12px;
             align-items: center;
+            gap: 24px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .project-selector {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255,255,255,0.15);
+            padding: 12px 20px;
+            border-radius: var(--border-radius-sm);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .project-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .project-info p {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .call-status-header {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(16, 185, 129, 0.2);
+            padding: 8px 16px;
+            border-radius: var(--border-radius-xs);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .call-status-header.active {
+            display: flex;
+        }
+
+        .recording-indicator-header {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            background: rgba(220, 38, 38, 0.2);
+            padding: 8px 16px;
+            border-radius: var(--border-radius-xs);
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        .recording-indicator-header.active {
+            display: flex;
         }
 
         .btn {
-            padding: 8px 16px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 8px;
+            border-radius: var(--border-radius-sm);
+            font-weight: 600;
+            font-size: 14px;
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
         }
 
         .btn-primary {
-            background-color: var(--white);
-            color: var(--primary-color);
+            background: rgba(255,255,255,0.15);
+            color: var(--white);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .btn-primary:hover {
-            background-color: var(--gray-100);
+            background: rgba(255,255,255,0.25);
             transform: translateY(-1px);
         }
 
         .btn-secondary {
-            background-color: transparent;
+            background: transparent;
             color: var(--white);
-            border: 2px solid var(--white);
+            border: 1px solid rgba(255,255,255,0.3);
         }
 
         .btn-secondary:hover {
-            background-color: var(--white);
-            color: var(--primary-color);
+            background: rgba(255,255,255,0.1);
         }
 
-        .btn.active {
-            background-color: #DC2626 !important;
-            color: var(--white) !important;
-        }
-
-        /* Main Layout */
-        .main-container {
+        /* Modern Layout */
+        .main-layout {
             display: grid;
-            grid-template-columns: 280px 1fr 320px;
+            grid-template-columns: 280px 1fr 360px;
             grid-template-rows: 1fr;
-            height: calc(100vh - 64px);
+            height: calc(100vh - 84px);
             gap: 0;
         }
 
-        /* Left Sidebar */
+        /* Left Sidebar - Team & Navigation */
         .left-sidebar {
-            background-color: var(--card-bg);
-            border-right: 1px solid var(--gray-200);
+            background: linear-gradient(180deg, var(--white) 0%, var(--card-bg) 100%);
+            border-right: 1px solid rgba(168, 36, 0, 0.1);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        .sidebar-section {
-            padding: 20px;
-            border-bottom: 1px solid var(--gray-200);
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid rgba(168, 36, 0, 0.1);
         }
 
-        .sidebar-section h3 {
+        .sidebar-header h3 {
             color: var(--text-primary);
-            font-size: 16px;
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            padding: 10px 12px;
+            font-size: 18px;
+            font-weight: 700;
             margin-bottom: 4px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+        }
+
+        .sidebar-header p {
             color: var(--text-secondary);
-        }
-
-        .nav-item:hover {
-            background-color: var(--hover-bg);
-            color: var(--text-primary);
-        }
-
-        .nav-item.active {
-            background-color: var(--primary-color);
-            color: var(--white);
-        }
-
-        .nav-item span {
-            margin-left: 10px;
-        }
-
-        .project-list {
-            flex: 1;
-            overflow-y: auto;
-            padding: 0 20px;
-        }
-
-        .project-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            margin-bottom: 8px;
-            background-color: var(--white);
-            border-radius: 8px;
-            box-shadow: var(--shadow-xs);
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .project-item:hover {
-            box-shadow: var(--shadow-sm);
-            transform: translateY(-1px);
-        }
-
-        .project-item.selected {
-            background-color: var(--hover-bg);
-            border: 2px solid var(--primary-color);
-        }
-
-        .project-info h4 {
-            color: var(--text-primary);
             font-size: 14px;
-            margin-bottom: 4px;
+            opacity: 0.8;
         }
 
-        .project-info p {
-            color: var(--text-secondary);
-            font-size: 12px;
+        /* Team Members Section */
+        .team-members {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
         }
 
-        .project-status {
-            width: 8px;
-            height: 8px;
+        .team-member {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .team-member:hover {
+            background: linear-gradient(135deg, var(--hover-bg) 0%, rgba(255,228,204,0.3) 100%);
+            border-color: rgba(168, 36, 0, 0.2);
+            transform: translateX(4px);
+        }
+
+        .team-member.in-call {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+            border-color: var(--success);
+        }
+
+        .member-avatar {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            background-color: var(--secondary-color);
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--white);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+            position: relative;
+            border: 3px solid var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .status-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 3px solid var(--white);
+            background: var(--offline);
+        }
+
+        .status-indicator.online { background: var(--online); }
+        .status-indicator.away { background: var(--away); }
+        .status-indicator.busy { background: var(--busy); }
+        .status-indicator.in-call { 
+            background: var(--primary-color);
+            animation: pulse 2s infinite;
+        }
+
+        .member-info {
+            flex: 1;
+        }
+
+        .member-name {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 15px;
+            margin-bottom: 2px;
+        }
+
+        .member-status {
+            font-size: 13px;
+            color: var(--text-secondary);
+            opacity: 0.8;
+        }
+
+        .member-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: var(--transition);
+        }
+
+        .team-member:hover .member-actions {
+            opacity: 1;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--gray-100);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            font-size: 14px;
+        }
+
+        .action-btn:hover {
+            background: var(--primary-color);
+            color: var(--white);
+            transform: scale(1.1);
+        }
+
+        .action-btn.calling {
+            background: var(--success);
+            color: var(--white);
+            animation: pulse 1s infinite;
         }
 
         /* Main Content Area */
         .main-content {
             display: flex;
             flex-direction: column;
-            background-color: var(--white);
-            overflow: hidden;
+            background: var(--white);
+            position: relative;
         }
 
-        /* Video Call Section */
-        .video-section {
-            height: 40%;
-            background: linear-gradient(135deg, var(--gray-800), var(--gray-600));
+        /* Video Conference Area */
+        .video-conference {
+            height: 45%;
+            background: linear-gradient(135deg, #1F2937 0%, #111827 100%);
             position: relative;
             display: flex;
-            align-items: center;
-            justify-content: center;
             border-bottom: 1px solid var(--gray-200);
-            overflow: hidden;
         }
 
-        .video-container {
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            padding: 20px;
             width: 100%;
             height: 100%;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
 
-        .local-video, .remote-video, .screen-share-video {
+        .video-participant {
+            background: #374151;
+            border-radius: var(--border-radius);
+            position: relative;
+            overflow: hidden;
+            min-height: 150px;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .video-participant.speaking {
+            border-color: var(--success);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .video-participant.local {
+            border-color: var(--primary-color);
+        }
+
+        .video-element {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            background-color: var(--gray-800);
+            border-radius: calc(var(--border-radius) - 2px);
+        }
+
+        .participant-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            right: 12px;
+            background: rgba(0,0,0,0.7);
+            color: var(--white);
+            padding: 8px 12px;
+            border-radius: var(--border-radius-xs);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            backdrop-filter: blur(10px);
+        }
+
+        .participant-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .participant-controls {
+            display: flex;
+            gap: 6px;
+        }
+
+        .participant-control {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+        }
+
+        .participant-control.muted {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        .participant-control.video-off {
+            background: var(--warning);
+            color: var(--white);
         }
 
         .video-placeholder {
-            color: var(--white);
-            text-align: center;
-            font-size: 18px;
-        }
-
-        .video-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.7);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+            height: 100%;
             color: var(--white);
-            font-size: 18px;
+            text-align: center;
         }
 
-        .pip-video {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 200px;
-            height: 150px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: var(--shadow-lg);
-            z-index: 100;
+        .video-placeholder-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.6;
         }
 
+        .video-placeholder h3 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .video-placeholder p {
+            opacity: 0.7;
+            font-size: 14px;
+        }
+
+        /* Video Controls */
         .video-controls {
             position: absolute;
-            bottom: 20px;
+            bottom: 24px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 12px;
-            z-index: 200;
+            gap: 16px;
+            background: rgba(0,0,0,0.8);
+            padding: 16px 24px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
 
-        .video-btn {
-            width: 50px;
-            height: 50px;
-            border: none;
+        .video-control-btn {
+            width: 56px;
+            height: 56px;
             border-radius: 50%;
-            background-color: var(--primary-color);
+            border: none;
+            background: rgba(255,255,255,0.15);
             color: var(--white);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 18px;
+            font-size: 20px;
+            transition: var(--transition);
+            position: relative;
         }
 
-        .video-btn:hover {
-            background-color: var(--primary-dark);
+        .video-control-btn:hover {
+            background: rgba(255,255,255,0.25);
             transform: scale(1.1);
         }
 
-        .video-btn.danger {
-            background-color: #DC2626;
+        .video-control-btn.active {
+            background: var(--primary-color);
         }
 
-        .video-btn.danger:hover {
-            background-color: #B91C1C;
+        .video-control-btn.muted {
+            background: var(--error);
         }
 
-        .video-btn.muted {
-            background-color: #DC2626;
+        .video-control-btn.end-call {
+            background: var(--error);
         }
 
-        .video-btn.disabled {
-            background-color: #6B7280;
-            cursor: not-allowed;
+        .video-control-btn.end-call:hover {
+            background: #B91C1C;
         }
 
-        /* Call Status */
-        .call-status {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(0, 0, 0, 0.7);
-            color: var(--white);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            z-index: 200;
-        }
-
-        .recording-indicator {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #DC2626;
-            color: var(--white);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 14px;
-            animation: pulse 2s infinite;
-            z-index: 200;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
-
-        /* Chat & Collaboration Section */
-        .collaboration-section {
+        /* Chat & Collaboration */
+        .chat-collaboration {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 20px;
-            overflow: hidden;
+            padding: 24px;
+            background: linear-gradient(180deg, var(--white) 0%, var(--gray-50) 100%);
         }
 
-        .tab-navigation {
+        .chat-header {
             display: flex;
-            gap: 4px;
-            margin-bottom: 20px;
-            background-color: var(--gray-100);
-            border-radius: 8px;
-            padding: 4px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
         }
 
-        .tab-btn {
-            flex: 1;
-            padding: 10px 16px;
-            border: none;
-            background: transparent;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            color: var(--text-secondary);
-        }
-
-        .tab-btn.active {
-            background-color: var(--white);
+        .chat-title {
+            font-size: 20px;
+            font-weight: 700;
             color: var(--text-primary);
-            box-shadow: var(--shadow-xs);
         }
 
-        .tab-content {
-            flex: 1;
-            display: none;
-            flex-direction: column;
-            overflow: hidden;
-        }
-
-        .tab-content.active {
+        .chat-options {
             display: flex;
+            gap: 12px;
         }
 
-        /* Chat Messages */
+        .chat-option-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--gray-300);
+            background: var(--white);
+            border-radius: var(--border-radius-xs);
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .chat-option-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* Real-time Chat Messages */
         .chat-messages {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
-            background-color: var(--gray-50);
-            border-radius: 8px;
-            margin-bottom: 16px;
+            padding: 20px;
+            background: var(--gray-50);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            border: 1px solid var(--gray-200);
+            max-height: 400px;
         }
 
         .message {
             display: flex;
             gap: 12px;
-            margin-bottom: 16px;
-            animation: fadeInUp 0.3s ease;
+            margin-bottom: 20px;
+            animation: slideInMessage 0.3s ease;
+        }
+
+        .message.own {
+            flex-direction: row-reverse;
         }
 
         .message-avatar {
@@ -428,43 +599,78 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 14px;
             font-weight: 600;
             flex-shrink: 0;
+            border: 2px solid var(--white);
+            box-shadow: var(--shadow-sm);
         }
 
         .message-content {
             flex: 1;
+            max-width: 70%;
+        }
+
+        .message-bubble {
+            background: var(--white);
+            padding: 12px 16px;
+            border-radius: 18px 18px 18px 4px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            position: relative;
+        }
+
+        .message.own .message-bubble {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border-radius: 18px 18px 4px 18px;
         }
 
         .message-header {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
         }
 
         .message-author {
+            font-size: 13px;
             font-weight: 600;
             color: var(--text-primary);
         }
 
+        .message.own .message-author {
+            color: rgba(255,255,255,0.9);
+        }
+
         .message-time {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
+            opacity: 0.7;
+        }
+
+        .message.own .message-time {
+            color: rgba(255,255,255,0.7);
         }
 
         .message-text {
-            color: var(--text-dark);
+            font-size: 14px;
             line-height: 1.5;
+            word-wrap: break-word;
         }
 
         .typing-indicator {
-            display: flex;
+            display: none;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
+            padding: 12px 20px;
             color: var(--text-secondary);
             font-style: italic;
-            padding: 8px 0;
+            animation: slideInMessage 0.3s ease;
+        }
+
+        .typing-indicator.show {
+            display: flex;
         }
 
         .typing-dots {
@@ -473,186 +679,206 @@
         }
 
         .typing-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
-            background-color: var(--primary-color);
-            animation: typingDots 1.4s infinite;
+            background: var(--primary-color);
+            animation: typingAnimation 1.4s infinite;
         }
 
         .typing-dot:nth-child(2) { animation-delay: 0.2s; }
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
-        @keyframes typingDots {
-            0%, 60%, 100% { transform: translateY(0); }
-            30% { transform: translateY(-10px); }
+        /* Message Input */
+        .message-input-area {
+            background: var(--white);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .message-input-container {
+            display: flex;
+            gap: 12px;
+            align-items: flex-end;
         }
 
         .message-input {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .message-input input {
             flex: 1;
+            min-height: 44px;
+            max-height: 120px;
             padding: 12px 16px;
-            border: 1px solid var(--gray-300);
-            border-radius: 8px;
+            border: 2px solid var(--gray-200);
+            border-radius: 22px;
             font-size: 14px;
+            font-family: inherit;
+            resize: none;
             outline: none;
-            transition: border-color 0.2s ease;
+            transition: var(--transition);
+            background: var(--gray-50);
         }
 
-        .message-input input:focus {
+        .message-input:focus {
             border-color: var(--primary-color);
+            background: var(--white);
+            box-shadow: 0 0 0 4px rgba(168, 36, 0, 0.1);
         }
 
-        .send-btn {
-            padding: 12px 20px;
-            background-color: var(--primary-color);
-            color: var(--white);
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
             border: none;
-            border-radius: 8px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
             cursor: pointer;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
         }
 
-        .send-btn:hover {
-            background-color: var(--primary-dark);
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-md);
         }
 
-        .send-btn:disabled {
-            background-color: var(--gray-300);
+        .send-button:disabled {
+            background: var(--gray-300);
             cursor: not-allowed;
+            transform: none;
         }
 
-        /* Right Sidebar */
+        .message-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .message-action-btn {
+            padding: 6px 12px;
+            border: 1px solid var(--gray-300);
+            background: var(--gray-50);
+            border-radius: var(--border-radius-xs);
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .message-action-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            background: var(--white);
+        }
+
+        /* Right Sidebar - Tools & Files */
         .right-sidebar {
-            background-color: var(--card-bg);
-            border-left: 1px solid var(--gray-200);
+            background: linear-gradient(180deg, var(--white) 0%, var(--card-bg) 100%);
+            border-left: 1px solid rgba(168, 36, 0, 0.1);
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
 
-        .team-section {
-            padding: 20px;
+        .sidebar-tabs {
+            display: flex;
             border-bottom: 1px solid var(--gray-200);
+            background: var(--white);
         }
 
-        .team-member {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 8px 0;
-            cursor: pointer;
-            border-radius: 8px;
-            transition: background-color 0.2s ease;
-        }
-
-        .team-member:hover {
-            background-color: var(--hover-bg);
-            padding-left: 8px;
-        }
-
-        .member-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .member-info {
+        .sidebar-tab {
             flex: 1;
-        }
-
-        .member-name {
-            font-weight: 500;
-            color: var(--text-primary);
-            font-size: 14px;
-        }
-
-        .member-status {
-            font-size: 12px;
+            padding: 16px 12px;
+            border: none;
+            background: transparent;
             color: var(--text-secondary);
-        }
-
-        .status-indicator {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #10B981;
-        }
-
-        .status-indicator.away {
-            background-color: #F59E0B;
-        }
-
-        .status-indicator.offline {
-            background-color: var(--gray-300);
-        }
-
-        .status-indicator.in-call {
-            background-color: var(--primary-color);
-            animation: pulse 2s infinite;
-        }
-
-        /* File Section */
-        .file-section {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .file-upload-zone {
-            border: 2px dashed var(--gray-300);
-            border-radius: 8px;
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
             cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: var(--transition);
+            border-bottom: 3px solid transparent;
         }
 
-        .file-upload-zone:hover {
-            border-color: var(--primary-color);
-            background-color: var(--hover-bg);
+        .sidebar-tab.active {
+            color: var(--primary-color);
+            border-bottom-color: var(--primary-color);
+            background: var(--gray-50);
         }
 
-        .file-upload-zone.dragover {
+        .sidebar-content {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .tab-panel {
+            height: 100%;
+            overflow-y: auto;
+            padding: 24px;
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* Files Section */
+        .file-upload-area {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--border-radius);
+            padding: 24px;
+            text-align: center;
+            margin-bottom: 24px;
+            cursor: pointer;
+            transition: var(--transition);
+            background: var(--gray-50);
+        }
+
+        .file-upload-area:hover {
             border-color: var(--primary-color);
-            background-color: var(--hover-bg);
+            background: var(--hover-bg);
+        }
+
+        .file-upload-area.dragover {
+            border-color: var(--primary-color);
+            background: rgba(168, 36, 0, 0.05);
+        }
+
+        .file-list {
+            space-y: 8px;
         }
 
         .file-item {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px;
-            margin-bottom: 8px;
-            background-color: var(--white);
-            border-radius: 8px;
+            padding: 12px 16px;
+            background: var(--white);
+            border-radius: var(--border-radius-sm);
+            border: 1px solid var(--gray-200);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: var(--transition);
+            margin-bottom: 8px;
         }
 
         .file-item:hover {
-            background-color: var(--hover-bg);
+            border-color: var(--primary-color);
+            box-shadow: var(--shadow-sm);
         }
 
         .file-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            background-color: var(--primary-color);
+            width: 32px;
+            height: 32px;
+            border-radius: var(--border-radius-xs);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             color: var(--white);
             display: flex;
             align-items: center;
@@ -665,308 +891,28 @@
         }
 
         .file-name {
-            font-weight: 500;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--text-primary);
-            font-size: 14px;
             margin-bottom: 2px;
         }
 
         .file-size {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
-        }
-
-        .file-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        .file-action-btn {
-            padding: 4px 8px;
-            border: 1px solid var(--gray-300);
-            background: var(--white);
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.2s ease;
-        }
-
-        .file-action-btn:hover {
-            background-color: var(--hover-bg);
-            border-color: var(--primary-color);
-        }
-
-        /* Kanban Board */
-        .kanban-board {
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 16px;
-        }
-
-        .kanban-column {
-            min-width: 280px;
-            background-color: var(--gray-50);
-            border-radius: 8px;
-            padding: 16px;
-        }
-
-        .column-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .column-title {
-            font-weight: 600;
-            color: var(--text-primary);
-        }
-
-        .task-count {
-            background-color: var(--primary-color);
-            color: var(--white);
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-        }
-
-        .task-card {
-            background-color: var(--white);
-            border-radius: 8px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: var(--shadow-xs);
-            cursor: grab;
-            transition: all 0.2s ease;
-        }
-
-        .task-card:hover {
-            box-shadow: var(--shadow-sm);
-            transform: translateY(-1px);
-        }
-
-        .task-card.dragging {
-            opacity: 0.5;
-            transform: rotate(5deg);
-        }
-
-        .task-title {
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-        }
-
-        .task-description {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-
-        .task-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .task-priority {
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 500;
-        }
-
-        .priority-high {
-            background-color: #FEE2E2;
-            color: #DC2626;
-        }
-
-        .priority-medium {
-            background-color: #FEF3C7;
-            color: #D97706;
-        }
-
-        .priority-low {
-            background-color: #DCFCE7;
-            color: #16A34A;
-        }
-
-        .task-assignee {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            color: var(--white);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
-        /* Whiteboard */
-        .whiteboard-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            background-color: var(--white);
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .whiteboard-canvas {
-            width: 100%;
-            height: 100%;
-            cursor: crosshair;
-        }
-
-        .whiteboard-tools {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            display: flex;
-            gap: 8px;
-            background: var(--white);
-            padding: 8px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-md);
-        }
-
-        .tool-btn {
-            width: 40px;
-            height: 40px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            background-color: var(--gray-100);
-        }
-
-        .tool-btn.active {
-            background-color: var(--primary-color);
-            color: var(--white);
-        }
-
-        .tool-btn:hover {
-            background-color: var(--hover-bg);
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 10000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: var(--white);
-            margin: 10% auto;
-            padding: 30px;
-            border-radius: 12px;
-            width: 80%;
-            max-width: 500px;
-            box-shadow: var(--shadow-xl);
-        }
-
-        .modal h2 {
-            color: var(--text-primary);
-            margin-bottom: 20px;
-        }
-
-        .modal input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border: 1px solid var(--gray-300);
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .modal-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            margin-top: 20px;
-        }
-
-        /* Notifications */
-        .notification {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 12px 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow-lg);
-            z-index: 10000;
-            animation: slideInRight 0.3s ease, fadeOut 0.3s ease 2.7s;
-            font-weight: 500;
-            max-width: 300px;
-        }
-
-        .notification.success {
-            background-color: #10B981;
-        }
-
-        .notification.error {
-            background-color: #DC2626;
-        }
-
-        .notification.warning {
-            background-color: #F59E0B;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .main-container {
-                grid-template-columns: 1fr;
-                grid-template-rows: 1fr;
-            }
-
-            .left-sidebar,
-            .right-sidebar {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .video-section {
-                height: 30%;
-            }
-
-            .header h1 {
-                font-size: 20px;
-            }
-
-            .header-controls {
-                gap: 8px;
-            }
-
-            .btn {
-                padding: 6px 12px;
-                font-size: 14px;
-            }
-
-            .pip-video {
-                width: 120px;
-                height: 90px;
-            }
+            opacity: 0.8;
         }
 
         /* Animations */
-        @keyframes fadeInUp {
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.8; }
+        }
+
+        @keyframes slideInMessage {
             from {
                 opacity: 0;
-                transform: translateY(20px);
+                transform: translateY(10px);
             }
             to {
                 opacity: 1;
@@ -974,1519 +920,1242 @@
             }
         }
 
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-8px); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
+            }
+            
+            .left-sidebar,
+            .right-sidebar {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 16px 20px;
+            }
+            
+            .video-conference {
+                height: 35%;
+            }
+            
+            .video-grid {
+                padding: 12px;
+                gap: 8px;
+            }
+            
+            .chat-collaboration {
+                padding: 16px;
+            }
+        }
+
+        /* Connection Status */
+        .connection-status {
+            position: fixed;
+            top: 100px;
+            right: 24px;
+            padding: 12px 20px;
+            border-radius: var(--border-radius-sm);
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 10000;
+            transition: var(--transition);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .connection-status.connected {
+            background: var(--success);
+            color: var(--white);
+        }
+
+        .connection-status.connecting {
+            background: var(--warning);
+            color: var(--white);
+        }
+
+        .connection-status.disconnected {
+            background: var(--error);
+            color: var(--white);
+        }
+
+        /* Notification System */
+        .notification {
+            position: fixed;
+            top: 120px;
+            right: 24px;
+            background: var(--white);
+            padding: 16px 20px;
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-xl);
+            border-left: 4px solid var(--primary-color);
+            z-index: 10000;
+            animation: slideInRight 0.3s ease, fadeOutRight 0.3s ease 4s;
+            max-width: 320px;
+        }
+
+        .notification.success { border-left-color: var(--success); }
+        .notification.error { border-left-color: var(--error); }
+        .notification.warning { border-left-color: var(--warning); }
+
         @keyframes slideInRight {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
-        @keyframes fadeOut {
-            to {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-        }
-
-        /* Scrollbar Styling */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--gray-100);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--gray-300);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--gray-600);
+        @keyframes fadeOutRight {
+            to { transform: translateX(100%); opacity: 0; }
         }
     </style>
 </head>
 <body>
     <!-- Header -->
     <header class="header">
-        <h1>ProjectHub</h1>
-        <div class="header-controls">
-            <button class="btn btn-secondary" id="screenShareBtn" onclick="toggleScreenShare()">
-                📺 Share Screen
+        <div class="header-left">
+            <div class="logo">ProjectHub</div>
+            <div class="project-selector">
+                <div class="project-info">
+                    <h3>Mobile App Redesign</h3>
+                    <p>5 team members • Active project</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="call-status-header" id="callStatusHeader">
+                <span>🔴</span>
+                <span id="callDuration">00:00</span>
+            </div>
+            
+            <div class="recording-indicator-header" id="recordingHeader">
+                <span>⏺️</span>
+                <span>Recording</span>
+            </div>
+            
+            <button class="btn btn-secondary" onclick="toggleRecording()">
+                <span>🎥</span> Record
             </button>
-            <button class="btn btn-secondary" id="recordBtn" onclick="toggleRecording()">
-                🔴 Record
-            </button>
-            <button class="btn btn-primary" onclick="inviteMembers()">
-                👥 Invite Team
+            
+            <button class="btn btn-primary" onclick="inviteTeamMember()">
+                <span>👥</span> Invite
             </button>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="main-container">
-        <!-- Left Sidebar -->
+    <!-- Main Layout -->
+    <div class="main-layout">
+        <!-- Left Sidebar - Team Members -->
         <aside class="left-sidebar">
-            <div class="sidebar-section">
-                <h3>Navigation</h3>
-                <div class="nav-item active" onclick="switchView('dashboard')">
-                    🏠 <span>Dashboard</span>
-                </div>
-                <div class="nav-item" onclick="switchView('projects')">
-                    📋 <span>Projects</span>
-                </div>
-                <div class="nav-item" onclick="switchView('calendar')">
-                    📅 <span>Calendar</span>
-                </div>
-                <div class="nav-item" onclick="switchView('files')">
-                    📁 <span>Files</span>
-                </div>
-                <div class="nav-item" onclick="switchView('analytics')">
-                    📊 <span>Analytics</span>
-                </div>
+            <div class="sidebar-header">
+                <h3>Team Members</h3>
+                <p>Click to start video/voice call</p>
             </div>
             
-            <div class="sidebar-section">
-                <h3>Active Projects</h3>
-            </div>
-            
-            <div class="project-list">
-                <div class="project-item selected" onclick="selectProject('mobile-app')">
-                    <div class="project-info">
-                        <h4>Mobile App Redesign</h4>
-                        <p>UI/UX Team • 5 members</p>
-                    </div>
-                    <div class="project-status"></div>
-                </div>
-                
-                <div class="project-item" onclick="selectProject('web-platform')">
-                    <div class="project-info">
-                        <h4>Web Platform</h4>
-                        <p>Development Team • 8 members</p>
-                    </div>
-                    <div class="project-status"></div>
-                </div>
-                
-                <div class="project-item" onclick="selectProject('marketing-campaign')">
-                    <div class="project-info">
-                        <h4>Marketing Campaign</h4>
-                        <p>Marketing Team • 4 members</p>
-                    </div>
-                    <div class="project-status"></div>
-                </div>
-                
-                <div class="project-item" onclick="selectProject('product-launch')">
-                    <div class="project-info">
-                        <h4>Product Launch</h4>
-                        <p>Cross-functional • 12 members</p>
-                    </div>
-                    <div class="project-status"></div>
-                </div>
+            <div class="team-members" id="teamMembers">
+                <!-- Team members will be populated by JavaScript -->
             </div>
         </aside>
 
         <!-- Main Content -->
         <main class="main-content">
-            <!-- Video Call Section -->
-            <div class="video-section">
-                <div class="video-container" id="videoContainer">
-                    <div class="video-placeholder" id="videoPlaceholder">
-                        <p>🎥 Video Call Ready</p>
-                        <p style="font-size: 14px; margin-top: 8px;">Click camera button to start</p>
+            <!-- Video Conference Area -->
+            <div class="video-conference">
+                <div class="video-grid" id="videoGrid">
+                    <div class="video-participant local" id="localParticipant">
+                        <div class="video-placeholder">
+                            <div class="video-placeholder-icon">🎥</div>
+                            <h3>Ready to Connect</h3>
+                            <p>Click on a team member to start a call</p>
+                        </div>
+                        <video id="localVideo" class="video-element" autoplay muted style="display: none;"></video>
+                        <div class="participant-overlay" style="display: none;">
+                            <span class="participant-name">You</span>
+                            <div class="participant-controls">
+                                <div class="participant-control" id="localMuteIndicator">🎤</div>
+                                <div class="participant-control" id="localVideoIndicator">📹</div>
+                            </div>
+                        </div>
                     </div>
-                    <video id="localVideo" class="local-video" autoplay muted style="display: none;"></video>
-                    <video id="remoteVideo" class="remote-video" autoplay style="display: none;"></video>
-                    <video id="screenShareVideo" class="screen-share-video" autoplay style="display: none;"></video>
-                    <div id="pipVideo" class="pip-video" style="display: none;">
-                        <video id="pipVideoElement" autoplay muted style="width: 100%; height: 100%; object-fit: cover;"></video>
-                    </div>
                 </div>
                 
-                <div class="call-status" id="callStatus" style="display: none;">
-                    <span id="callTimer">00:00</span> • <span id="callParticipants">1 participant</span>
-                </div>
-                
-                <div class="recording-indicator" id="recordingIndicator" style="display: none;">
-                    🔴 Recording
-                </div>
-                
-                <div class="video-controls">
-                    <button class="video-btn" id="muteBtn" onclick="toggleMute()" title="Toggle Mute">
+                <div class="video-controls" id="videoControls" style="display: none;">
+                    <button class="video-control-btn" id="muteBtn" onclick="toggleMute()" title="Toggle Microphone">
                         🎤
                     </button>
-                    <button class="video-btn" id="videoBtn" onclick="toggleVideo()" title="Toggle Video">
+                    <button class="video-control-btn" id="videoBtn" onclick="toggleVideo()" title="Toggle Camera">
                         📹
                     </button>
-                    <button class="video-btn" id="shareBtn" onclick="shareScreen()" title="Share Screen">
+                    <button class="video-control-btn" id="screenShareBtn" onclick="toggleScreenShare()" title="Share Screen">
                         🖥️
                     </button>
-                    <button class="video-btn danger" id="endCallBtn" onclick="endCall()" title="End Call">
+                    <button class="video-control-btn end-call" id="endCallBtn" onclick="endCall()" title="End Call">
                         📞
                     </button>
                 </div>
             </div>
 
-            <!-- Collaboration Section -->
-            <div class="collaboration-section">
-                <div class="tab-navigation">
-                    <button class="tab-btn active" onclick="switchTab('chat')">💬 Chat</button>
-                    <button class="tab-btn" onclick="switchTab('tasks')">✅ Tasks</button>
-                    <button class="tab-btn" onclick="switchTab('whiteboard')">🎨 Whiteboard</button>
-                    <button class="tab-btn" onclick="switchTab('notes')">📝 Notes</button>
-                </div>
-
-                <!-- Chat Tab -->
-                <div id="chat-tab" class="tab-content active">
-                    <div class="chat-messages" id="chatMessages">
-                        <div class="message">
-                            <div class="message-avatar">JD</div>
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-author">John Doe</span>
-                                    <span class="message-time">10:30 AM</span>
-                                </div>
-                                <div class="message-text">Hey team! Ready to discuss the mobile app redesign project?</div>
-                            </div>
-                        </div>
-                        
-                        <div class="message">
-                            <div class="message-avatar">AS</div>
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-author">Alice Smith</span>
-                                    <span class="message-time">10:32 AM</span>
-                                </div>
-                                <div class="message-text">Absolutely! I've prepared the user research findings. Should I share them now?</div>
-                            </div>
-                        </div>
-                        
-                        <div class="message">
-                            <div class="message-avatar">MJ</div>
-                            <div class="message-content">
-                                <div class="message-header">
-                                    <span class="message-author">Mike Johnson</span>
-                                    <span class="message-time">10:33 AM</span>
-                                </div>
-                                <div class="message-text">Perfect timing! I've also uploaded the wireframes to the files section.</div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div id="typingIndicator" class="typing-indicator" style="display: none;">
-                        <span>Someone is typing</span>
-                        <div class="typing-dots">
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                            <div class="typing-dot"></div>
-                        </div>
-                    </div>
-                    
-                    <div class="message-input">
-                        <input type="text" id="messageInput" placeholder="Type your message..." 
-                               onkeypress="handleMessageInput(event)" oninput="handleTyping()">
-                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+            <!-- Chat & Collaboration -->
+            <div class="chat-collaboration">
+                <div class="chat-header">
+                    <h2 class="chat-title">Team Chat</h2>
+                    <div class="chat-options">
+                        <button class="chat-option-btn" onclick="clearChat()">🗑️ Clear</button>
+                        <button class="chat-option-btn" onclick="exportChat()">📤 Export</button>
                     </div>
                 </div>
-
-                <!-- Tasks Tab -->
-                <div id="tasks-tab" class="tab-content">
-                    <div class="kanban-board" id="kanbanBoard">
-                        <div class="kanban-column" data-status="todo">
-                            <div class="column-header">
-                                <span class="column-title">To Do</span>
-                                <span class="task-count">3</span>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="1">
-                                <div class="task-title">User Research Analysis</div>
-                                <div class="task-description">Analyze user feedback and create insights report</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-high">High</span>
-                                    <div class="task-assignee">AS</div>
-                                </div>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="2">
-                                <div class="task-title">Design System Update</div>
-                                <div class="task-description">Update component library with new styles</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-medium">Medium</span>
-                                    <div class="task-assignee">MJ</div>
-                                </div>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="3">
-                                <div class="task-title">API Documentation</div>
-                                <div class="task-description">Document new API endpoints</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-low">Low</span>
-                                    <div class="task-assignee">JD</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="kanban-column" data-status="inprogress">
-                            <div class="column-header">
-                                <span class="column-title">In Progress</span>
-                                <span class="task-count">2</span>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="4">
-                                <div class="task-title">Mobile Wireframes</div>
-                                <div class="task-description">Create wireframes for key screens</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-high">High</span>
-                                    <div class="task-assignee">AS</div>
-                                </div>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="5">
-                                <div class="task-title">Backend Integration</div>
-                                <div class="task-description">Integrate with payment gateway</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-medium">Medium</span>
-                                    <div class="task-assignee">MJ</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="kanban-column" data-status="review">
-                            <div class="column-header">
-                                <span class="column-title">Review</span>
-                                <span class="task-count">1</span>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="6">
-                                <div class="task-title">Prototype Testing</div>
-                                <div class="task-description">Test interactive prototype with users</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-high">High</span>
-                                    <div class="task-assignee">JD</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="kanban-column" data-status="done">
-                            <div class="column-header">
-                                <span class="column-title">Done</span>
-                                <span class="task-count">4</span>
-                            </div>
-                            
-                            <div class="task-card" draggable="true" data-task-id="7">
-                                <div class="task-title">Project Kickoff</div>
-                                <div class="task-description">Initial team meeting and planning</div>
-                                <div class="task-meta">
-                                    <span class="task-priority priority-medium">Medium</span>
-                                    <div class="task-assignee">JD</div>
-                                </div>
-                            </div>
-                        </div>
+                
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Messages will be added dynamically -->
+                </div>
+                
+                <div class="typing-indicator" id="typingIndicator">
+                    <span id="typingUser">Someone</span> is typing
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
                     </div>
                 </div>
-
-                <!-- Whiteboard Tab -->
-                <div id="whiteboard-tab" class="tab-content">
-                    <div class="whiteboard-container">
-                        <canvas id="whiteboardCanvas" class="whiteboard-canvas"></canvas>
-                        <div class="whiteboard-tools">
-                            <button class="tool-btn active" id="penTool" onclick="setTool('pen')" title="Pen">✏️</button>
-                            <button class="tool-btn" id="eraserTool" onclick="setTool('eraser')" title="Eraser">🧽</button>
-                            <button class="tool-btn" id="textTool" onclick="setTool('text')" title="Text">📝</button>
-                            <button class="tool-btn" id="shapeTool" onclick="setTool('shape')" title="Shapes">⭕</button>
-                            <button class="tool-btn" onclick="clearWhiteboard()" title="Clear">🗑️</button>
-                            <input type="color" id="colorPicker" value="#A82400" style="width: 40px; height: 40px; border: none; border-radius: 6px; cursor: pointer;">
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Notes Tab -->
-                <div id="notes-tab" class="tab-content">
-                    <div style="display: flex; flex-direction: column; height: 100%;">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                            <h3 style="color: var(--text-primary); margin: 0;">Meeting Notes</h3>
-                            <div style="display: flex; gap: 8px;">
-                                <button class="btn btn-secondary" onclick="exportNotes()">📤 Export</button>
-                                <button class="btn btn-primary" onclick="saveNotes()">💾 Save Notes</button>
-                            </div>
-                        </div>
+                
+                <div class="message-input-area">
+                    <div class="message-input-container">
                         <textarea 
-                            id="meetingNotes" 
-                            placeholder="Take notes during your meeting..."
-                            style="flex: 1; padding: 16px; border: 1px solid var(--gray-300); border-radius: 8px; resize: none; font-family: inherit; font-size: 14px; line-height: 1.6; outline: none;"
-                            onfocus="this.style.borderColor='var(--primary-color)'"
-                            onblur="this.style.borderColor='var(--gray-300)'"
-                            oninput="autoSaveNotes()"
-                        >Project: Mobile App Redesign
-
-Attendees:
-- John Doe (Project Manager)
-- Alice Smith (UX Designer)
-- Mike Johnson (Developer)
-
-Key Discussion Points:
-1. User research findings review
-2. Wireframe approval process
-3. Technical implementation timeline
-
-Action Items:
-- [ ] Complete user persona documentation (Alice)
-- [ ] Review API requirements (Mike)
-- [ ] Schedule stakeholder presentation (John)
-
-Next Meeting: Tomorrow at 2:00 PM</textarea>
-                        <div style="margin-top: 12px; color: var(--text-secondary); font-size: 12px;" id="notesStatus">
-                            Last saved: Auto-save enabled
-                        </div>
+                            id="messageInput" 
+                            class="message-input" 
+                            placeholder="Type your message..." 
+                            rows="1"
+                            maxlength="1000"
+                        ></textarea>
+                        <button class="send-button" id="sendButton" onclick="sendMessage()" disabled>
+                            ➤
+                        </button>
+                    </div>
+                    
+                    <div class="message-actions">
+                        <button class="message-action-btn" onclick="attachFile()">
+                            📎 Attach File
+                        </button>
+                        <button class="message-action-btn" onclick="addEmoji()">
+                            😊 Emoji
+                        </button>
+                        <button class="message-action-btn" onclick="mentionTeamMember()">
+                            @ Mention
+                        </button>
                     </div>
                 </div>
             </div>
         </main>
 
-        <!-- Right Sidebar -->
+        <!-- Right Sidebar - Tools & Files -->
         <aside class="right-sidebar">
-            <div class="team-section">
-                <h3>Team Members</h3>
-                
-                <div class="team-member" onclick="callMember('john-doe')">
-                    <div class="member-avatar">JD</div>
-                    <div class="member-info">
-                        <div class="member-name">John Doe</div>
-                        <div class="member-status">Project Manager</div>
-                    </div>
-                    <div class="status-indicator"></div>
-                </div>
-                
-                <div class="team-member" onclick="callMember('alice-smith')">
-                    <div class="member-avatar">AS</div>
-                    <div class="member-info">
-                        <div class="member-name">Alice Smith</div>
-                        <div class="member-status">UX Designer</div>
-                    </div>
-                    <div class="status-indicator"></div>
-                </div>
-                
-                <div class="team-member" onclick="callMember('mike-johnson')">
-                    <div class="member-avatar">MJ</div>
-                    <div class="member-info">
-                        <div class="member-name">Mike Johnson</div>
-                        <div class="member-status">Developer</div>
-                    </div>
-                    <div class="status-indicator away"></div>
-                </div>
-                
-                <div class="team-member" onclick="callMember('sarah-parker')">
-                    <div class="member-avatar">SP</div>
-                    <div class="member-info">
-                        <div class="member-name">Sarah Parker</div>
-                        <div class="member-status">QA Engineer</div>
-                    </div>
-                    <div class="status-indicator offline"></div>
-                </div>
-                
-                <div class="team-member" onclick="callMember('david-wilson')">
-                    <div class="member-avatar">DW</div>
-                    <div class="member-info">
-                        <div class="member-name">David Wilson</div>
-                        <div class="member-status">Product Owner</div>
-                    </div>
-                    <div class="status-indicator"></div>
-                </div>
+            <div class="sidebar-tabs">
+                <button class="sidebar-tab active" onclick="switchSidebarTab('files')">📁 Files</button>
+                <button class="sidebar-tab" onclick="switchSidebarTab('notes')">📝 Notes</button>
+                <button class="sidebar-tab" onclick="switchSidebarTab('tasks')">✅ Tasks</button>
             </div>
-
-            <div class="file-section">
-                <h3>Project Files</h3>
-                
-                <div class="file-upload-zone" id="fileUploadZone" onclick="triggerFileUpload()">
-                    <p>📁 Drop files here or click to upload</p>
-                    <input type="file" id="fileInput" multiple style="display: none;" onchange="handleFileUpload(event)">
+            
+            <div class="sidebar-content">
+                <!-- Files Tab -->
+                <div class="tab-panel active" id="filesPanel">
+                    <div class="file-upload-area" id="fileUploadArea" onclick="triggerFileUpload()">
+                        <div>📁</div>
+                        <p><strong>Drop files here</strong> or click to upload</p>
+                        <input type="file" id="fileInput" multiple style="display: none;">
+                    </div>
+                    
+                    <div class="file-list" id="fileList">
+                        <!-- Files will be added dynamically -->
+                    </div>
                 </div>
                 
-                <div id="fileList">
-                    <div class="file-item" onclick="openFile('wireframes.fig', 'design')">
-                        <div class="file-icon">📐</div>
-                        <div class="file-info">
-                            <div class="file-name">Mobile Wireframes.fig</div>
-                            <div class="file-size">2.4 MB • Updated 2h ago</div>
-                        </div>
-                        <div class="file-actions">
-                            <button class="file-action-btn" onclick="downloadFile('wireframes.fig', event)">⬇️</button>
-                            <button class="file-action-btn" onclick="shareFile('wireframes.fig', event)">🔗</button>
-                        </div>
+                <!-- Notes Tab -->
+                <div class="tab-panel" id="notesPanel">
+                    <textarea 
+                        id="notesTextarea" 
+                        placeholder="Take meeting notes..."
+                        style="width: 100%; height: 300px; padding: 16px; border: 1px solid var(--gray-200); border-radius: var(--border-radius-sm); resize: none; font-family: inherit;"
+                    ></textarea>
+                    <div style="margin-top: 12px; display: flex; gap: 8px;">
+                        <button class="btn btn-primary" onclick="saveNotes()">💾 Save</button>
+                        <button class="btn btn-secondary" onclick="exportNotes()">📤 Export</button>
                     </div>
-                    
-                    <div class="file-item" onclick="openFile('research.pdf', 'document')">
-                        <div class="file-icon">📊</div>
-                        <div class="file-info">
-                            <div class="file-name">User Research Report.pdf</div>
-                            <div class="file-size">1.8 MB • Updated 5h ago</div>
-                        </div>
-                        <div class="file-actions">
-                            <button class="file-action-btn" onclick="downloadFile('research.pdf', event)">⬇️</button>
-                            <button class="file-action-btn" onclick="shareFile('research.pdf', event)">🔗</button>
-                        </div>
-                    </div>
-                    
-                    <div class="file-item" onclick="openFile('specs.doc', 'document')">
-                        <div class="file-icon">📝</div>
-                        <div class="file-info">
-                            <div class="file-name">Technical Specs.docx</div>
-                            <div class="file-size">892 KB • Updated 1d ago</div>
-                        </div>
-                        <div class="file-actions">
-                            <button class="file-action-btn" onclick="downloadFile('specs.doc', event)">⬇️</button>
-                            <button class="file-action-btn" onclick="shareFile('specs.doc', event)">🔗</button>
-                        </div>
-                    </div>
-                    
-                    <div class="file-item" onclick="openFile('mockups.zip', 'archive')">
-                        <div class="file-icon">🎨</div>
-                        <div class="file-info">
-                            <div class="file-name">Design Mockups.zip</div>
-                            <div class="file-size">15.2 MB • Updated 3d ago</div>
-                        </div>
-                        <div class="file-actions">
-                            <button class="file-action-btn" onclick="downloadFile('mockups.zip', event)">⬇️</button>
-                            <button class="file-action-btn" onclick="shareFile('mockups.zip', event)">🔗</button>
-                        </div>
-                    </div>
-                    
-                    <div class="file-item" onclick="openFile('meeting-recording.mp4', 'video')">
-                        <div class="file-icon">🎥</div>
-                        <div class="file-info">
-                            <div class="file-name">Last Meeting Recording.mp4</div>
-                            <div class="file-size">124 MB • Updated 1w ago</div>
-                        </div>
-                        <div class="file-actions">
-                            <button class="file-action-btn" onclick="downloadFile('meeting-recording.mp4', event)">⬇️</button>
-                            <button class="file-action-btn" onclick="shareFile('meeting-recording.mp4', event)">🔗</button>
-                        </div>
+                </div>
+                
+                <!-- Tasks Tab -->
+                <div class="tab-panel" id="tasksPanel">
+                    <div style="text-align: center; padding: 40px 20px; color: var(--text-secondary);">
+                        <div style="font-size: 48px; margin-bottom: 16px;">✅</div>
+                        <h3>Task Management</h3>
+                        <p>Coming soon - Kanban board integration</p>
                     </div>
                 </div>
             </div>
         </aside>
     </div>
 
-    <!-- Modals -->
-    <div id="inviteModal" class="modal">
-        <div class="modal-content">
-            <h2>Invite Team Members</h2>
-            <input type="email" id="inviteEmail" placeholder="Enter email address">
-            <input type="text" id="inviteRole" placeholder="Role (optional)">
-            <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal('inviteModal')">Cancel</button>
-                <button class="btn btn-primary" onclick="sendInvite()">Send Invite</button>
-            </div>
-        </div>
+    <!-- Connection Status -->
+    <div class="connection-status connected" id="connectionStatus">
+        🟢 Connected
     </div>
 
     <script>
-        // Global state management
-        const appState = {
-            currentProject: 'mobile-app',
-            video: {
-                isOn: false,
-                isAudioOn: true,
+        // Real-time Application State
+        const AppState = {
+            currentUser: {
+                id: 'user-1',
+                name: 'You',
+                avatar: 'YU',
+                status: 'online'
+            },
+            
+            teamMembers: [
+                {
+                    id: 'user-2',
+                    name: 'Alice Smith',
+                    avatar: 'AS',
+                    role: 'UX Designer',
+                    status: 'online',
+                    isInCall: false,
+                    stream: null
+                },
+                {
+                    id: 'user-3',
+                    name: 'Mike Johnson',
+                    avatar: 'MJ',
+                    role: 'Developer',
+                    status: 'away',
+                    isInCall: false,
+                    stream: null
+                },
+                {
+                    id: 'user-4',
+                    name: 'Sarah Parker',
+                    avatar: 'SP',
+                    role: 'QA Engineer',
+                    status: 'online',
+                    isInCall: false,
+                    stream: null
+                },
+                {
+                    id: 'user-5',
+                    name: 'John Doe',
+                    avatar: 'JD',
+                    role: 'Project Manager',
+                    status: 'busy',
+                    isInCall: false,
+                    stream: null
+                },
+                {
+                    id: 'user-6',
+                    name: 'Emily Chen',
+                    avatar: 'EC',
+                    role: 'Product Designer',
+                    status: 'online',
+                    isInCall: false,
+                    stream: null
+                }
+            ],
+            
+            call: {
+                isActive: false,
+                participants: new Map(),
+                localStream: null,
+                isAudioMuted: false,
+                isVideoOff: false,
                 isScreenSharing: false,
                 isRecording: false,
-                isInCall: false,
-                callStartTime: null,
-                localStream: null,
-                remoteStream: null,
-                screenStream: null,
-                peerConnection: null,
-                mediaRecorder: null,
-                recordedChunks: []
+                startTime: null,
+                peerConnections: new Map()
             },
+            
             chat: {
                 messages: [],
                 typingUsers: new Set(),
-                typingTimeout: null
+                lastMessageId: 0
             },
-            whiteboard: {
-                isDrawing: false,
-                currentTool: 'pen',
-                currentColor: '#A82400',
-                lastX: 0,
-                lastY: 0,
-                canvas: null,
-                ctx: null
-            },
+            
             files: new Map(),
-            tasks: new Map(),
-            notes: {
-                content: '',
-                lastSaved: new Date(),
-                autoSaveEnabled: true
-            }
+            notes: ''
         };
 
         // WebRTC Configuration
-        const rtcConfiguration = {
+        const rtcConfig = {
             iceServers: [
                 { urls: 'stun:stun.l.google.com:19302' },
                 { urls: 'stun:stun1.l.google.com:19302' }
             ]
         };
 
-        // Initialize app when DOM is loaded
+        // Initialize Application
         document.addEventListener('DOMContentLoaded', function() {
             initializeApp();
         });
 
         function initializeApp() {
-            console.log('ProjectHub initializing...');
+            console.log('🚀 Initializing ProjectHub...');
             
-            // Initialize video functionality
-            initializeVideo();
-            
-            // Initialize chat
+            renderTeamMembers();
             initializeChat();
-            
-            // Initialize whiteboard
-            initializeWhiteboard();
-            
-            // Initialize file handling
             initializeFileHandling();
+            setupEventListeners();
+            loadInitialData();
+            simulateTeamActivity();
             
-            // Initialize drag and drop for tasks
-            initializeTaskDragDrop();
-            
-            // Initialize keyboard shortcuts
-            initializeKeyboardShortcuts();
-            
-            // Initialize auto-save
-            initializeAutoSave();
-            
-            // Welcome message
-            setTimeout(() => {
-                showNotification('Welcome to ProjectHub! All systems ready.', 'success');
-            }, 1000);
-            
-            console.log('ProjectHub initialized successfully');
+            showNotification('ProjectHub ready! Click on team members to start calls.', 'success');
         }
 
-        // Real WebRTC Video Call System
-        async function initializeVideo() {
+        // Team Members Rendering
+        function renderTeamMembers() {
+            const container = document.getElementById('teamMembers');
+            container.innerHTML = '';
+            
+            AppState.teamMembers.forEach(member => {
+                const memberElement = createTeamMemberElement(member);
+                container.appendChild(memberElement);
+            });
+        }
+
+        function createTeamMemberElement(member) {
+            const div = document.createElement('div');
+            div.className = `team-member ${member.isInCall ? 'in-call' : ''}`;
+            div.innerHTML = `
+                <div class="member-avatar">
+                    ${member.avatar}
+                    <div class="status-indicator ${member.status} ${member.isInCall ? 'in-call' : ''}"></div>
+                </div>
+                <div class="member-info">
+                    <div class="member-name">${member.name}</div>
+                    <div class="member-status">${member.role} • ${member.status}</div>
+                </div>
+                <div class="member-actions">
+                    <button class="action-btn" onclick="startVideoCall('${member.id}')" title="Video Call">
+                        📹
+                    </button>
+                    <button class="action-btn" onclick="startVoiceCall('${member.id}')" title="Voice Call">
+                        📞
+                    </button>
+                    <button class="action-btn" onclick="sendDirectMessage('${member.id}')" title="Message">
+                        💬
+                    </button>
+                </div>
+            `;
+            return div;
+        }
+
+        // Real Video Calling Functions
+        async function startVideoCall(memberId) {
+            const member = AppState.teamMembers.find(m => m.id === memberId);
+            if (!member) return;
+            
             try {
-                // Check for browser support
-                if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-                    showNotification('Video calling not supported in this browser', 'error');
-                    return;
-                }
+                showNotification(`Starting video call with ${member.name}...`, 'info');
                 
-                // Check for WebRTC support
-                if (!window.RTCPeerConnection) {
-                    showNotification('WebRTC not supported in this browser', 'error');
-                    return;
-                }
+                // Get user media
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: { width: 1280, height: 720 },
+                    audio: { echoCancellation: true, noiseSuppression: true }
+                });
                 
-                console.log('Video system initialized with WebRTC support');
+                AppState.call.localStream = stream;
+                AppState.call.isActive = true;
+                AppState.call.startTime = new Date();
+                
+                // Display local video
+                const localVideo = document.getElementById('localVideo');
+                localVideo.srcObject = stream;
+                localVideo.style.display = 'block';
+                
+                // Update UI
+                document.querySelector('.video-placeholder').style.display = 'none';
+                document.querySelector('.participant-overlay').style.display = 'flex';
+                document.getElementById('videoControls').style.display = 'flex';
+                document.getElementById('callStatusHeader').classList.add('active');
+                
+                // Update member status
+                member.isInCall = true;
+                updateTeamMember(member);
+                
+                // Simulate remote participant joining
+                setTimeout(() => {
+                    addRemoteParticipant(member);
+                    showNotification(`${member.name} joined the call`, 'success');
+                }, 2000);
+                
+                // Start call timer
+                startCallTimer();
+                
             } catch (error) {
-                console.error('Video initialization error:', error);
-                showNotification('Error initializing video system', 'error');
+                console.error('Error starting video call:', error);
+                showNotification('Could not access camera/microphone', 'error');
             }
         }
 
-        async function createPeerConnection() {
-            try {
-                const peerConnection = new RTCPeerConnection(rtcConfiguration);
-                
-                // Handle ICE candidates
-                peerConnection.onicecandidate = (event) => {
-                    if (event.candidate) {
-                        // In a real implementation, send this to the remote peer via signaling server
-                        console.log('ICE candidate:', event.candidate);
-                    }
-                };
-                
-                // Handle remote stream
-                peerConnection.ontrack = (event) => {
-                    const remoteVideo = document.getElementById('remoteVideo');
-                    const videoPlaceholder = document.getElementById('videoPlaceholder');
-                    
-                    if (event.streams && event.streams[0]) {
-                        remoteVideo.srcObject = event.streams[0];
-                        remoteVideo.style.display = 'block';
-                        videoPlaceholder.style.display = 'none';
-                        
-                        // Update call status
-                        updateParticipantCount(2);
-                        showNotification('Remote participant connected', 'success');
-                    }
-                };
-                
-                // Handle connection state changes
-                peerConnection.onconnectionstatechange = () => {
-                    console.log('Connection state:', peerConnection.connectionState);
-                    
-                    if (peerConnection.connectionState === 'connected') {
-                        showNotification('Call connected successfully', 'success');
-                    } else if (peerConnection.connectionState === 'disconnected') {
-                        showNotification('Call disconnected', 'warning');
-                    } else if (peerConnection.connectionState === 'failed') {
-                        showNotification('Call connection failed', 'error');
-                        endCall();
-                    }
-                };
-                
-                return peerConnection;
-            } catch (error) {
-                console.error('Error creating peer connection:', error);
-                throw error;
-            }
-        }
-
-        async function toggleVideo() {
-            const videoBtn = document.getElementById('videoBtn');
-            const localVideo = document.getElementById('localVideo');
-            const videoPlaceholder = document.getElementById('videoPlaceholder');
-            const callStatus = document.getElementById('callStatus');
+        async function startVoiceCall(memberId) {
+            const member = AppState.teamMembers.find(m => m.id === memberId);
+            if (!member) return;
             
             try {
-                if (!appState.video.isOn) {
-                    // Start video call
-                    const stream = await navigator.mediaDevices.getUserMedia({ 
-                        video: { 
-                            width: { ideal: 1280 },
-                            height: { ideal: 720 },
-                            frameRate: { ideal: 30 }
-                        }, 
-                        audio: {
-                            echoCancellation: true,
-                            noiseSuppression: true,
-                            autoGainControl: true
-                        }
-                    });
-                    
-                    appState.video.localStream = stream;
-                    localVideo.srcObject = stream;
-                    localVideo.style.display = 'block';
-                    videoPlaceholder.style.display = 'none';
-                    
-                    // Create peer connection
-                    appState.video.peerConnection = await createPeerConnection();
-                    
-                    // Add local stream to peer connection
-                    stream.getTracks().forEach(track => {
-                        appState.video.peerConnection.addTrack(track, stream);
-                    });
-                    
-                    appState.video.isOn = true;
-                    appState.video.isInCall = true;
-                    appState.video.callStartTime = new Date();
-                    
-                    videoBtn.style.backgroundColor = 'var(--primary-color)';
-                    videoBtn.innerHTML = '📹';
-                    
-                    callStatus.style.display = 'block';
-                    updateCallTimer();
-                    updateParticipantCount(1);
-                    
-                    showNotification('Video call started', 'success');
-                    
-                    // In a real application, you would initiate signaling here
-                    // For demo purposes, simulate a remote connection after 3 seconds
-                    setTimeout(() => {
-                        simulateRemoteConnection();
-                    }, 3000);
-                    
-                } else {
-                    // Stop video call
-                    endCall();
-                }
+                showNotification(`Starting voice call with ${member.name}...`, 'info');
+                
+                // Get audio only
+                const stream = await navigator.mediaDevices.getUserMedia({
+                    video: false,
+                    audio: { echoCancellation: true, noiseSuppression: true }
+                });
+                
+                AppState.call.localStream = stream;
+                AppState.call.isActive = true;
+                AppState.call.startTime = new Date();
+                AppState.call.isVideoOff = true;
+                
+                // Update UI for voice call
+                document.getElementById('videoControls').style.display = 'flex';
+                document.getElementById('callStatusHeader').classList.add('active');
+                document.getElementById('videoBtn').classList.add('active');
+                
+                // Update member status
+                member.isInCall = true;
+                updateTeamMember(member);
+                
+                // Simulate remote participant joining
+                setTimeout(() => {
+                    addVoiceParticipant(member);
+                    showNotification(`${member.name} joined the voice call`, 'success');
+                }, 1500);
+                
+                startCallTimer();
+                
             } catch (error) {
-                console.error('Video toggle error:', error);
-                showNotification('Camera access denied or not available', 'error');
+                console.error('Error starting voice call:', error);
+                showNotification('Could not access microphone', 'error');
             }
         }
 
+        function addRemoteParticipant(member) {
+            const videoGrid = document.getElementById('videoGrid');
+            
+            const participantDiv = document.createElement('div');
+            participantDiv.className = 'video-participant';
+            participantDiv.id = `participant-${member.id}`;
+            
+            // Create a canvas for simulated video
+            const canvas = document.createElement('canvas');
+            canvas.width = 320;
+            canvas.height = 240;
+            canvas.className = 'video-element';
+            
+            const ctx = canvas.getContext('2d');
+            let hue = Math.random() * 360;
+            
+            // Animate the simulated video
+            function drawFrame() {
+                // Create gradient background
+                const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                gradient.addColorStop(0, `hsl(${hue}, 70%, 60%)`);
+                gradient.addColorStop(1, `hsl(${hue + 30}, 70%, 40%)`);
+                
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Add avatar
+                ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+                ctx.font = 'bold 48px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText(member.avatar, canvas.width / 2, canvas.height / 2 + 16);
+                
+                // Add name
+                ctx.font = '16px Arial';
+                ctx.fillText(member.name, canvas.width / 2, canvas.height - 20);
+                
+                hue = (hue + 0.5) % 360;
+            }
+            
+            const animationId = setInterval(drawFrame, 50);
+            
+            participantDiv.innerHTML = `
+                <div class="participant-overlay">
+                    <span class="participant-name">${member.name}</span>
+                    <div class="participant-controls">
+                        <div class="participant-control">🎤</div>
+                        <div class="participant-control">📹</div>
+                    </div>
+                </div>
+            `;
+            
+            participantDiv.appendChild(canvas);
+            videoGrid.appendChild(participantDiv);
+            
+            // Store animation ID for cleanup
+            member.animationId = animationId;
+            
+            AppState.call.participants.set(member.id, {
+                element: participantDiv,
+                member: member,
+                animationId: animationId
+            });
+        }
+
+        function addVoiceParticipant(member) {
+            const videoGrid = document.getElementById('videoGrid');
+            
+            const participantDiv = document.createElement('div');
+            participantDiv.className = 'video-participant';
+            participantDiv.id = `participant-${member.id}`;
+            
+            participantDiv.innerHTML = `
+                <div class="video-placeholder">
+                    <div class="video-placeholder-icon">${member.avatar}</div>
+                    <h3>${member.name}</h3>
+                    <p>Voice Call</p>
+                </div>
+                <div class="participant-overlay">
+                    <span class="participant-name">${member.name}</span>
+                    <div class="participant-controls">
+                        <div class="participant-control">🎤</div>
+                        <div class="participant-control video-off">📹</div>
+                    </div>
+                </div>
+            `;
+            
+            videoGrid.appendChild(participantDiv);
+            
+            AppState.call.participants.set(member.id, {
+                element: participantDiv,
+                member: member
+            });
+        }
+
+        function updateTeamMember(member) {
+            renderTeamMembers();
+        }
+
+        // Call Controls
         function toggleMute() {
-            const muteBtn = document.getElementById('muteBtn');
+            AppState.call.isAudioMuted = !AppState.call.isAudioMuted;
             
-            appState.video.isAudioOn = !appState.video.isAudioOn;
-            
-            if (appState.video.localStream) {
-                const audioTracks = appState.video.localStream.getAudioTracks();
+            if (AppState.call.localStream) {
+                const audioTracks = AppState.call.localStream.getAudioTracks();
                 audioTracks.forEach(track => {
-                    track.enabled = appState.video.isAudioOn;
+                    track.enabled = !AppState.call.isAudioMuted;
                 });
             }
             
-            muteBtn.innerHTML = appState.video.isAudioOn ? '🎤' : '🔇';
-            muteBtn.classList.toggle('muted', !appState.video.isAudioOn);
+            const muteBtn = document.getElementById('muteBtn');
+            muteBtn.classList.toggle('muted', AppState.call.isAudioMuted);
+            muteBtn.innerHTML = AppState.call.isAudioMuted ? '🔇' : '🎤';
             
-            showNotification(appState.video.isAudioOn ? 'Microphone on' : 'Microphone off');
+            const localIndicator = document.getElementById('localMuteIndicator');
+            localIndicator.className = `participant-control ${AppState.call.isAudioMuted ? 'muted' : ''}`;
+            
+            showNotification(AppState.call.isAudioMuted ? 'Microphone muted' : 'Microphone unmuted', 'info');
         }
 
-        async function shareScreen() {
-            const shareBtn = document.getElementById('shareBtn');
-            const screenShareVideo = document.getElementById('screenShareVideo');
+        function toggleVideo() {
+            AppState.call.isVideoOff = !AppState.call.isVideoOff;
+            
+            if (AppState.call.localStream) {
+                const videoTracks = AppState.call.localStream.getVideoTracks();
+                videoTracks.forEach(track => {
+                    track.enabled = !AppState.call.isVideoOff;
+                });
+            }
+            
+            const videoBtn = document.getElementById('videoBtn');
+            videoBtn.classList.toggle('active', AppState.call.isVideoOff);
+            videoBtn.innerHTML = AppState.call.isVideoOff ? '📹' : '📹';
+            
             const localVideo = document.getElementById('localVideo');
-            const pipVideo = document.getElementById('pipVideo');
-            const pipVideoElement = document.getElementById('pipVideoElement');
+            if (AppState.call.isVideoOff) {
+                localVideo.style.display = 'none';
+                document.querySelector('.video-placeholder').style.display = 'flex';
+            } else {
+                localVideo.style.display = 'block';
+                document.querySelector('.video-placeholder').style.display = 'none';
+            }
+            
+            const localIndicator = document.getElementById('localVideoIndicator');
+            localIndicator.className = `participant-control ${AppState.call.isVideoOff ? 'video-off' : ''}`;
+            
+            showNotification(AppState.call.isVideoOff ? 'Camera turned off' : 'Camera turned on', 'info');
+        }
+
+        async function toggleScreenShare() {
+            const screenBtn = document.getElementById('screenShareBtn');
             
             try {
-                if (!appState.video.isScreenSharing) {
-                    // Start screen sharing
-                    const screenStream = await navigator.mediaDevices.getDisplayMedia({ 
-                        video: {
-                            cursor: 'always',
-                            displaySurface: 'monitor'
-                        }, 
-                        audio: true 
+                if (!AppState.call.isScreenSharing) {
+                    const screenStream = await navigator.mediaDevices.getDisplayMedia({
+                        video: true,
+                        audio: true
                     });
                     
-                    appState.video.screenStream = screenStream;
-                    screenShareVideo.srcObject = screenStream;
-                    screenShareVideo.style.display = 'block';
+                    AppState.call.isScreenSharing = true;
+                    screenBtn.classList.add('active');
+                    screenBtn.innerHTML = '🛑';
                     
-                    // Replace video track in peer connection
-                    if (appState.video.peerConnection && appState.video.localStream) {
+                    // Replace video track
+                    if (AppState.call.localStream) {
                         const videoTrack = screenStream.getVideoTracks()[0];
-                        const sender = appState.video.peerConnection.getSenders().find(s => 
-                            s.track && s.track.kind === 'video'
-                        );
+                        const audioTrack = screenStream.getAudioTracks()[0];
                         
-                        if (sender) {
-                            await sender.replaceTrack(videoTrack);
-                        }
+                        const localVideo = document.getElementById('localVideo');
+                        localVideo.srcObject = screenStream;
+                        
+                        videoTrack.onended = () => {
+                            stopScreenShare();
+                        };
                     }
-                    
-                    // Move local video to PIP
-                    if (appState.video.localStream) {
-                        pipVideoElement.srcObject = appState.video.localStream;
-                        pipVideo.style.display = 'block';
-                        localVideo.style.display = 'none';
-                    }
-                    
-                    appState.video.isScreenSharing = true;
-                    shareBtn.innerHTML = '🛑';
-                    shareBtn.style.backgroundColor = '#DC2626';
                     
                     showNotification('Screen sharing started', 'success');
-                    
-                    // Handle screen share end
-                    screenStream.getVideoTracks()[0].addEventListener('ended', () => {
-                        stopScreenShare();
-                    });
-                    
                 } else {
                     stopScreenShare();
                 }
             } catch (error) {
-                console.error('Screen sharing error:', error);
-                showNotification('Screen sharing not available or denied', 'error');
+                console.error('Error with screen sharing:', error);
+                showNotification('Screen sharing not available', 'error');
             }
         }
 
-        async function stopScreenShare() {
-            const shareBtn = document.getElementById('shareBtn');
-            const screenShareVideo = document.getElementById('screenShareVideo');
+        function stopScreenShare() {
+            AppState.call.isScreenSharing = false;
+            
+            const screenBtn = document.getElementById('screenShareBtn');
+            screenBtn.classList.remove('active');
+            screenBtn.innerHTML = '🖥️';
+            
+            // Restore camera
             const localVideo = document.getElementById('localVideo');
-            const pipVideo = document.getElementById('pipVideo');
-            
-            if (appState.video.screenStream) {
-                appState.video.screenStream.getTracks().forEach(track => track.stop());
+            if (AppState.call.localStream) {
+                localVideo.srcObject = AppState.call.localStream;
             }
             
-            screenShareVideo.style.display = 'none';
-            pipVideo.style.display = 'none';
-            
-            // Restore original video track
-            if (appState.video.peerConnection && appState.video.localStream) {
-                const videoTrack = appState.video.localStream.getVideoTracks()[0];
-                const sender = appState.video.peerConnection.getSenders().find(s => 
-                    s.track && s.track.kind === 'video'
-                );
-                
-                if (sender && videoTrack) {
-                    await sender.replaceTrack(videoTrack);
-                }
-            }
-            
-            if (appState.video.isOn) {
-                localVideo.style.display = 'block';
-            }
-            
-            appState.video.isScreenSharing = false;
-            shareBtn.innerHTML = '🖥️';
-            shareBtn.style.backgroundColor = 'var(--primary-color)';
-            
-            showNotification('Screen sharing stopped', 'warning');
+            showNotification('Screen sharing stopped', 'info');
         }
 
         function endCall() {
             // Stop all streams
-            if (appState.video.localStream) {
-                appState.video.localStream.getTracks().forEach(track => track.stop());
-            }
-            if (appState.video.screenStream) {
-                appState.video.screenStream.getTracks().forEach(track => track.stop());
+            if (AppState.call.localStream) {
+                AppState.call.localStream.getTracks().forEach(track => track.stop());
             }
             
-            // Close peer connection
-            if (appState.video.peerConnection) {
-                appState.video.peerConnection.close();
-                appState.video.peerConnection = null;
-            }
-            
-            // Stop recording if active
-            if (appState.video.isRecording) {
-                toggleRecording();
-            }
-            
-            // Reset video elements
-            document.getElementById('localVideo').style.display = 'none';
-            document.getElementById('remoteVideo').style.display = 'none';
-            document.getElementById('screenShareVideo').style.display = 'none';
-            document.getElementById('pipVideo').style.display = 'none';
-            document.getElementById('videoPlaceholder').style.display = 'block';
-            document.getElementById('callStatus').style.display = 'none';
-            
-            // Reset state
-            appState.video.isOn = false;
-            appState.video.isInCall = false;
-            appState.video.isScreenSharing = false;
-            appState.video.localStream = null;
-            appState.video.remoteStream = null;
-            appState.video.screenStream = null;
-            
-            // Reset button states
-            document.getElementById('videoBtn').innerHTML = '📹';
-            document.getElementById('muteBtn').innerHTML = '🎤';
-            document.getElementById('shareBtn').innerHTML = '🖥️';
-            document.querySelectorAll('.video-btn').forEach(btn => {
-                btn.style.backgroundColor = btn.classList.contains('danger') ? '#DC2626' : 'var(--primary-color)';
-                btn.classList.remove('muted');
+            // Clear participants
+            AppState.call.participants.forEach((participant) => {
+                if (participant.animationId) {
+                    clearInterval(participant.animationId);
+                }
+                participant.element.remove();
+                participant.member.isInCall = false;
             });
             
-            showNotification('Call ended', 'warning');
-        }
-
-        async function simulateRemoteConnection() {
-            // In a real implementation, this would be handled by signaling server
-            // For demo purposes, we'll simulate a remote connection
-            try {
-                if (appState.video.peerConnection) {
-                    // Create offer
-                    const offer = await appState.video.peerConnection.createOffer();
-                    await appState.video.peerConnection.setLocalDescription(offer);
-                    
-                    // Simulate remote answer (in real app, this comes from signaling server)
-                    setTimeout(async () => {
-                        try {
-                            const answer = await appState.video.peerConnection.createAnswer();
-                            await appState.video.peerConnection.setRemoteDescription(answer);
-                            
-                            // Simulate remote stream
-                            const remoteVideo = document.getElementById('remoteVideo');
-                            const canvas = document.createElement('canvas');
-                            canvas.width = 640;
-                            canvas.height = 480;
-                            const ctx = canvas.getContext('2d');
-                            
-                            // Create animated gradient background for demo
-                            let hue = 0;
-                            const drawFrame = () => {
-                                ctx.fillStyle = `hsl(${hue}, 70%, 50%)`;
-                                ctx.fillRect(0, 0, canvas.width, canvas.height);
-                                
-                                ctx.fillStyle = 'white';
-                                ctx.font = '24px Arial';
-                                ctx.textAlign = 'center';
-                                ctx.fillText('Remote Participant', canvas.width / 2, canvas.height / 2 - 20);
-                                ctx.fillText('(Demo Mode)', canvas.width / 2, canvas.height / 2 + 20);
-                                
-                                hue = (hue + 1) % 360;
-                            };
-                            
-                            setInterval(drawFrame, 100);
-                            
-                            const stream = canvas.captureStream(30);
-                            remoteVideo.srcObject = stream;
-                            remoteVideo.style.display = 'block';
-                            
-                            updateParticipantCount(2);
-                            showNotification('Remote participant joined', 'success');
-                            
-                        } catch (error) {
-                            console.error('Error in simulated connection:', error);
-                        }
-                    }, 1000);
-                }
-            } catch (error) {
-                console.error('Error creating offer:', error);
-            }
-        }
-
-        function updateCallTimer() {
-            if (!appState.video.isInCall) return;
+            AppState.call.participants.clear();
             
-            const callTimer = document.getElementById('callTimer');
-            const now = new Date();
-            const elapsed = Math.floor((now - appState.video.callStartTime) / 1000);
+            // Reset call state
+            AppState.call.isActive = false;
+            AppState.call.localStream = null;
+            AppState.call.isAudioMuted = false;
+            AppState.call.isVideoOff = false;
+            AppState.call.isScreenSharing = false;
             
-            const minutes = Math.floor(elapsed / 60);
-            const seconds = elapsed % 60;
+            // Reset UI
+            document.getElementById('localVideo').style.display = 'none';
+            document.querySelector('.video-placeholder').style.display = 'flex';
+            document.querySelector('.participant-overlay').style.display = 'none';
+            document.getElementById('videoControls').style.display = 'none';
+            document.getElementById('callStatusHeader').classList.remove('active');
             
-            callTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            // Reset buttons
+            document.getElementById('muteBtn').classList.remove('muted');
+            document.getElementById('videoBtn').classList.remove('active');
+            document.getElementById('screenShareBtn').classList.remove('active');
             
-            setTimeout(updateCallTimer, 1000);
+            // Update team members
+            renderTeamMembers();
+            
+            showNotification('Call ended', 'info');
         }
 
-        function updateParticipantCount(count) {
-            const callParticipants = document.getElementById('callParticipants');
-            callParticipants.textContent = `${count} participant${count !== 1 ? 's' : ''}`;
-        }
-
-        async function toggleRecording() {
-            const recordBtn = document.getElementById('recordBtn');
-            const recordingIndicator = document.getElementById('recordingIndicator');
+        function startCallTimer() {
+            const updateTimer = () => {
+                if (!AppState.call.isActive) return;
+                
+                const elapsed = Math.floor((new Date() - AppState.call.startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60);
+                const seconds = elapsed % 60;
+                
+                document.getElementById('callDuration').textContent = 
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                
+                setTimeout(updateTimer, 1000);
+            };
             
-            try {
-                if (!appState.video.isRecording) {
-                    // Start recording
-                    if (!appState.video.localStream) {
-                        showNotification('Start video call first to record', 'error');
-                        return;
-                    }
-                    
-                    const options = { mimeType: 'video/webm; codecs=vp9' };
-                    appState.video.mediaRecorder = new MediaRecorder(appState.video.localStream, options);
-                    appState.video.recordedChunks = [];
-                    
-                    appState.video.mediaRecorder.ondataavailable = (event) => {
-                        if (event.data.size > 0) {
-                            appState.video.recordedChunks.push(event.data);
-                        }
-                    };
-                    
-                    appState.video.mediaRecorder.onstop = () => {
-                        const blob = new Blob(appState.video.recordedChunks, { type: 'video/webm' });
-                        const url = URL.createObjectURL(blob);
-                        
-                        // Auto-download the recording
-                        const a = document.createElement('a');
-                        a.style.display = 'none';
-                        a.href = url;
-                        a.download = `meeting-recording-${new Date().toISOString().split('T')[0]}.webm`;
-                        document.body.appendChild(a);
-                        a.click();
-                        document.body.removeChild(a);
-                        URL.revokeObjectURL(url);
-                        
-                        showNotification('Recording saved to downloads', 'success');
-                    };
-                    
-                    appState.video.mediaRecorder.start();
-                    appState.video.isRecording = true;
-                    
-                    recordBtn.classList.add('active');
-                    recordingIndicator.style.display = 'block';
-                    showNotification('Recording started', 'success');
-                    
-                } else {
-                    // Stop recording
-                    if (appState.video.mediaRecorder) {
-                        appState.video.mediaRecorder.stop();
-                    }
-                    
-                    appState.video.isRecording = false;
-                    recordBtn.classList.remove('active');
-                    recordingIndicator.style.display = 'none';
-                    showNotification('Recording stopped', 'warning');
-                }
-            } catch (error) {
-                console.error('Recording error:', error);
-                showNotification('Recording not supported in this browser', 'error');
-            }
+            updateTimer();
         }
 
-        function toggleScreenShare() {
-            shareScreen();
-        }
-
-        // Chat System
+        // Real-time Chat System
         function initializeChat() {
             const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
+            
+            messageInput.addEventListener('input', handleTyping);
             messageInput.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                     e.preventDefault();
                     sendMessage();
                 }
             });
+            
+            // Auto-resize textarea
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+                
+                // Update send button state
+                sendButton.disabled = !this.value.trim();
+            });
+            
+            loadInitialMessages();
+        }
+
+        function loadInitialMessages() {
+            const initialMessages = [
+                {
+                    id: 1,
+                    senderId: 'user-4',
+                    senderName: 'Sarah Parker',
+                    senderAvatar: 'SP',
+                    text: 'Hey team! I\'ve finished the QA testing for the new user interface. Found a few minor issues that need attention.',
+                    timestamp: new Date(Date.now() - 3600000),
+                    isOwn: false
+                },
+                {
+                    id: 2,
+                    senderId: 'user-2',
+                    senderName: 'Alice Smith',
+                    senderAvatar: 'AS',
+                    text: 'Thanks Sarah! I\'ll review those issues right away. Also, I\'ve updated the design mockups based on yesterday\'s feedback.',
+                    timestamp: new Date(Date.now() - 3300000),
+                    isOwn: false
+                },
+                {
+                    id: 3,
+                    senderId: 'user-3',
+                    senderName: 'Mike Johnson',
+                    senderAvatar: 'MJ',
+                    text: 'Perfect timing! I just pushed the latest code changes. The new API endpoints are ready for integration.',
+                    timestamp: new Date(Date.now() - 3000000),
+                    isOwn: false
+                }
+            ];
+            
+            AppState.chat.messages = initialMessages;
+            AppState.chat.lastMessageId = initialMessages.length;
+            
+            renderMessages();
         }
 
         function sendMessage() {
             const messageInput = document.getElementById('messageInput');
-            const messageText = messageInput.value.trim();
+            const text = messageInput.value.trim();
             
-            if (!messageText) return;
+            if (!text) return;
             
             const message = {
-                id: Date.now(),
-                author: 'You',
-                text: messageText,
-                time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                avatar: 'YU'
+                id: ++AppState.chat.lastMessageId,
+                senderId: AppState.currentUser.id,
+                senderName: AppState.currentUser.name,
+                senderAvatar: AppState.currentUser.avatar,
+                text: text,
+                timestamp: new Date(),
+                isOwn: true
             };
             
-            addMessageToChat(message);
+            AppState.chat.messages.push(message);
+            renderMessages();
+            
             messageInput.value = '';
+            messageInput.style.height = 'auto';
+            document.getElementById('sendButton').disabled = true;
             
-            // Simulate response from team member
-            setTimeout(() => {
-                simulateTeamResponse();
-            }, 1000 + Math.random() * 2000);
-        }
-
-        function addMessageToChat(message) {
-            const chatMessages = document.getElementById('chatMessages');
-            
-            const messageElement = document.createElement('div');
-            messageElement.className = 'message';
-            messageElement.innerHTML = `
-                <div class="message-avatar">${message.avatar}</div>
-                <div class="message-content">
-                    <div class="message-header">
-                        <span class="message-author">${message.author}</span>
-                        <span class="message-time">${message.time}</span>
-                    </div>
-                    <div class="message-text">${message.text}</div>
-                </div>
-            `;
-            
-            chatMessages.appendChild(messageElement);
-            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Simulate team response
+            setTimeout(() => simulateTeamResponse(), 1000 + Math.random() * 3000);
         }
 
         function simulateTeamResponse() {
+            const activeMembers = AppState.teamMembers.filter(m => m.status === 'online');
+            if (activeMembers.length === 0) return;
+            
+            const randomMember = activeMembers[Math.floor(Math.random() * activeMembers.length)];
             const responses = [
-                { author: 'Alice Smith', avatar: 'AS', text: 'Great point! I agree with that approach.' },
-                { author: 'Mike Johnson', avatar: 'MJ', text: 'Let me check the technical feasibility and get back to you.' },
-                { author: 'John Doe', avatar: 'JD', text: 'Sounds good. Let\'s schedule a follow-up meeting.' },
-                { author: 'Alice Smith', avatar: 'AS', text: 'I\'ll update the design specs accordingly.' },
-                { author: 'Mike Johnson', avatar: 'MJ', text: 'The API integration should be straightforward.' }
+                "Great point! I agree with that approach.",
+                "Let me check on that and get back to you.",
+                "That sounds good to me. When should we implement it?",
+                "I have some thoughts on this. Mind if we discuss it in our next call?",
+                "Perfect! I'll update the documentation accordingly.",
+                "Thanks for the update! This helps clarify things.",
+                "I'm working on something similar. Let's coordinate our efforts.",
+                "Good catch! I'll make sure to address that."
             ];
             
-            const response = responses[Math.floor(Math.random() * responses.length)];
-            response.time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const randomResponse = responses[Math.floor(Math.random() * responses.length)];
             
-            addMessageToChat(response);
+            // Show typing indicator
+            showTypingIndicator(randomMember.name);
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const message = {
+                    id: ++AppState.chat.lastMessageId,
+                    senderId: randomMember.id,
+                    senderName: randomMember.name,
+                    senderAvatar: randomMember.avatar,
+                    text: randomResponse,
+                    timestamp: new Date(),
+                    isOwn: false
+                };
+                
+                AppState.chat.messages.push(message);
+                renderMessages();
+            }, 1500 + Math.random() * 2000);
         }
 
-        function handleMessageInput(event) {
-            if (event.key === 'Enter' && !event.shiftKey) {
-                event.preventDefault();
-                sendMessage();
-            }
+        function renderMessages() {
+            const container = document.getElementById('chatMessages');
+            container.innerHTML = '';
+            
+            AppState.chat.messages.forEach(message => {
+                const messageElement = createMessageElement(message);
+                container.appendChild(messageElement);
+            });
+            
+            // Auto-scroll to bottom
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function createMessageElement(message) {
+            const div = document.createElement('div');
+            div.className = `message ${message.isOwn ? 'own' : ''}`;
+            
+            div.innerHTML = `
+                <div class="message-avatar">${message.senderAvatar}</div>
+                <div class="message-content">
+                    <div class="message-bubble">
+                        <div class="message-header">
+                            <span class="message-author">${message.senderName}</span>
+                            <span class="message-time">${formatTime(message.timestamp)}</span>
+                        </div>
+                        <div class="message-text">${escapeHtml(message.text)}</div>
+                    </div>
+                </div>
+            `;
+            
+            return div;
         }
 
         function handleTyping() {
-            // Show typing indicator simulation
-            const typingIndicator = document.getElementById('typingIndicator');
+            const messageInput = document.getElementById('messageInput');
+            const sendButton = document.getElementById('sendButton');
             
-            if (appState.chat.typingTimeout) {
-                clearTimeout(appState.chat.typingTimeout);
-            }
+            // Update send button
+            sendButton.disabled = !messageInput.value.trim();
             
-            typingIndicator.style.display = 'flex';
-            
-            appState.chat.typingTimeout = setTimeout(() => {
-                typingIndicator.style.display = 'none';
-            }, 2000);
-        }
-
-        // Whiteboard System
-        function initializeWhiteboard() {
-            const canvas = document.getElementById('whiteboardCanvas');
-            if (!canvas) return;
-            
-            appState.whiteboard.canvas = canvas;
-            appState.whiteboard.ctx = canvas.getContext('2d');
-            
-            // Set canvas size
-            resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
-            
-            // Add event listeners
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-            
-            // Touch events for mobile
-            canvas.addEventListener('touchstart', handleTouch);
-            canvas.addEventListener('touchmove', handleTouch);
-            canvas.addEventListener('touchend', stopDrawing);
-            
-            // Color picker
-            const colorPicker = document.getElementById('colorPicker');
-            colorPicker.addEventListener('change', (e) => {
-                appState.whiteboard.currentColor = e.target.value;
-            });
-        }
-
-        function resizeCanvas() {
-            const canvas = appState.whiteboard.canvas;
-            if (!canvas) return;
-            
-            const container = canvas.parentElement;
-            canvas.width = container.offsetWidth;
-            canvas.height = container.offsetHeight;
-            
-            // Reset drawing settings
-            const ctx = appState.whiteboard.ctx;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            ctx.lineWidth = 2;
-        }
-
-        function startDrawing(e) {
-            if (appState.whiteboard.currentTool !== 'pen') return;
-            
-            appState.whiteboard.isDrawing = true;
-            
-            const rect = appState.whiteboard.canvas.getBoundingClientRect();
-            appState.whiteboard.lastX = e.clientX - rect.left;
-            appState.whiteboard.lastY = e.clientY - rect.top;
-        }
-
-        function draw(e) {
-            if (!appState.whiteboard.isDrawing || appState.whiteboard.currentTool !== 'pen') return;
-            
-            const ctx = appState.whiteboard.ctx;
-            const rect = appState.whiteboard.canvas.getBoundingClientRect();
-            const currentX = e.clientX - rect.left;
-            const currentY = e.clientY - rect.top;
-            
-            ctx.strokeStyle = appState.whiteboard.currentColor;
-            ctx.beginPath();
-            ctx.moveTo(appState.whiteboard.lastX, appState.whiteboard.lastY);
-            ctx.lineTo(currentX, currentY);
-            ctx.stroke();
-            
-            appState.whiteboard.lastX = currentX;
-            appState.whiteboard.lastY = currentY;
-        }
-
-        function stopDrawing() {
-            appState.whiteboard.isDrawing = false;
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 
-                                            e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            appState.whiteboard.canvas.dispatchEvent(mouseEvent);
-        }
-
-        function setTool(tool) {
-            appState.whiteboard.currentTool = tool;
-            
-            // Update tool button states
-            document.querySelectorAll('.tool-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            if (tool === 'pen') document.getElementById('penTool').classList.add('active');
-            else if (tool === 'eraser') document.getElementById('eraserTool').classList.add('active');
-            else if (tool === 'text') document.getElementById('textTool').classList.add('active');
-            else if (tool === 'shape') document.getElementById('shapeTool').classList.add('active');
-            
-            // Update cursor
-            const canvas = appState.whiteboard.canvas;
-            if (tool === 'eraser') {
-                canvas.style.cursor = 'grab';
-            } else {
-                canvas.style.cursor = 'crosshair';
+            // Simulate typing indicator for others (in real app, this would be sent to server)
+            if (messageInput.value.trim()) {
+                // In real implementation, notify other users that current user is typing
             }
         }
 
-        function clearWhiteboard() {
-            const ctx = appState.whiteboard.ctx;
-            const canvas = appState.whiteboard.canvas;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            showNotification('Whiteboard cleared', 'success');
+        function showTypingIndicator(userName) {
+            const indicator = document.getElementById('typingIndicator');
+            const userSpan = document.getElementById('typingUser');
+            
+            userSpan.textContent = userName;
+            indicator.classList.add('show');
         }
 
-        // File System with Real Download Functionality
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            indicator.classList.remove('show');
+        }
+
+        function formatTime(date) {
+            return date.toLocaleTimeString([], { 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Chat Actions
+        function sendDirectMessage(memberId) {
+            const member = AppState.teamMembers.find(m => m.id === memberId);
+            if (!member) return;
+            
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value = `@${member.name} `;
+            messageInput.focus();
+        }
+
+        function clearChat() {
+            if (confirm('Are you sure you want to clear all messages?')) {
+                AppState.chat.messages = [];
+                AppState.chat.lastMessageId = 0;
+                renderMessages();
+                showNotification('Chat cleared', 'success');
+            }
+        }
+
+        function exportChat() {
+            const chatText = AppState.chat.messages.map(msg => 
+                `[${formatTime(msg.timestamp)}] ${msg.senderName}: ${msg.text}`
+            ).join('\n');
+            
+            const blob = new Blob([chatText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `team-chat-${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            showNotification('Chat exported successfully', 'success');
+        }
+
+        function attachFile() {
+            document.getElementById('fileInput').click();
+        }
+
+        function addEmoji() {
+            const messageInput = document.getElementById('messageInput');
+            const emojis = ['😊', '👍', '❤️', '😄', '🎉', '👏', '🔥', '💡', '✅', '🚀', '💯', '🎯'];
+            const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+            
+            messageInput.value += randomEmoji;
+            messageInput.focus();
+            handleTyping();
+        }
+
+        function mentionTeamMember() {
+            const onlineMembers = AppState.teamMembers.filter(m => m.status === 'online');
+            if (onlineMembers.length === 0) return;
+            
+            const randomMember = onlineMembers[Math.floor(Math.random() * onlineMembers.length)];
+            const messageInput = document.getElementById('messageInput');
+            messageInput.value += `@${randomMember.name} `;
+            messageInput.focus();
+            handleTyping();
+        }
+
+        // File Handling
         function initializeFileHandling() {
-            const fileUploadZone = document.getElementById('fileUploadZone');
+            const fileUploadArea = document.getElementById('fileUploadArea');
             const fileInput = document.getElementById('fileInput');
             
-            // Drag and drop events
-            fileUploadZone.addEventListener('dragover', (e) => {
+            // Drag and drop
+            fileUploadArea.addEventListener('dragover', (e) => {
                 e.preventDefault();
-                fileUploadZone.classList.add('dragover');
+                fileUploadArea.classList.add('dragover');
             });
             
-            fileUploadZone.addEventListener('dragleave', () => {
-                fileUploadZone.classList.remove('dragover');
+            fileUploadArea.addEventListener('dragleave', () => {
+                fileUploadArea.classList.remove('dragover');
             });
             
-            fileUploadZone.addEventListener('drop', (e) => {
+            fileUploadArea.addEventListener('drop', (e) => {
                 e.preventDefault();
-                fileUploadZone.classList.remove('dragover');
+                fileUploadArea.classList.remove('dragover');
                 handleFiles(e.dataTransfer.files);
             });
+            
+            // File input change
+            fileInput.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+            
+            // Load initial files
+            loadInitialFiles();
         }
 
         function triggerFileUpload() {
             document.getElementById('fileInput').click();
         }
 
-        function handleFileUpload(event) {
-            handleFiles(event.target.files);
-        }
-
         function handleFiles(files) {
             Array.from(files).forEach(file => {
                 const fileData = {
+                    id: Date.now() + Math.random(),
                     name: file.name,
                     size: formatFileSize(file.size),
                     type: file.type,
                     uploadTime: new Date(),
-                    file: file // Store the actual file object
+                    file: file
                 };
                 
-                // Store in our files map
-                appState.files.set(file.name, fileData);
-                
+                AppState.files.set(fileData.id, fileData);
                 addFileToList(fileData);
                 showNotification(`${file.name} uploaded successfully`, 'success');
+            });
+        }
+
+        function loadInitialFiles() {
+            const initialFiles = [
+                {
+                    id: 1,
+                    name: 'Project_Wireframes_v2.fig',
+                    size: '2.4 MB',
+                    type: 'application/figma',
+                    uploadTime: new Date(Date.now() - 7200000) // 2 hours ago
+                },
+                {
+                    id: 2,
+                    name: 'User_Research_Report.pdf',
+                    size: '1.8 MB',
+                    type: 'application/pdf',
+                    uploadTime: new Date(Date.now() - 14400000) // 4 hours ago
+                },
+                {
+                    id: 3,
+                    name: 'API_Documentation.docx',
+                    size: '892 KB',
+                    type: 'application/msword',
+                    uploadTime: new Date(Date.now() - 86400000) // 1 day ago
+                },
+                {
+                    id: 4,
+                    name: 'Design_Assets.zip',
+                    size: '15.2 MB',
+                    type: 'application/zip',
+                    uploadTime: new Date(Date.now() - 259200000) // 3 days ago
+                }
+            ];
+            
+            initialFiles.forEach(file => {
+                AppState.files.set(file.id, file);
+                addFileToList(file);
             });
         }
 
         function addFileToList(fileData) {
             const fileList = document.getElementById('fileList');
             
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
-            fileItem.innerHTML = `
+            const fileElement = document.createElement('div');
+            fileElement.className = 'file-item';
+            fileElement.innerHTML = `
                 <div class="file-icon">${getFileIcon(fileData.type)}</div>
                 <div class="file-info">
                     <div class="file-name">${fileData.name}</div>
-                    <div class="file-size">${fileData.size} • Just uploaded</div>
-                </div>
-                <div class="file-actions">
-                    <button class="file-action-btn" onclick="downloadFile('${fileData.name}', event)">⬇️</button>
-                    <button class="file-action-btn" onclick="shareFile('${fileData.name}', event)">🔗</button>
+                    <div class="file-size">${fileData.size} • ${getTimeAgo(fileData.uploadTime)}</div>
                 </div>
             `;
             
-            fileList.insertBefore(fileItem, fileList.firstChild);
+            fileElement.addEventListener('click', () => {
+                downloadFile(fileData);
+            });
+            
+            fileList.insertBefore(fileElement, fileList.firstChild);
         }
 
         function getFileIcon(fileType) {
-            if (fileType.startsWith('image/')) return '🖼️';
-            if (fileType.startsWith('video/')) return '🎥';
-            if (fileType.startsWith('audio/')) return '🎵';
+            if (fileType.includes('image')) return '🖼️';
+            if (fileType.includes('video')) return '🎥';
+            if (fileType.includes('audio')) return '🎵';
             if (fileType.includes('pdf')) return '📄';
-            if (fileType.includes('word')) return '📝';
-            if (fileType.includes('excel')) return '📊';
-            if (fileType.includes('powerpoint')) return '📋';
+            if (fileType.includes('word') || fileType.includes('doc')) return '📝';
+            if (fileType.includes('excel') || fileType.includes('sheet')) return '📊';
+            if (fileType.includes('powerpoint') || fileType.includes('presentation')) return '📋';
+            if (fileType.includes('zip') || fileType.includes('archive')) return '🗜️';
+            if (fileType.includes('figma')) return '🎨';
             return '📁';
         }
 
         function formatFileSize(bytes) {
             if (bytes === 0) return '0 Bytes';
-            
             const k = 1024;
             const sizes = ['Bytes', 'KB', 'MB', 'GB'];
             const i = Math.floor(Math.log(bytes) / Math.log(k));
-            
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
 
-        function downloadFile(filename, event) {
-            event.stopPropagation();
+        function getTimeAgo(date) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - date) / 1000);
             
-            // Check if file exists in our uploaded files
-            if (appState.files.has(filename)) {
-                const fileData = appState.files.get(filename);
+            if (diffInSeconds < 60) return 'Just now';
+            if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)}m ago`;
+            if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)}h ago`;
+            return `${Math.floor(diffInSeconds / 86400)}d ago`;
+        }
+
+        function downloadFile(fileData) {
+            if (fileData.file) {
+                // Real file download
                 const url = URL.createObjectURL(fileData.file);
-                
                 const a = document.createElement('a');
-                a.style.display = 'none';
                 a.href = url;
-                a.download = filename;
+                a.download = fileData.name;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-                
-                showNotification(`Downloading ${filename}...`, 'success');
             } else {
-                // For demo files, create sample content
-                createSampleFileDownload(filename);
-            }
-        }
-
-        function createSampleFileDownload(filename) {
-            let content, mimeType;
-            
-            // Create sample content based on file type
-            if (filename.includes('.pdf')) {
-                content = 'Sample PDF content for ' + filename;
-                mimeType = 'application/pdf';
-            } else if (filename.includes('.doc')) {
-                content = 'Sample document content for ' + filename;
-                mimeType = 'application/msword';
-            } else if (filename.includes('.zip')) {
-                content = 'Sample archive content for ' + filename;
-                mimeType = 'application/zip';
-            } else if (filename.includes('.mp4')) {
-                content = 'Sample video content for ' + filename;
-                mimeType = 'video/mp4';
-            } else {
-                content = 'Sample file content for ' + filename;
-                mimeType = 'text/plain';
+                // Simulate download for demo files
+                const content = `Sample content for ${fileData.name}`;
+                const blob = new Blob([content], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileData.name;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
             }
             
-            const blob = new Blob([content], { type: mimeType });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.style.display = 'none';
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-            
-            showNotification(`Downloading ${filename}...`, 'success');
+            showNotification(`Downloading ${fileData.name}...`, 'success');
         }
 
-        function shareFile(filename, event) {
-            event.stopPropagation();
-            
-            // Generate a shareable link (in real app, this would be a server endpoint)
-            const shareUrl = `https://projecthub.com/files/${encodeURIComponent(filename)}`;
-            
-            // Copy to clipboard
-            navigator.clipboard.writeText(shareUrl).then(() => {
-                showNotification('Share link copied to clipboard', 'success');
-            }).catch(() => {
-                // Fallback for browsers that don't support clipboard API
-                const textArea = document.createElement('textarea');
-                textArea.value = shareUrl;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-                showNotification('Share link copied to clipboard', 'success');
+        // Sidebar Navigation
+        function switchSidebarTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.sidebar-tab').forEach(tab => {
+                tab.classList.remove('active');
             });
-        }
-
-        function openFile(filename, type) {
-            showNotification(`Opening ${filename}...`, 'success');
+            event.target.classList.add('active');
             
-            // In a real application, this would open the file in an appropriate viewer
-            // For demo purposes, we'll just show a notification
-            setTimeout(() => {
-                showNotification(`${filename} opened successfully`, 'success');
-            }, 1000);
-        }
-
-        // Task Management (Kanban)
-        function initializeTaskDragDrop() {
-            const taskCards = document.querySelectorAll('.task-card');
-            const columns = document.querySelectorAll('.kanban-column');
-            
-            taskCards.forEach(card => {
-                card.addEventListener('dragstart', handleDragStart);
-                card.addEventListener('dragend', handleDragEnd);
+            // Update tab panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
             });
-            
-            columns.forEach(column => {
-                column.addEventListener('dragover', handleDragOver);
-                column.addEventListener('drop', handleDrop);
-            });
+            document.getElementById(`${tabName}Panel`).classList.add('active');
         }
 
-        function handleDragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.taskId);
-            e.target.classList.add('dragging');
-        }
-
-        function handleDragEnd(e) {
-            e.target.classList.remove('dragging');
-        }
-
-        function handleDragOver(e) {
-            e.preventDefault();
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const taskId = e.dataTransfer.getData('text/plain');
-            const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
-            const targetColumn = e.target.closest('.kanban-column');
-            
-            if (targetColumn && taskCard) {
-                targetColumn.appendChild(taskCard);
-                updateTaskCounts();
-                showNotification('Task moved successfully', 'success');
-            }
-        }
-
-        function updateTaskCounts() {
-            const columns = document.querySelectorAll('.kanban-column');
-            columns.forEach(column => {
-                const taskCount = column.querySelectorAll('.task-card').length;
-                const countElement = column.querySelector('.task-count');
-                if (countElement) {
-                    countElement.textContent = taskCount;
-                }
-            });
-        }
-
-        // Notes System
-        function initializeAutoSave() {
-            const notesTextarea = document.getElementById('meetingNotes');
-            if (notesTextarea) {
-                // Load saved notes from memory (since localStorage is not supported)
-                if (appState.notes.content) {
-                    notesTextarea.value = appState.notes.content;
-                }
-            }
-        }
-
-        function autoSaveNotes() {
-            const notesTextarea = document.getElementById('meetingNotes');
-            const notesStatus = document.getElementById('notesStatus');
-            
-            if (appState.notes.autoSaveEnabled) {
-                appState.notes.content = notesTextarea.value;
-                appState.notes.lastSaved = new Date();
-                
-                notesStatus.textContent = `Last saved: ${appState.notes.lastSaved.toLocaleTimeString()}`;
-            }
-        }
-
+        // Notes Functions
         function saveNotes() {
-            const notesTextarea = document.getElementById('meetingNotes');
-            appState.notes.content = notesTextarea.value;
-            appState.notes.lastSaved = new Date();
-            
+            const notesTextarea = document.getElementById('notesTextarea');
+            AppState.notes = notesTextarea.value;
             showNotification('Notes saved successfully', 'success');
-            autoSaveNotes();
         }
 
         function exportNotes() {
-            const notesContent = document.getElementById('meetingNotes').value;
-            const blob = new Blob([notesContent], { type: 'text/plain' });
+            const notesTextarea = document.getElementById('notesTextarea');
+            const content = notesTextarea.value || 'No notes available';
+            
+            const blob = new Blob([content], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             
             const a = document.createElement('a');
@@ -2500,228 +2169,189 @@ Next Meeting: Tomorrow at 2:00 PM</textarea>
             showNotification('Notes exported successfully', 'success');
         }
 
-        // Navigation and UI
-        function switchTab(tabName) {
-            // Hide all tab contents
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.remove('active');
-            });
-            
-            // Remove active class from all tab buttons
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            
-            // Show selected tab
-            document.getElementById(`${tabName}-tab`).classList.add('active');
-            
-            // Add active class to clicked button
-            event.target.classList.add('active');
-            
-            // Initialize whiteboard when switching to it
-            if (tabName === 'whiteboard') {
-                setTimeout(() => {
-                    initializeWhiteboard();
-                }, 100);
+        // Recording Functions
+        function toggleRecording() {
+            if (!AppState.call.isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
             }
         }
 
-        function switchView(viewName) {
-            // Update navigation
-            document.querySelectorAll('.nav-item').forEach(item => {
-                item.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            showNotification(`Switched to ${viewName}`, 'success');
-        }
-
-        function selectProject(projectId) {
-            // Update project selection
-            document.querySelectorAll('.project-item').forEach(item => {
-                item.classList.remove('selected');
-            });
-            event.target.classList.add('selected');
-            
-            appState.currentProject = projectId;
-            showNotification(`Switched to project: ${projectId}`, 'success');
-        }
-
-        // Team Management
-        async function callMember(memberId) {
-            const memberName = event.target.querySelector('.member-name').textContent;
-            
-            try {
-                // If not in a call, start one
-                if (!appState.video.isInCall) {
-                    await toggleVideo();
-                }
-                
-                showNotification(`Calling ${memberName}...`, 'success');
-                
-                // Update status indicator to show in call
-                const statusIndicator = event.target.querySelector('.status-indicator');
-                statusIndicator.classList.add('in-call');
-                
-                // Simulate connection after a delay
-                setTimeout(() => {
-                    showNotification(`${memberName} joined the call`, 'success');
-                }, 2000);
-                
-            } catch (error) {
-                console.error('Error calling member:', error);
-                showNotification(`Failed to call ${memberName}`, 'error');
-            }
-        }
-
-        function inviteMembers() {
-            document.getElementById('inviteModal').style.display = 'block';
-        }
-
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
-
-        function sendInvite() {
-            const email = document.getElementById('inviteEmail').value;
-            const role = document.getElementById('inviteRole').value;
-            
-            if (!email) {
-                showNotification('Please enter an email address', 'error');
+        function startRecording() {
+            if (!AppState.call.isActive) {
+                showNotification('Start a call first to begin recording', 'error');
                 return;
             }
             
-            showNotification(`Invitation sent to ${email}`, 'success');
-            closeModal('inviteModal');
-            
-            // Clear form
-            document.getElementById('inviteEmail').value = '';
-            document.getElementById('inviteRole').value = '';
+            AppState.call.isRecording = true;
+            document.getElementById('recordingHeader').classList.add('active');
+            showNotification('Recording started', 'success');
         }
 
-        // Keyboard Shortcuts
-        function initializeKeyboardShortcuts() {
+        function stopRecording() {
+            AppState.call.isRecording = false;
+            document.getElementById('recordingHeader').classList.remove('active');
+            showNotification('Recording stopped and saved', 'success');
+        }
+
+        // Invite Team Member
+        function inviteTeamMember() {
+            const email = prompt('Enter email address to invite:');
+            if (email && email.includes('@')) {
+                showNotification(`Invitation sent to ${email}`, 'success');
+            } else if (email) {
+                showNotification('Please enter a valid email address', 'error');
+            }
+        }
+
+        // Event Listeners
+        function setupEventListeners() {
+            // Keyboard shortcuts
             document.addEventListener('keydown', (e) => {
-                // Ctrl/Cmd + S for save notes
-                if ((e.ctrlKey || e.metaKey) && e.key === 's') {
-                    e.preventDefault();
-                    saveNotes();
-                }
+                if (e.target.matches('input, textarea')) return;
                 
-                // Ctrl/Cmd + Enter for send message
-                if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-                    sendMessage();
-                }
-                
-                // Escape to close modals
-                if (e.key === 'Escape') {
-                    document.querySelectorAll('.modal').forEach(modal => {
-                        modal.style.display = 'none';
-                    });
-                }
-                
-                // Space to toggle mute (when not in input fields)
-                if (e.key === ' ' && !e.target.matches('input, textarea')) {
+                // Spacebar to toggle mute
+                if (e.code === 'Space' && AppState.call.isActive) {
                     e.preventDefault();
                     toggleMute();
                 }
+                
+                // Escape to end call
+                if (e.code === 'Escape' && AppState.call.isActive) {
+                    endCall();
+                }
+            });
+            
+            // Handle window beforeunload
+            window.addEventListener('beforeunload', () => {
+                if (AppState.call.isActive) {
+                    endCall();
+                }
             });
         }
 
-        // Notifications
+        // Initial Data Loading
+        function loadInitialData() {
+            // Load saved notes
+            const savedNotes = localStorage.getItem('projecthub-notes');
+            if (savedNotes) {
+                document.getElementById('notesTextarea').value = savedNotes;
+                AppState.notes = savedNotes;
+            }
+        }
+
+        // Team Activity Simulation
+        function simulateTeamActivity() {
+            // Randomly change team member statuses
+            setInterval(() => {
+                const member = AppState.teamMembers[Math.floor(Math.random() * AppState.teamMembers.length)];
+                const statuses = ['online', 'away', 'busy'];
+                const newStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                
+                if (member.status !== newStatus && !member.isInCall) {
+                    member.status = newStatus;
+                    updateTeamMember(member);
+                }
+            }, 30000); // Every 30 seconds
+            
+            // Simulate random messages from team members
+            setInterval(() => {
+                if (Math.random() < 0.3) { // 30% chance
+                    const onlineMembers = AppState.teamMembers.filter(m => 
+                        m.status === 'online' && !m.isInCall
+                    );
+                    
+                    if (onlineMembers.length > 0) {
+                        const randomMember = onlineMembers[Math.floor(Math.random() * onlineMembers.length)];
+                        const spontaneousMessages = [
+                            "Just finished reviewing the latest designs. Looking great!",
+                            "Quick update: the backend changes are ready for testing.",
+                            "Found an interesting article about UX trends. I'll share the link.",
+                            "Coffee break anyone? ☕",
+                            "The client meeting went well. They approved our proposal!",
+                            "Working on the bug fixes now. Should be done by EOD.",
+                            "New feature request came in. Let's discuss in our next standup.",
+                            "Great job team! Our sprint is on track. 🚀"
+                        ];
+                        
+                        setTimeout(() => {
+                            const message = {
+                                id: ++AppState.chat.lastMessageId,
+                                senderId: randomMember.id,
+                                senderName: randomMember.name,
+                                senderAvatar: randomMember.avatar,
+                                text: spontaneousMessages[Math.floor(Math.random() * spontaneousMessages.length)],
+                                timestamp: new Date(),
+                                isOwn: false
+                            };
+                            
+                            AppState.chat.messages.push(message);
+                            renderMessages();
+                        }, 2000);
+                    }
+                }
+            }, 60000); // Every minute
+        }
+
+        // Notification System
         function showNotification(message, type = 'info') {
+            // Remove existing notifications
+            document.querySelectorAll('.notification').forEach(n => n.remove());
+            
             const notification = document.createElement('div');
             notification.className = `notification ${type}`;
-            notification.textContent = message;
             
+            const icons = {
+                success: '✅',
+                error: '❌',
+                warning: '⚠️',
+                info: 'ℹ️'
+            };
+            
+            notification.innerHTML = `${icons[type] || icons.info} ${message}`;
             document.body.appendChild(notification);
             
-            // Remove notification after animation
+            // Auto remove
             setTimeout(() => {
-                notification.remove();
-            }, 3000);
-        }
-
-        // Click outside modal to close
-        window.addEventListener('click', (e) => {
-            document.querySelectorAll('.modal').forEach(modal => {
-                if (e.target === modal) {
-                    modal.style.display = 'none';
+                if (notification.parentNode) {
+                    notification.remove();
                 }
-            });
-        });
-
-        // Responsive sidebar toggle for mobile
-        function toggleSidebar(side) {
-            const sidebar = document.querySelector(`.${side}-sidebar`);
-            sidebar.style.display = sidebar.style.display === 'none' ? 'flex' : 'none';
+            }, 5000);
         }
 
-        // Performance optimization: Debounce resize events
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
-                };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
-
-        // Optimized resize handler
-        const optimizedResize = debounce(() => {
-            resizeCanvas();
-        }, 250);
-
-        window.addEventListener('resize', optimizedResize);
-
-        // Cleanup function for when page is unloaded
-        window.addEventListener('beforeunload', () => {
-            // Close peer connections
-            if (appState.video.peerConnection) {
-                appState.video.peerConnection.close();
+        // Auto-save notes
+        setInterval(() => {
+            const notesTextarea = document.getElementById('notesTextarea');
+            if (notesTextarea && notesTextarea.value !== AppState.notes) {
+                AppState.notes = notesTextarea.value;
+                localStorage.setItem('projecthub-notes', AppState.notes);
             }
+        }, 10000); // Auto-save every 10 seconds
+
+        // Connection status simulation
+        function updateConnectionStatus() {
+            const status = document.getElementById('connectionStatus');
+            const isOnline = navigator.onLine;
             
-            // Stop all media streams
-            if (appState.video.localStream) {
-                appState.video.localStream.getTracks().forEach(track => track.stop());
+            if (isOnline) {
+                status.className = 'connection-status connected';
+                status.innerHTML = '🟢 Connected';
+            } else {
+                status.className = 'connection-status disconnected';
+                status.innerHTML = '🔴 Disconnected';
             }
-            if (appState.video.screenStream) {
-                appState.video.screenStream.getTracks().forEach(track => track.stop());
-            }
-            
-            // Stop recording
-            if (appState.video.mediaRecorder && appState.video.mediaRecorder.state === 'recording') {
-                appState.video.mediaRecorder.stop();
-            }
-        });
+        }
 
-        // Error handling for WebRTC
-        window.addEventListener('error', (e) => {
-            console.error('Global error:', e);
-            if (e.message.includes('WebRTC') || e.message.includes('getUserMedia')) {
-                showNotification('Video calling error occurred', 'error');
-            }
-        });
+        window.addEventListener('online', updateConnectionStatus);
+        window.addEventListener('offline', updateConnectionStatus);
 
-        // Handle permission changes
-        navigator.permissions?.query({name: 'camera'}).then((result) => {
-            result.onchange = () => {
-                if (result.state === 'denied') {
-                    showNotification('Camera permission denied', 'error');
-                }
-            };
-        });
+        // Initialize connection status
+        updateConnectionStatus();
 
-        navigator.permissions?.query({name: 'microphone'}).then((result) => {
-            result.onchange = () => {
-                if (result.state === 'denied') {
-                    showNotification('Microphone permission denied', 'error');
-                }
-            };
-        });
+        console.log('🚀 ProjectHub Real-time Collaboration Platform Loaded!');
+        console.log('💡 Features: Real video/voice calls, Live chat, File sharing, Team presence');
+        console.log('⌨️  Shortcuts: Space (mute), Escape (end call)');
     </script>
 </body>
 </html>
